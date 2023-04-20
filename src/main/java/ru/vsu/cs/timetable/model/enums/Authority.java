@@ -1,0 +1,13 @@
+package ru.vsu.cs.timetable.model.enums;
+
+public enum Authority {
+
+    CREATE_USER_AUTHORITY,
+    CREATE_UNIVERSITY_AUTHORITY,
+    CREATE_FACULTY_AUTHORITY,
+    CREATE_AUDIENCE_AUTHORITY,
+    CREATE_GROUP_AUTHORITY,
+    SEND_REQUEST_AUTHORITY,
+    MOVE_CLASS_AUTHORITY
+    ;
+}
