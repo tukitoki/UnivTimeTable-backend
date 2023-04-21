@@ -25,7 +25,7 @@ public class Equipment {
     @NotNull
     private String displayName;
     @ManyToMany(mappedBy = "equipments", fetch = FetchType.LAZY)
-    private Set<Class> classes;
+    private Set<Audience> audiences;
     @ManyToMany(mappedBy = "requiredEquipments", fetch = FetchType.LAZY)
     private Set<Request> requests;
 }

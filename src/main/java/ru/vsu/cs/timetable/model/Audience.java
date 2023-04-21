@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -19,7 +21,7 @@ public class Audience {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    private String address;
+    private Integer audienceNumber;
     @NotNull
     private Long capacity;
     @ManyToOne
@@ -28,4 +30,9 @@ public class Audience {
     @ManyToOne
     @JoinColumn(name = "university_id")
     private University university;
+    @ManyToMany
+    @JoinTable(name = "audience_equipment",
+            joinColumns = @JoinColumn(name = "audience_id"),
+            inverseJoinColumns = @JoinColumn(name = "equipment_id"))
+    private Set<Equipment> equipments;
 }

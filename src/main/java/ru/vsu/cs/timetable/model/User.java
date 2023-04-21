@@ -26,6 +26,8 @@ public class User {
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
     private String email;
     @NotNull
+    private String name;
+    @NotNull
     private String username;
     @NotNull
     private String password;

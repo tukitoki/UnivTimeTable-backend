@@ -22,6 +22,8 @@ public class University {
     private Long id;
     @NotNull
     private String name;
+    @NotNull
+    private String city;
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private List<User> users;
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
