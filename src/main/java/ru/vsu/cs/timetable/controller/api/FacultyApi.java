@@ -23,7 +23,7 @@ public interface FacultyApi {
             int pageSize,
             @Parameter(description = "Название факультета для поиска")
             String name,
-            @Parameter(description = "Сортировка по алфавиту или нет")
+            @Parameter(description = "Сортировка по алфавиту")
             SortDirection order,
             @Parameter(description = "Id университета, факультеты которого нужны")
             Long universityId
@@ -34,7 +34,9 @@ public interface FacultyApi {
     )
     void createFaculty(
             @Parameter(description = "Параметры для создания факультета")
-            CreateFacultyRequest createFacultyRequest
+            CreateFacultyRequest createFacultyRequest,
+            @Parameter(description = "Id университета, для которого создаются факультеты")
+            Long id
     );
 
     @Operation(
@@ -49,9 +51,9 @@ public interface FacultyApi {
             summary = "Обновление факультета конкретного университета"
     )
     void updateFaculty(
-            @Parameter(description = "Id факультета, который нужно обновить")
-            Long id,
             @Parameter(description = "Измененная версия факульета")
-            FacultyDto facultyDto
+            FacultyDto facultyDto,
+            @Parameter(description = "Id факультета, который нужно обновить")
+            Long id
     );
 }

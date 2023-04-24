@@ -1,5 +1,14 @@
 package ru.vsu.cs.timetable.dto.user;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+@Setter
+@Getter
+@AllArgsConstructor
+@SuperBuilder
 public class UserDto {
 
     private String role;

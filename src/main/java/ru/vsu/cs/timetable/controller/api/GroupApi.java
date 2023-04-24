@@ -7,11 +7,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.vsu.cs.timetable.dto.group.CreateGroupRequest;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
+import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
+import ru.vsu.cs.timetable.dto.page.SortDirection;
 
 @Tag(name = "Group API", description = "API для работы с группами факульетов")
 @SecurityRequirement(name = "JWT auth")
 public interface GroupApi {
 
+    @Operation(
+            summary = "Получение списка групп с фильтрацией и поиском"
+    )
     GroupPageDto getFacultyGroups(
             @Parameter(description = "Номер страницы")
             int pageNumber,
@@ -21,6 +26,8 @@ public interface GroupApi {
             Integer course,
             @Parameter(description = "Номер группы для фильтрации")
             Integer groupNumber,
+            @Parameter(description = "")
+            SortDirection order,
             @Parameter(description = "Id факультета, группы которого нужны")
             Long facultyId
     );
@@ -30,7 +37,17 @@ public interface GroupApi {
     )
     void createGroup(
             @Parameter(description = "Параметры для создания группы")
-            CreateGroupRequest createGroupRequest
+            CreateGroupRequest createGroupRequest,
+            @Parameter(description = "Id факультета, группа для которого создается")
+            Long facultyId
+    );
+
+    @Operation(
+            summary = "Показ информации для создания группы конкретного факульета"
+    )
+    ShowCreateGroupDto showCreateGroup(
+            @Parameter(description = "Id факультета, группа для которого создается")
+            Long facultyId
     );
 
     @Operation(
@@ -45,9 +62,9 @@ public interface GroupApi {
             summary = "Обновление группы конкретного факульета"
     )
     void updateGroup(
-            @Parameter(description = "Id группы для обновления")
-            Long id,
             @Parameter(description = "Измененная версия группы")
-            GroupDto groupDto
+            GroupDto groupDto,
+            @Parameter(description = "Id группы для обновления")
+            Long id
     );
 }

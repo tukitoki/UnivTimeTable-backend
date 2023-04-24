@@ -39,10 +39,10 @@ public interface UniversityApi {
             summary = "Редактирование университета"
     )
     void updateUniversity(
-            @Parameter(description = "Id университета для редактирования")
-            Long id,
             @Parameter(description = "Измененная версия университета")
-            UniversityDto universityDto
+            UniversityDto universityDto,
+            @Parameter(description = "Id университета для редактирования")
+            Long id
     );
 
     @Operation(

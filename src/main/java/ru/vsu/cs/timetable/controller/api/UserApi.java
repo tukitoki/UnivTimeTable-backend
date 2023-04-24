@@ -50,10 +50,10 @@ public interface UserApi {
             summary = "Создание пользователя конкретного университета"
     )
     void updateUser(
-            @Parameter(description = "Id пользователя для редактирования")
-            Long id,
             @Parameter(description = "Новые характеристики пользователя")
-            UserDto userDto
+            UserDto userDto,
+            @Parameter(description = "Id пользователя для редактирования")
+            Long id
     );
 
     @Operation(

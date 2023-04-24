@@ -24,6 +24,8 @@ public class Request {
     @NotNull
     private String subjectName;
     @NotNull
+    private Long lecturerId;
+    @NotNull
     private Integer subjectHourPerWeek;
     @NotNull
     @Enumerated(EnumType.STRING)
