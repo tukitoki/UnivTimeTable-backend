@@ -31,7 +31,8 @@ public class Class {
     @NotNull
     @Enumerated(EnumType.STRING)
     private TypeClass typeClass;
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "audience_id")
     private Audience audience;
     @ManyToOne
     @JoinColumn(name = "day_of_week_id")
@@ -41,9 +42,4 @@ public class Class {
     @ManyToOne
     @JoinColumn(name = "timetable_id")
     private Timetable timetable;
-    @ManyToMany
-    @JoinTable(name = "class_equipment",
-            joinColumns = @JoinColumn(name = "class_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipment_id"))
-    private Set<Equipment> equipments;
 }
