@@ -9,5 +9,4 @@ public class UnivTimetableApplication {
     public static void main(String[] args) {
         SpringApplication.run(UnivTimetableApplication.class, args);
     }
-
 }

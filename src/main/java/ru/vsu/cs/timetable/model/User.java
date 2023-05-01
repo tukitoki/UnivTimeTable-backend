@@ -7,7 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import ru.vsu.cs.timetable.model.enums.UserRole;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter

@@ -5,7 +5,7 @@
 
     <groupId>ru.vsu.cs.timetable</groupId>
     <artifactId>UnivTimeTable-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>UnivTimeTable-backend</name>
     <description>UnivTimeTable-backend</description>
 
@@ -13,6 +13,7 @@
         <java.version>17</java.version>
         <version.lombok>1.18.26</version.lombok>
         <verison.openapi>2.0.4</verison.openapi>
+        <auth0.version>4.4.0</auth0.version>
     </properties>
 
     <parent>
@@ -35,10 +36,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
 
         <dependency>
@@ -58,6 +63,12 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${verison.openapi}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${auth0.version}</version>
         </dependency>
 
         <dependency>
