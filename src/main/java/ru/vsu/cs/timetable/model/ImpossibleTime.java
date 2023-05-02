@@ -1,5 +1,6 @@
 package ru.vsu.cs.timetable.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -23,5 +24,6 @@ public class ImpossibleTime {
     @EmbeddedId
     private ImpossibleTimeId id;
     @NotNull
+    @Column(name = "time_from", nullable = false)
     private Time timeFrom;
 }

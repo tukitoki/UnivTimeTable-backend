@@ -19,16 +19,19 @@ public class Audience {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
+    @Column(name = "audience_number", nullable = false)
     private Integer audienceNumber;
     @NotNull
+    @Column(name = "capacity", nullable = false)
     private Long capacity;
     @ManyToOne
-    @JoinColumn(name = "faculty_id")
+    @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
     @ManyToOne
-    @JoinColumn(name = "university_id")
+    @JoinColumn(name = "university_id", nullable = false)
     private University university;
     @ManyToMany
     @JoinTable(name = "audience_equipment",

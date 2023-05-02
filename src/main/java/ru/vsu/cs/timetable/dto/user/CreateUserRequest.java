@@ -13,8 +13,9 @@ public class CreateUserRequest {
     private String fullName;
     private String username;
     private String email;
+    private String city;
     private String password;
     private Long universityId;
     private Long facultyId;
-    private Integer group;
+    private Long groupId;
 }

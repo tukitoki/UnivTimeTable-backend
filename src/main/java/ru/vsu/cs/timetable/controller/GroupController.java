@@ -8,11 +8,16 @@ import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
 import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
+import ru.vsu.cs.timetable.model.Group;
+import ru.vsu.cs.timetable.service.GroupService;
 
 @RequiredArgsConstructor
 @RequestMapping("/university/{univId}/faculty")
 @RestController
 public class GroupController implements GroupApi {
+
+    private final GroupService groupService;
+
     @Override
     @GetMapping("/{facultyId}")
     public GroupPageDto getFacultyGroups(

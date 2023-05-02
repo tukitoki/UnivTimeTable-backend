@@ -1,6 +1,6 @@
 package ru.vsu.cs.timetable.model.enums;
 
-public enum DayOfWeekName {
+public enum DayOfWeekEnum {
     MONDAY("Понедельник"),
     TUESDAY("Вторник"),
     WEDNESDAY("Среда"),
@@ -10,5 +10,5 @@ public enum DayOfWeekName {
     SUNDAY("Воскресенье")
     ;
 
-    DayOfWeekName(String name) {}
+    DayOfWeekEnum(String name) {}
 }

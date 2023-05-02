@@ -20,17 +20,22 @@ public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
-    private Long studentsAmount;
+    @Column(name = "students_amount", nullable = false)
+    private Integer studentsAmount;
     @NotNull
+    @Column(name = "course_number", nullable = false)
     private Integer courseNumber;
     @NotNull
+    @Column(name = "group_number", nullable = false)
     private Integer groupNumber;
-    @NotNull
+    @Column(name = "headman_id", nullable = true)
     private Long headmanId;
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "faculty_id")
+    @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
     @OneToMany(mappedBy = "group")
     private List<User> users;

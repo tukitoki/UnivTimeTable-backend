@@ -19,10 +19,13 @@ public class University {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     @NotNull
+    @Column(name = "city", nullable = false)
     private String city;
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private List<User> users;
