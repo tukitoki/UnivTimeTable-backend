@@ -19,8 +19,10 @@ public class Faculty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     @ManyToOne
     @JoinColumn(name = "university_id", nullable = false)

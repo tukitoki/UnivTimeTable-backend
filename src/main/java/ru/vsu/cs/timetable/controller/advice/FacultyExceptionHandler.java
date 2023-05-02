@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.vsu.cs.timetable.exception.UserException;
+import ru.vsu.cs.timetable.exception.FacultyException;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -13,14 +13,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @RestControllerAdvice
-public class UserExceptionHandler {
+public class FacultyExceptionHandler {
 
-    @ExceptionHandler(UserException.class)
-    public ResponseEntity<ErrorMessage> handleUserException(UserException ex) {
-        UserException.CODE code = ex.getCode();
+    @ExceptionHandler(FacultyException.class)
+    public ResponseEntity<ErrorMessage> handleFacultyException(FacultyException ex) {
+        FacultyException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case USERNAME_NOT_FOUND, ID_NOT_FOUND -> NOT_FOUND;
-            case USERNAME_ALREADY_PRESENT, EMAIL_ALREADY_PRESENT -> BAD_REQUEST;
+            case ID_NOT_FOUND -> NOT_FOUND;
+            case NAME_ALREADY_PRESENT -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();

@@ -7,11 +7,14 @@ import ru.vsu.cs.timetable.dto.faculty.CreateFacultyRequest;
 import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
 import ru.vsu.cs.timetable.dto.faculty.FacultyPageDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
+import ru.vsu.cs.timetable.service.FacultyService;
 
 @RequiredArgsConstructor
 @RequestMapping("/university/{univId}")
 @RestController
 public class FacultyController implements FacultyApi {
+
+    private final FacultyService facultyService;
 
     @Override
     @GetMapping("/faculties")

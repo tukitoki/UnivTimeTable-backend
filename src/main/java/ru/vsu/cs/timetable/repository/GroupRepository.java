@@ -9,5 +9,7 @@ import java.util.Optional;
 
 public interface GroupRepository extends CrudRepository<Group, Long> {
 
-    Optional<Group> findByFacultyAndGroupNumber(Faculty faculty, @NotNull Integer groupNumber);
+    Optional<Group> findByFacultyAndGroupNumberAndCourseNumber(@NotNull Faculty faculty,
+                                                               @NotNull Integer groupNumber,
+                                                               @NotNull Integer courseNumber);
 }

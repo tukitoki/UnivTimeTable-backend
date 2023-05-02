@@ -7,11 +7,14 @@ import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.dto.university.CreateUnivRequest;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
+import ru.vsu.cs.timetable.service.UniversityService;
 
 @RequiredArgsConstructor
 @RequestMapping
 @RestController
 public class UniversityController implements UniversityApi {
+
+    private final UniversityService universityService;
 
     @Override
     @GetMapping("/universities")
@@ -19,7 +22,8 @@ public class UniversityController implements UniversityApi {
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String universityName,
-            @RequestParam(defaultValue = "ASC") SortDirection order) {
+            @RequestParam(defaultValue = "ASC") SortDirection order
+    ) {
         return null;
     }
 

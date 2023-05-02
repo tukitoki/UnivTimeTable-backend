@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnTransformer;
 import ru.vsu.cs.timetable.model.enums.TypeClass;
 
 import java.util.Set;
@@ -20,17 +21,24 @@ public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
+    @Column(name = "subject_name", nullable = false)
     private String subjectName;
     @NotNull
+    @Column(name = "lecturer_id", nullable = false)
     private Long lecturerId;
     @NotNull
+    @Column(name = "subject_hour_per_week", nullable = false)
     private Integer subjectHourPerWeek;
     @NotNull
+    @ColumnTransformer(read = "UPPER(typeClass)", write = "LOWER(?)")
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_class", nullable = false)
     private TypeClass typeClass;
     @NotNull
+    @Column(name = "group_id", nullable = false)
     private Long groupId;
     @ManyToMany
     @JoinTable(name = "request_equipment",

@@ -1,10 +1,13 @@
 package ru.vsu.cs.timetable.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnTransformer;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
 
 import java.util.List;
 
@@ -18,10 +21,13 @@ public class Timetable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "day_of_week_id")
-    private DayOfWeek dayOfWeek;
+    @NotNull
+    @ColumnTransformer(read = "UPPER(dayOfWeek)", write = "LOWER(?)")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "day_of_week", nullable = false)
+    private DayOfWeekEnum dayOfWeek;
     @OneToMany(mappedBy = "timetable")
     private List<Class> classes;
 }

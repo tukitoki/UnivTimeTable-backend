@@ -26,7 +26,8 @@ public class UserController implements UserApi {
             @RequestParam(required = false) List<String> universities,
             @RequestParam(required = false) List<String> roles,
             @RequestParam(required = false) List<String> cities,
-            @RequestParam(required = false) String name) {
+            @RequestParam(required = false) String name
+    ) {
         return null;
     }
 

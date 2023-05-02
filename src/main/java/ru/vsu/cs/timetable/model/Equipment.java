@@ -17,12 +17,15 @@ public class Equipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
     @ColumnTransformer(read = "UPPER(name)", write = "LOWER(?)")
     @Enumerated(EnumType.STRING)
+    @Column(name = "name", nullable = false)
     private EquipmentName name;
     @NotNull
+    @Column(name = "display_name", nullable = false)
     private String displayName;
     @ManyToMany(mappedBy = "equipments", fetch = FetchType.LAZY)
     private Set<Audience> audiences;

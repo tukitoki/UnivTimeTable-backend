@@ -17,13 +17,13 @@ public interface UserService {
 
     void createUser(CreateUserRequest createUserRequest);
 
-    User getUserById(Long id);
-
-    User getUserByUsername(String username);
-
     CreateUserResponse showCreateUser();
 
     void updateUser(UserDto userDto, Long id);
 
     void deleteUser(Long id);
+
+    User getUserById(Long id);
+
+    User getUserByUsername(String username);
 }
