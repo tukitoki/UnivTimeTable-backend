@@ -60,7 +60,8 @@ public class SecurityConfig {
                 .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .anyRequest().permitAll().and()
+                .requestMatchers("/auth/**", "/swagger-ui/**").permitAll()
+                .anyRequest().authenticated().and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

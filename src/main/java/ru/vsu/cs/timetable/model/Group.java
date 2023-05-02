@@ -26,6 +26,8 @@ public class Group {
     @NotNull
     private Integer courseNumber;
     @NotNull
+    private Integer groupNumber;
+    @NotNull
     private Long headmanId;
     @ManyToOne
     @JoinColumn(name = "faculty_id")

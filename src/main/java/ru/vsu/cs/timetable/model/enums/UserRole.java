@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import static ru.vsu.cs.timetable.model.enums.Authority.*;
 
-@RequiredArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public enum UserRole {
 
     HEADMAN(Set.of()),

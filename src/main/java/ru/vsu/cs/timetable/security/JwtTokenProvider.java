@@ -51,9 +51,16 @@ public class JwtTokenProvider {
         DecodedJWT decodedJWT = decodeJwt(jwtToken);
         String username = decodedJWT.getSubject();
         List<String> list = decodedJWT.getClaim("authorities").asList(String.class);
-        List<SimpleGrantedAuthority> authorities = list.stream().map(SimpleGrantedAuthority::new)
+        List<SimpleGrantedAuthority> authorities = list
+                .stream()
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
+    }
+
+    public String getUsernameFromJwt(String jwtToken) {
+        DecodedJWT decodedJWT = decodeJwt(jwtToken);
+        return decodedJWT.getSubject();
     }
 
     private DecodedJWT decodeJwt(String jwtToken) {
