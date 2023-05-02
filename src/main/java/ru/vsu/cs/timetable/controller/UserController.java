@@ -7,6 +7,7 @@ import ru.vsu.cs.timetable.dto.user.CreateUserRequest;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
 import ru.vsu.cs.timetable.dto.user.UserDto;
+import ru.vsu.cs.timetable.service.UserService;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
 @RequestMapping
 @RestController
 public class UserController implements UserApi {
+
+    private final UserService userService;
 
     @Override
     @GetMapping("/users")
@@ -30,7 +33,7 @@ public class UserController implements UserApi {
     @Override
     @PostMapping("/user/create")
     public void createUser(@RequestBody CreateUserRequest createUserRequest) {
-
+        userService.createUser(createUserRequest);
     }
 
     @Override

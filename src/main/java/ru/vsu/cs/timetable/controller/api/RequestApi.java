@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.Authentication;
 import ru.vsu.cs.timetable.dto.univ_requests.MoveClassRequest;
 import ru.vsu.cs.timetable.dto.univ_requests.MoveClassResponse;
 import ru.vsu.cs.timetable.dto.univ_requests.SendRequestDto;
@@ -18,7 +19,9 @@ public interface RequestApi {
     )
     void sendRequest(
             @Parameter(description = "Вся информация о заявке преподавателя")
-            SendRequestDto sendRequestDto
+            SendRequestDto sendRequestDto,
+            @Parameter(hidden = true)
+            Authentication authentication
     );
 
     @Operation(
@@ -31,7 +34,9 @@ public interface RequestApi {
     )
     void moveClass(
             @Parameter(description = "Вся информация о заявке на перенос")
-            MoveClassRequest moveClassRequest
+            MoveClassRequest moveClassRequest,
+            @Parameter(hidden = true)
+            Authentication authentication
     );
 
     @Operation(

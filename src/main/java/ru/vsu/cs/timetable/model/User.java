@@ -17,7 +17,6 @@ import ru.vsu.cs.timetable.model.enums.UserRole;
 @Entity
 public class User {
 
-    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

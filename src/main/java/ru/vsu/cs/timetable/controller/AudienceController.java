@@ -20,6 +20,7 @@ public class AudienceController implements AudienceApi {
     @Override
     @GetMapping("/audience/create")
     public CreateAudienceResponse showCreateAudience() {
+        System.out.println("dsadas");
         return null;
     }
 }
