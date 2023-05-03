@@ -11,7 +11,7 @@ import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
 
 @Tag(name = "Group API", description = "API для работы с группами факульетов")
-@SecurityRequirement(name = "JWT auth")
+@SecurityRequirement(name = "bearer-key")
 public interface GroupApi {
 
     @Operation(

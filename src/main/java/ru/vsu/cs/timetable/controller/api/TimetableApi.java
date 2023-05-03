@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.vsu.cs.timetable.dto.TimetableResponse;
 
 @Tag(name = "Timetable API", description = "API для работы с расписанием")
-@SecurityRequirement(name = "JWT auth")
+@SecurityRequirement(name = "bearer-key")
 public interface TimetableApi {
 
     @Operation(

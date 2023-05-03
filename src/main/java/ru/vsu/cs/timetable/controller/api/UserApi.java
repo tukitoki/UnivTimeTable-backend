@@ -11,7 +11,7 @@ import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
 import java.util.List;
 
 @Tag(name = "User API", description = "API для работы с пользователем")
-@SecurityRequirement(name = "JWT auth")
+@SecurityRequirement(name = "bearer-key")
 public interface UserApi {
 
     @Operation(

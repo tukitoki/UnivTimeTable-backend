@@ -11,7 +11,7 @@ import ru.vsu.cs.timetable.dto.univ_requests.SendRequestDto;
 import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequestDto;
 
 @Tag(name = "Request API", description = "API для работы с заявками преподавателей")
-@SecurityRequirement(name = "JWT auth")
+@SecurityRequirement(name = "bearer-key")
 public interface RequestApi {
 
     @Operation(
