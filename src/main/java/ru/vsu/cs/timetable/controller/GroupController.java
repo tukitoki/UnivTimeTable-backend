@@ -8,7 +8,6 @@ import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
 import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.model.Group;
 import ru.vsu.cs.timetable.service.GroupService;
 
 @RequiredArgsConstructor
@@ -28,32 +27,32 @@ public class GroupController implements GroupApi {
             @RequestParam(defaultValue = "ASC") SortDirection order,
             @PathVariable Long facultyId
     ) {
-        return null;
+        return groupService.getFacultyGroups(pageNumber, pageSize, course, groupNumber, order, facultyId);
     }
 
     @Override
     @PostMapping("/{facultyId}/group/create")
     public void createGroup(@RequestBody CreateGroupRequest createGroupRequest,
                             @PathVariable Long facultyId) {
-
+        groupService.createGroup(createGroupRequest, facultyId);
     }
 
     @Override
     @GetMapping("/{facultyId}/group/create")
     public ShowCreateGroupDto showCreateGroup(@PathVariable Long facultyId) {
-        return null;
+        return groupService.showCreateGroup(facultyId);
     }
 
     @Override
     @GetMapping("/{facultyId}/group/{id}")
     public void deleteGroup(@PathVariable Long id) {
-
+        groupService.deleteGroup(id);
     }
 
     @Override
     @PutMapping("/{facultyId}/group/{id}")
     public void updateGroup(@RequestBody GroupDto groupDto,
                             @PathVariable Long id) {
-
+        groupService.updateGroup(groupDto, id);
     }
 }

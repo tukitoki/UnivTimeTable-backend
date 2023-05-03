@@ -1,12 +1,12 @@
 package ru.vsu.cs.timetable.dto.faculty;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class CreateFacultyRequest {
 
     private String name;

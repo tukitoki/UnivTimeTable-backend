@@ -19,8 +19,8 @@ public class UniversityExceptionHandler {
     public ResponseEntity<ErrorMessage> handleUniversityException(UniversityException ex) {
         UniversityException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case ID_NOT_FOUND -> NOT_FOUND;
-            case UNIVERSITY_NAME_NOT_FOUND -> BAD_REQUEST;
+            case ID_NOT_FOUND, UNIVERSITY_NAME_NOT_FOUND -> NOT_FOUND;
+            case UNIVERSITY_ALREADY_PRESENT -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();

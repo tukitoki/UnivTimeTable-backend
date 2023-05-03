@@ -11,6 +11,8 @@ import ru.vsu.cs.timetable.model.University;
 import ru.vsu.cs.timetable.repository.UniversityRepository;
 import ru.vsu.cs.timetable.service.UniversityService;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UniversityServiceImpl implements UniversityService {
@@ -30,9 +32,20 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
+    public University findUnivByName(String name) {
+        return universityRepository.findByNameIgnoreCase(name)
+                .orElseThrow(UniversityException.CODE.UNIVERSITY_ALREADY_PRESENT::get);
+    }
+
+    @Override
+    public List<University> findAllUniversities() {
+        return universityRepository.findAll();
+    }
+
+    @Override
     public void createUniversity(CreateUnivRequest createUnivRequest) {
         if (universityRepository.findByName(createUnivRequest.getUniversityName()).isPresent()) {
-            throw UniversityException.CODE.UNIVERSITY_NAME_NOT_FOUND.get();
+            throw UniversityException.CODE.UNIVERSITY_ALREADY_PRESENT.get();
         }
 
         University university = University.builder()

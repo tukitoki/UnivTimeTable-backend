@@ -8,7 +8,7 @@ import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceResponse;
 
 @Tag(name = "Audience API", description = "API для работы с аудиториями")
-@SecurityRequirement(name = "JWT auth")
+@SecurityRequirement(name = "bearer-key")
 public interface AudienceApi {
 
     @Operation(

@@ -4,15 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import ru.vsu.cs.timetable.dto.user.CreateUserRequest;
+import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
-import ru.vsu.cs.timetable.dto.user.UserDto;
 
 import java.util.List;
 
 @Tag(name = "User API", description = "API для работы с пользователем")
-@SecurityRequirement(name = "JWT auth")
+@SecurityRequirement(name = "bearer-key")
 public interface UserApi {
 
     @Operation(
@@ -34,20 +33,28 @@ public interface UserApi {
     );
 
     @Operation(
-            summary = "Создание пользователя конкретного университета"
+            summary = "Получить пользователя по id"
     )
-    void createUser(
-            @Parameter(description = "Параметры создания пользователя")
-            CreateUserRequest createUserRequest
+    UserDto getUserById(
+            @Parameter(description = "Id пользователя")
+            Long id
     );
 
     @Operation(
-            summary = "Показ страницы создания пользователя конкретного университета"
+            summary = "Создание пользователя"
+    )
+    void createUser(
+            @Parameter(description = "Параметры создания пользователя")
+            UserDto userDto
+    );
+
+    @Operation(
+            summary = "Показ страницы создания пользователя"
     )
     CreateUserResponse showCreateUser();
 
     @Operation(
-            summary = "Создание пользователя конкретного университета"
+            summary = "Обновление пользователя"
     )
     void updateUser(
             @Parameter(description = "Новые характеристики пользователя")
@@ -57,7 +64,7 @@ public interface UserApi {
     );
 
     @Operation(
-            summary = "Создание пользователя конкретного университета"
+            summary = "Удаление пользователя"
     )
     void deleteUser(
             @Parameter(description = "Id пользователя для удаления")

@@ -3,10 +3,9 @@ package ru.vsu.cs.timetable.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UserApi;
-import ru.vsu.cs.timetable.dto.user.CreateUserRequest;
+import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
-import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.service.UserService;
 
 import java.util.List;
@@ -28,30 +27,36 @@ public class UserController implements UserApi {
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) String name
     ) {
-        return null;
+        return userService.getAllUsers(pageNumber, pageSize, universities, roles, cities, name);
+    }
+
+    @Override
+    @GetMapping("/user/{id}")
+    public UserDto getUserById(@PathVariable Long id) {
+        return userService.getUserDtoById(id);
     }
 
     @Override
     @PostMapping("/user/create")
-    public void createUser(@RequestBody CreateUserRequest createUserRequest) {
-        userService.createUser(createUserRequest);
+    public void createUser(@RequestBody UserDto userDto) {
+        userService.createUser(userDto);
     }
 
     @Override
     @GetMapping("/user/create")
     public CreateUserResponse showCreateUser() {
-        return null;
+        return userService.showCreateUser();
     }
 
     @Override
     @PutMapping("/user/{id}")
     public void updateUser(@RequestBody UserDto userDto, @PathVariable Long id) {
-
+        userService.updateUser(userDto, id);
     }
 
     @Override
     @DeleteMapping("/user/{id}")
     public void deleteUser(@PathVariable Long id) {
-
+        userService.deleteUser(id);
     }
 }

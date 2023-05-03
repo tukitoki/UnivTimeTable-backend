@@ -10,7 +10,7 @@ import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
 
 @Tag(name = "University API", description = "API для работы с университетами")
-@SecurityRequirement(name = "JWT auth")
+@SecurityRequirement(name = "bearer-key")
 public interface UniversityApi {
 
     @Operation(

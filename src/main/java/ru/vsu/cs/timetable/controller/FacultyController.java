@@ -25,26 +25,26 @@ public class FacultyController implements FacultyApi {
             @RequestParam(defaultValue = "ASC") SortDirection order,
             @PathVariable Long univId
     ) {
-        return null;
+        return facultyService.getFacultiesByUniversity(pageNumber, pageSize, name, order, univId);
     }
 
     @Override
     @PostMapping("/faculty/create")
     public void createFaculty(@RequestBody CreateFacultyRequest createFacultyRequest,
                               @PathVariable Long univId) {
-
+        facultyService.createFaculty(createFacultyRequest, univId);
     }
 
     @Override
     @DeleteMapping("/faculty/{id}")
     public void deleteFaculty(@PathVariable Long id) {
-
+        facultyService.deleteFaculty(id);
     }
 
     @Override
     @PutMapping("/faculty/{id}")
     public void updateFaculty(@RequestBody FacultyDto facultyDto,
                               @PathVariable Long id) {
-
+        facultyService.updateFaculty(facultyDto, id);
     }
 }

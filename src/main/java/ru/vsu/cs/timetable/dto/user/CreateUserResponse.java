@@ -12,6 +12,6 @@ import java.util.List;
 @SuperBuilder
 public class CreateUserResponse {
 
-    List<String> roles;
-    List<UniversityDto> universityDtos;
+    private List<String> roles;
+    private List<UniversityDto> universityDtos;
 }

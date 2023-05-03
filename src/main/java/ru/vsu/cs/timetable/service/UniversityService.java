@@ -6,12 +6,18 @@ import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
 import ru.vsu.cs.timetable.model.University;
 
+import java.util.List;
+
 public interface UniversityService {
 
     UniversityPageDto getAllUniversities(int pageNumber, int pageSize,
                                          String universityName, SortDirection order);
 
     University findUnivById(Long id);
+
+    University findUnivByName(String name);
+
+    List<University> findAllUniversities();
 
     void createUniversity(CreateUnivRequest createUnivRequest);
 
