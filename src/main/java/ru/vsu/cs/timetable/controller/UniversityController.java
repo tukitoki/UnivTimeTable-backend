@@ -24,25 +24,25 @@ public class UniversityController implements UniversityApi {
             @RequestParam(required = false) String universityName,
             @RequestParam(defaultValue = "ASC") SortDirection order
     ) {
-        return null;
+        return universityService.getAllUniversities(pageNumber, pageSize, universityName, order);
     }
 
     @Override
     @PostMapping("/university/create")
     public void createUniversity(@RequestBody CreateUnivRequest createUnivRequest) {
-
+        universityService.createUniversity(createUnivRequest);
     }
 
     @Override
     @PutMapping("/university/{id}")
     public void updateUniversity(@RequestBody UniversityDto universityDto,
                                  @PathVariable Long id) {
-
+        universityService.updateUniversity(universityDto, id);
     }
 
     @Override
     @DeleteMapping("/university/{id}")
     public void deleteUniversity(@PathVariable Long id) {
-
+        universityService.deleteUniversity(id);
     }
 }

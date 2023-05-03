@@ -1,10 +1,9 @@
 package ru.vsu.cs.timetable.service;
 
 import org.springframework.validation.annotation.Validated;
-import ru.vsu.cs.timetable.dto.user.CreateUserRequest;
+import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
-import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.model.User;
 
 import java.util.List;
@@ -15,7 +14,9 @@ public interface UserService {
     ShowUserResponse getAllUsers(int pageNumber, int pageSize, List<String> universities,
                                  List<String> roles, List<String> cities, String name);
 
-    void createUser(CreateUserRequest createUserRequest);
+    UserDto getUserDtoById(Long id);
+
+    void createUser(UserDto userDto);
 
     CreateUserResponse showCreateUser();
 

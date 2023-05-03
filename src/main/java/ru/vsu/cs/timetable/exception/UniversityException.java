@@ -3,7 +3,8 @@ package ru.vsu.cs.timetable.exception;
 public class UniversityException extends RuntimeException {
     public enum CODE {
         ID_NOT_FOUND("University with given id not found"),
-        UNIVERSITY_NAME_NOT_FOUND("University with given name already present"),
+        UNIVERSITY_ALREADY_PRESENT("University with given name already present"),
+        UNIVERSITY_NAME_NOT_FOUND("University with given name not found"),
         ;
 
         final String codeDescription;

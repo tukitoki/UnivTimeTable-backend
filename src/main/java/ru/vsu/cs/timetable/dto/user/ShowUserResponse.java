@@ -12,7 +12,8 @@ import java.util.List;
 @SuperBuilder
 public class ShowUserResponse {
 
-    private PageModel<UserDto> usersPage;
+    private PageModel<UserResponse> usersPage;
     private List<String> roles;
     private List<String> universities;
+    private List<String> cities;
 }
