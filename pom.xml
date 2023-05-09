@@ -15,6 +15,7 @@
         <verison.openapi>2.0.4</verison.openapi>
         <auth0.version>4.4.0</auth0.version>
         <spring-framework.version>6.0.8</spring-framework.version>
+        <flyway-version>9.17.0</flyway-version>
     </properties>
 
     <parent>
@@ -58,6 +59,12 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway-version}</version>
         </dependency>
 
         <dependency>

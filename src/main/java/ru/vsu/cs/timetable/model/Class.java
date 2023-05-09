@@ -29,9 +29,6 @@ public class Class {
     @Column(name = "subject_name", nullable = false)
     private String subjectName;
     @NotNull
-    @Column(name = "lecturer_id", nullable = false)
-    private Long lecturerId;
-    @NotNull
     @Column(name = "start_time", nullable = false)
     private Time startTime;
     @NotNull
@@ -39,17 +36,22 @@ public class Class {
     @Enumerated(EnumType.STRING)
     @Column(name = "type_class", nullable = false)
     private TypeClass typeClass;
-    @ManyToOne
-    @JoinColumn(name = "audience_id", nullable = false)
-    private Audience audience;
     @NotNull
     @ColumnTransformer(read = "UPPER(dayOfWeek)", write = "LOWER(?)")
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", nullable = false)
     private DayOfWeekEnum dayOfWeek;
-    @ManyToMany(mappedBy = "classes")
-    private Set<Group> groups;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id", nullable = false)
+    private User lecturer;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "audience_id", nullable = false)
+    private Audience audience;
     @ManyToOne
     @JoinColumn(name = "timetable_id", nullable = false)
     private Timetable timetable;
+    @ManyToMany(mappedBy = "classes")
+    private Set<Group> groups;
 }
