@@ -27,9 +27,6 @@ public class Request {
     @Column(name = "subject_name", nullable = false)
     private String subjectName;
     @NotNull
-    @Column(name = "lecturer_id", nullable = false)
-    private Long lecturerId;
-    @NotNull
     @Column(name = "subject_hour_per_week", nullable = false)
     private Integer subjectHourPerWeek;
     @NotNull
@@ -38,8 +35,13 @@ public class Request {
     @Column(name = "type_class", nullable = false)
     private TypeClass typeClass;
     @NotNull
-    @Column(name = "group_id", nullable = false)
-    private Long groupId;
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id", nullable = false)
+    private User lecturer;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
     @ManyToMany
     @JoinTable(name = "request_equipment",
             joinColumns = @JoinColumn(name = "request_id"),

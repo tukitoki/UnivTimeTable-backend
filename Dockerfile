@@ -5,6 +5,5 @@ RUN mvn clean package -DskipTests
 
 FROM amazoncorretto:17-alpine-jdk
 WORKDIR "/app"
-RUN mkdir "logs"
 COPY --from=builder /target/*.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
