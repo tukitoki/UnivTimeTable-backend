@@ -20,12 +20,12 @@ public class UniversityController implements UniversityApi {
     @Override
     @GetMapping()
     public UniversityPageDto getAllUniversities(
-            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String universityName,
             @RequestParam(defaultValue = "ASC") SortDirection order
     ) {
-        return universityService.getAllUniversities(pageNumber, pageSize, universityName, order);
+        return universityService.getAllUniversities(currentPage, pageSize, universityName, order);
     }
 
     @Override

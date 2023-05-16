@@ -2,10 +2,7 @@ package ru.vsu.cs.timetable.service.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -44,23 +41,25 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UniversityService universityService;
     private final GroupService groupService;
     private final FacultyService facultyService;
     private final UserMapper userMapper;
     private final UniversityMapper universityMapper;
+    private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
 
     @Override
     @Transactional(readOnly = true)
-    public ShowUserResponse getAllUsers(int pageNumber, int pageSize, List<String> universities,
+    public ShowUserResponse getAllUsers(int currentPage, int pageSize, List<String> universities,
                                         List<String> roles, List<String> cities, String name) {
-        Page<User> page = filerPage(pageNumber, pageSize, universities, roles, cities, name);
+        Page<User> page = filerPage(currentPage, pageSize, universities, roles, cities, name);
+
         List<UserResponse> userResponses = page.getContent()
                 .stream()
                 .map(userMapper::toResponse)
                 .toList();
+
         List<String> userRoles = getAllRoles();
         List<String> univNames = universityService.findAllUniversities()
                 .stream()
@@ -68,7 +67,9 @@ public class UserServiceImpl implements UserService {
                 .toList();
         List<String> userCities = userRepository.findAllUserCities();
 
-        var pageModel = PageModel.of(userResponses, pageNumber, page.getTotalElements(), pageSize, page.getTotalPages());
+        var pageModel = PageModel.of(userResponses, currentPage, page.getTotalElements(),
+                pageSize, page.getTotalPages());
+
         return ShowUserResponse.builder()
                 .usersPage(pageModel)
                 .cities(userCities)
@@ -195,9 +196,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserException.CODE.USERNAME_NOT_FOUND::get);
     }
 
-    private Page<User> filerPage(int pageNumber, int pageSize, List<String> universities,
+    private Page<User> filerPage(int currentPage, int pageSize, List<String> universities,
                                  List<String> roles, List<String> cities, String name) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
@@ -222,9 +223,13 @@ public class UserServiceImpl implements UserService {
             cities.forEach(city -> predicates.add(cb.equal(root.get("city"), city)));
         }
         if (name != null) {
-            predicates.add(cb.like(cb.lower(root.get("fullName")).as(String.class), name.toLowerCase()));
+            predicates.add(cb.like(cb.lower(root.get("fullName")), "%" + name.toLowerCase() + "%"));
         }
+
         query.where(cb.and(predicates.toArray(new Predicate[0])));
+
+        List<Order> orderList = List.of(cb.asc(root.get("id")));
+        query.orderBy(orderList);
 
         TypedQuery<User> typedQuery = entityManager.createQuery(query);
         typedQuery.setFirstResult((int) pageable.getOffset());
@@ -261,9 +266,11 @@ public class UserServiceImpl implements UserService {
             cities.forEach(city -> predicates.add(cb.equal(root.get("city"), city)));
         }
         if (name != null) {
-            predicates.add(cb.like(cb.lower(root.get("fullName")).as(String.class), name.toLowerCase()));
+            predicates.add(cb.like(cb.lower(root.get("fullName")), "%" + name.toLowerCase() + "%"));
         }
+
         query.where(cb.and(predicates.toArray(new Predicate[0])));
+
         TypedQuery<Long> typedQuery = entityManager.createQuery(query);
 
         return typedQuery.getSingleResult();

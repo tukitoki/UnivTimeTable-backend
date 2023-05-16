@@ -26,4 +26,11 @@ public class FacultyMapper {
                 .groups(groups)
                 .build();
     }
+
+    public Faculty toEntity(FacultyDto facultyDto) {
+        return Faculty.builder()
+                .id(facultyDto.getId())
+                .name(facultyDto.getName())
+                .build();
+    }
 }

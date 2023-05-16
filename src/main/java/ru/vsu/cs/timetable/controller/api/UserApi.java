@@ -19,7 +19,7 @@ public interface UserApi {
     )
     ShowUserResponse getAllUsers(
             @Parameter(description = "Номер страницы")
-            int pageNumber,
+            int currentPage,
             @Parameter(description = "Количество элементов на странице")
             int pageSize,
             @Parameter(description = "Список вузов для фильтрации")

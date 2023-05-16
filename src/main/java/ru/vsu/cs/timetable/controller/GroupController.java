@@ -11,14 +11,14 @@ import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.service.GroupService;
 
 @RequiredArgsConstructor
-@RequestMapping("/university/{univId}/faculty")
+@RequestMapping("/faculty")
 @RestController
 public class GroupController implements GroupApi {
 
     private final GroupService groupService;
 
     @Override
-    @GetMapping("/{facultyId}")
+    @GetMapping("/{facultyId}/groups")
     public GroupPageDto getFacultyGroups(
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -31,26 +31,26 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @PostMapping("/{facultyId}/group/create")
+    @PostMapping("/{facultyId}/group")
     public void createGroup(@RequestBody CreateGroupRequest createGroupRequest,
                             @PathVariable Long facultyId) {
         groupService.createGroup(createGroupRequest, facultyId);
     }
 
     @Override
-    @GetMapping("/{facultyId}/group/create")
+    @GetMapping("/{facultyId}/group")
     public ShowCreateGroupDto showCreateGroup(@PathVariable Long facultyId) {
         return groupService.showCreateGroup(facultyId);
     }
 
     @Override
-    @GetMapping("/{facultyId}/group/{id}")
+    @GetMapping("/group/{id}")
     public void deleteGroup(@PathVariable Long id) {
         groupService.deleteGroup(id);
     }
 
     @Override
-    @PutMapping("/{facultyId}/group/{id}")
+    @PutMapping("/group/{id}")
     public void updateGroup(@RequestBody GroupDto groupDto,
                             @PathVariable Long id) {
         groupService.updateGroup(groupDto, id);

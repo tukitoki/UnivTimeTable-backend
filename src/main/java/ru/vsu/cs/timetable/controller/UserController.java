@@ -20,14 +20,14 @@ public class UserController implements UserApi {
     @Override
     @GetMapping("/users")
     public ShowUserResponse getAllUsers(
-            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) List<String> universities,
             @RequestParam(required = false) List<String> roles,
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) String name
     ) {
-        return userService.getAllUsers(pageNumber, pageSize, universities, roles, cities, name);
+        return userService.getAllUsers(currentPage, pageSize, universities, roles, cities, name);
     }
 
     @Override

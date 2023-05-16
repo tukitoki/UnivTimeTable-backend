@@ -10,26 +10,32 @@ import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.service.FacultyService;
 
 @RequiredArgsConstructor
-@RequestMapping("/university/{univId}")
+@RequestMapping("/university")
 @RestController
 public class FacultyController implements FacultyApi {
 
     private final FacultyService facultyService;
 
     @Override
-    @GetMapping("/faculties")
+    @GetMapping("/{univId}/faculties")
     public FacultyPageDto getFacultiesByUniversity(
-            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "ASC") SortDirection order,
             @PathVariable Long univId
     ) {
-        return facultyService.getFacultiesByUniversity(pageNumber, pageSize, name, order, univId);
+        return facultyService.getFacultiesByUniversity(currentPage, pageSize, name, order, univId);
     }
 
     @Override
-    @PostMapping("/faculty/create")
+    @GetMapping("/faculty/{id}")
+    public FacultyDto getFacultyById(@PathVariable Long id) {
+        return facultyService.getFacultyById(id);
+    }
+
+    @Override
+    @PostMapping("/{univId}/faculty/create")
     public void createFaculty(@RequestBody CreateFacultyRequest createFacultyRequest,
                               @PathVariable Long univId) {
         facultyService.createFaculty(createFacultyRequest, univId);

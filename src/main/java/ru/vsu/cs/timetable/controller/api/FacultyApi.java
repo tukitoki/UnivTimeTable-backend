@@ -18,7 +18,7 @@ public interface FacultyApi {
     )
     FacultyPageDto getFacultiesByUniversity(
             @Parameter(description = "Номер страницы")
-            int pageNumber,
+            int currentPage,
             @Parameter(description = "Количество элементов на странице")
             int pageSize,
             @Parameter(description = "Название факультета для поиска")
@@ -27,6 +27,14 @@ public interface FacultyApi {
             SortDirection order,
             @Parameter(description = "Id университета, факультеты которого нужны")
             Long universityId
+    );
+
+    @Operation(
+            summary = "Получение факультета по id"
+    )
+    FacultyDto getFacultyById(
+            @Parameter(description = "Id факультета")
+            Long id
     );
 
     @Operation(
