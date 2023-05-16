@@ -6,7 +6,6 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.page.PageModel;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
     private final EntityManager entityManager;
 
     @Override
+    @Transactional(readOnly = true)
     public ShowUserResponse getAllUsers(int pageNumber, int pageSize, List<String> universities,
                                         List<String> roles, List<String> cities, String name) {
         Page<User> page = filerPage(pageNumber, pageSize, universities, roles, cities, name);
@@ -77,6 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto getUserDtoById(Long id) {
         User user = getUserById(id);
         return userMapper.toDto(user);
@@ -108,6 +110,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CreateUserResponse showCreateUser() {
         List<String> userRoles = getAllRoles();
         List<UniversityDto> universities = universityService.findAllUniversities()
@@ -201,6 +204,7 @@ public class UserServiceImpl implements UserService {
 
         Root<User> root = query.from(User.class);
         query.select(root).distinct(true);
+
         List<Predicate> predicates = new ArrayList<>();
         if (universities != null) {
             universities.forEach(university -> {
@@ -215,12 +219,12 @@ public class UserServiceImpl implements UserService {
             });
         }
         if (cities != null) {
-            cities.forEach(city -> predicates.add(cb.equal(root.get("city"), cities)));
+            cities.forEach(city -> predicates.add(cb.equal(root.get("city"), city)));
         }
         if (name != null) {
-            predicates.add(cb.equal(root.get("fullName"), name));
+            predicates.add(cb.like(cb.lower(root.get("fullName")).as(String.class), name.toLowerCase()));
         }
-        query.where(cb.or(predicates.toArray(new Predicate[0])));
+        query.where(cb.and(predicates.toArray(new Predicate[0])));
 
         TypedQuery<User> typedQuery = entityManager.createQuery(query);
         typedQuery.setFirstResult((int) pageable.getOffset());
@@ -254,10 +258,10 @@ public class UserServiceImpl implements UserService {
             });
         }
         if (cities != null) {
-            cities.forEach(city -> predicates.add(cb.equal(root.get("city"), cities)));
+            cities.forEach(city -> predicates.add(cb.equal(root.get("city"), city)));
         }
         if (name != null) {
-            predicates.add(cb.equal(root.get("fullName"), name));
+            predicates.add(cb.like(cb.lower(root.get("fullName")).as(String.class), name.toLowerCase()));
         }
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         TypedQuery<Long> typedQuery = entityManager.createQuery(query);

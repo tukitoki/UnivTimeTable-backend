@@ -31,7 +31,7 @@ public class Group {
     @NotNull
     @Column(name = "group_number", nullable = false)
     private Integer groupNumber;
-    @Column(name = "headman_id", nullable = true)
+    @Column(name = "headman_id")
     private Long headmanId;
     @NotNull
     @ManyToOne

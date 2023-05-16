@@ -10,5 +10,5 @@ import ru.vsu.cs.timetable.dto.page.PageModel;
 @SuperBuilder
 public class UniversityPageDto {
 
-    PageModel<UniversityDto> universitiesPage;
+    private PageModel<UniversityDto> universitiesPage;
 }

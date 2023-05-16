@@ -28,6 +28,14 @@ public interface UniversityApi {
     );
 
     @Operation(
+            summary = "Получить университет по id"
+    )
+    UniversityDto getUniversityById(
+            @Parameter(description = "Id университета")
+            Long id
+    );
+
+    @Operation(
             summary = "Создание университета"
     )
     void createUniversity(

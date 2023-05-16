@@ -13,6 +13,8 @@ public interface UniversityService {
     UniversityPageDto getAllUniversities(int pageNumber, int pageSize,
                                          String universityName, SortDirection order);
 
+    UniversityDto getUniversityById(Long id);
+
     University findUnivById(Long id);
 
     University findUnivByName(String name);
