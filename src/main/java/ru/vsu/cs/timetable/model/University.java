@@ -27,7 +27,7 @@ public class University {
     @NotNull
     @Column(name = "city", nullable = false)
     private String city;
-    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "university")
     private List<User> users;
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private List<Faculty> faculties;

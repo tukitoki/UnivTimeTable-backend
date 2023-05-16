@@ -27,4 +27,12 @@ public class UniversityMapper {
                 .faculites(faculties)
                 .build();
     }
+
+    public University toEntity(UniversityDto univDto) {
+        return University.builder()
+                .id(univDto.getId())
+                .name(univDto.getUnivName())
+                .city(univDto.getCity())
+                .build();
+    }
 }
