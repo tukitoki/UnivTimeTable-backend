@@ -1,5 +1,7 @@
 package ru.vsu.cs.timetable.service;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
@@ -11,20 +13,21 @@ import java.util.List;
 @Validated
 public interface UserService {
 
-    ShowUserResponse getAllUsers(int pageNumber, int pageSize, List<String> universities,
+    ShowUserResponse getAllUsers(int currentPage, int pageSize, List<String> universities,
                                  List<String> roles, List<String> cities, String name);
 
-    UserDto getUserDtoById(Long id);
+    UserDto getUserDtoById(@NotNull Long id);
 
-    void createUser(UserDto userDto);
+    void createUser(@NotNull @Valid UserDto userDto);
 
     CreateUserResponse showCreateUser();
 
-    void updateUser(UserDto userDto, Long id);
+    void updateUser(@NotNull @Valid UserDto userDto,
+                    @NotNull Long id);
 
-    void deleteUser(Long id);
+    void deleteUser(@NotNull Long id);
 
-    User getUserById(Long id);
+    User getUserById(@NotNull Long id);
 
-    User getUserByUsername(String username);
+    User getUserByUsername(@NotNull String username);
 }

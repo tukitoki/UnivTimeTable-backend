@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UserApi;
 import ru.vsu.cs.timetable.dto.user.UserDto;
@@ -11,6 +12,7 @@ import ru.vsu.cs.timetable.service.UserService;
 import java.util.List;
 
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('CREATE_USER_AUTHORITY')")
 @RequestMapping
 @RestController
 public class UserController implements UserApi {
@@ -20,14 +22,14 @@ public class UserController implements UserApi {
     @Override
     @GetMapping("/users")
     public ShowUserResponse getAllUsers(
-            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) List<String> universities,
             @RequestParam(required = false) List<String> roles,
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) String name
     ) {
-        return userService.getAllUsers(pageNumber, pageSize, universities, roles, cities, name);
+        return userService.getAllUsers(currentPage, pageSize, universities, roles, cities, name);
     }
 
     @Override

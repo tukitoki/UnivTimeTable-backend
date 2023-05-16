@@ -18,7 +18,7 @@ public interface UniversityApi {
     )
     UniversityPageDto getAllUniversities(
             @Parameter(description = "Номер страницы")
-            int pageNumber,
+            int currentPage,
             @Parameter(description = "Количество элементов на странице")
             int pageSize,
             @Parameter(description = "Имя университета для поиска")
@@ -28,7 +28,7 @@ public interface UniversityApi {
     );
 
     @Operation(
-            summary = "Получить университет по id"
+            summary = "Получение университета по id"
     )
     UniversityDto getUniversityById(
             @Parameter(description = "Id университета")

@@ -1,12 +1,14 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.AudienceApi;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceResponse;
 
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('CREATE_AUDIENCE_AUTHORITY')")
 @RequestMapping
 @RestController
 public class AudienceController implements AudienceApi {

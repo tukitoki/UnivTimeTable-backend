@@ -14,5 +14,6 @@ public class GroupDto {
     private Long id;
     private Integer groupNumber;
     private Integer courseNumber;
+    private Integer studentsAmount;
     private Long headmanId;
 }

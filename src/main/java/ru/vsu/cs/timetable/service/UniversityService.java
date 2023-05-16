@@ -1,5 +1,8 @@
 package ru.vsu.cs.timetable.service;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.dto.university.CreateUnivRequest;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
@@ -8,22 +11,24 @@ import ru.vsu.cs.timetable.model.University;
 
 import java.util.List;
 
+@Validated
 public interface UniversityService {
 
-    UniversityPageDto getAllUniversities(int pageNumber, int pageSize,
+    UniversityPageDto getAllUniversities(int currentPage, int pageSize,
                                          String universityName, SortDirection order);
 
-    UniversityDto getUniversityById(Long id);
+    UniversityDto getUniversityById(@NotNull Long id);
 
-    University findUnivById(Long id);
+    University findUnivById(@NotNull Long id);
 
-    University findUnivByName(String name);
+    University findUnivByName(@NotNull String name);
 
     List<University> findAllUniversities();
 
-    void createUniversity(CreateUnivRequest createUnivRequest);
+    void createUniversity(@NotNull @Valid CreateUnivRequest createUnivRequest);
 
-    void updateUniversity(UniversityDto universityDto, Long id);
+    void updateUniversity(@NotNull @Valid UniversityDto universityDto,
+                          @NotNull Long id);
 
-    void deleteUniversity(Long id);
+    void deleteUniversity(@NotNull Long id);
 }

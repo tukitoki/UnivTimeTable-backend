@@ -39,16 +39,16 @@ public class UniversityServiceImpl implements UniversityService {
 
     @Override
     @Transactional(readOnly = true)
-    public UniversityPageDto getAllUniversities(int pageNumber, int pageSize,
+    public UniversityPageDto getAllUniversities(int currentPage, int pageSize,
                                                 String universityName, SortDirection order) {
-        Page<University> page = filerPage(pageNumber, pageSize, universityName, order);
+        Page<University> page = filerPage(currentPage, pageSize, universityName, order);
 
         List<UniversityDto> universityDtos = page.getContent()
                 .stream()
                 .map(universityMapper::toDto)
                 .toList();
 
-        var pageModel = PageModel.of(universityDtos, pageNumber, page.getTotalElements(),
+        var pageModel = PageModel.of(universityDtos, currentPage, page.getTotalElements(),
                 pageSize, page.getTotalPages());
 
         return UniversityPageDto.builder()
@@ -97,8 +97,8 @@ public class UniversityServiceImpl implements UniversityService {
 
     @Override
     public void updateUniversity(UniversityDto universityDto, Long id) {
-        var oldUniv = findUnivById(id);
-        var newUniv = universityMapper.toEntity(universityDto);
+        University oldUniv = findUnivById(id);
+        University newUniv = universityMapper.toEntity(universityDto);
 
         BeanUtils.copyProperties(newUniv, oldUniv, "id", "users", "faculties", "audiences");
         universityRepository.save(oldUniv);
@@ -118,9 +118,9 @@ public class UniversityServiceImpl implements UniversityService {
         universityRepository.delete(university);
     }
 
-    private Page<University> filerPage(int pageNumber, int pageSize,
+    private Page<University> filerPage(int currentPage, int pageSize,
                                        String universityName, SortDirection order) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<University> query = cb.createQuery(University.class);
@@ -130,14 +130,16 @@ public class UniversityServiceImpl implements UniversityService {
 
         List<Predicate> predicates = new ArrayList<>();
         if (universityName != null) {
-            predicates.add(cb.like(cb.lower(root.get("name").as(String.class)), universityName));
+            predicates.add(cb.like(cb.lower(root.get("name")), "%" + universityName.toLowerCase() + "%"));
         }
         query.where(cb.and(predicates.toArray(new Predicate[0])));
 
         Path<Object> name = root.get("name");
-        Order alphabetOrder = order.equals(ASC) ? cb.asc(name) : cb.desc(name);
-        List<Order> orderList = List.of(alphabetOrder, cb.asc(root.get("id")));
+        Order alphabetOrder = order.equals(ASC)
+                ? cb.asc(name)
+                : cb.desc(name);
 
+        List<Order> orderList = List.of(alphabetOrder, cb.asc(root.get("id")));
         query.orderBy(orderList);
 
         TypedQuery<University> typedQuery = entityManager.createQuery(query);
@@ -146,13 +148,13 @@ public class UniversityServiceImpl implements UniversityService {
 
         List<University> universities = typedQuery.getResultList();
 
-        long count = countFilteredUsers(universityName);
+        long count = countFilteredUniversities(universityName);
 
         return new PageImpl<>(universities, pageable, count);
     }
 
 
-    private long countFilteredUsers(String universityName) {
+    private long countFilteredUniversities(String universityName) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
 
@@ -161,9 +163,11 @@ public class UniversityServiceImpl implements UniversityService {
 
         List<Predicate> predicates = new ArrayList<>();
         if (universityName != null) {
-            predicates.add(cb.like(cb.lower(root.get("name").as(String.class)), universityName));
+            predicates.add(cb.like(cb.lower(root.get("name")), "%" + universityName.toLowerCase() + "%"));
         }
+
         query.where(cb.and(predicates.toArray(new Predicate[0])));
+
         TypedQuery<Long> typedQuery = entityManager.createQuery(query);
 
         return typedQuery.getSingleResult();

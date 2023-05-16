@@ -2,6 +2,7 @@ package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UniversityApi;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
@@ -11,6 +12,7 @@ import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
 import ru.vsu.cs.timetable.service.UniversityService;
 
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('CREATE_UNIVERSITY_AUTHORITY')")
 @RequestMapping("/universities")
 @RestController
 public class UniversityController implements UniversityApi {
@@ -20,12 +22,12 @@ public class UniversityController implements UniversityApi {
     @Override
     @GetMapping()
     public UniversityPageDto getAllUniversities(
-            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String universityName,
             @RequestParam(defaultValue = "ASC") SortDirection order
     ) {
-        return universityService.getAllUniversities(pageNumber, pageSize, universityName, order);
+        return universityService.getAllUniversities(currentPage, pageSize, universityName, order);
     }
 
     @Override
