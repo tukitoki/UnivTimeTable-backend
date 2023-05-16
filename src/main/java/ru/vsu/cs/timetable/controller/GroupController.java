@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.GroupApi;
 import ru.vsu.cs.timetable.dto.group.CreateGroupRequest;
@@ -11,6 +12,7 @@ import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.service.GroupService;
 
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('CREATE_GROUP_AUTHORITY')")
 @RequestMapping("/faculty")
 @RestController
 public class GroupController implements GroupApi {

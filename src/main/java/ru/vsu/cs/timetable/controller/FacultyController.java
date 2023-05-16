@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.FacultyApi;
 import ru.vsu.cs.timetable.dto.faculty.CreateFacultyRequest;
@@ -10,6 +11,7 @@ import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.service.FacultyService;
 
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('CREATE_FACULTY_AUTHORITY')")
 @RequestMapping("/university")
 @RestController
 public class FacultyController implements FacultyApi {

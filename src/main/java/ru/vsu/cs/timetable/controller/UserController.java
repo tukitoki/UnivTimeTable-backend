@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UserApi;
 import ru.vsu.cs.timetable.dto.user.UserDto;
@@ -11,6 +12,7 @@ import ru.vsu.cs.timetable.service.UserService;
 import java.util.List;
 
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('CREATE_USER_AUTHORITY')")
 @RequestMapping
 @RestController
 public class UserController implements UserApi {

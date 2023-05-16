@@ -12,6 +12,7 @@ public class GroupMapper {
                 .id(group.getId())
                 .groupNumber(group.getGroupNumber())
                 .courseNumber(group.getCourseNumber())
+                .studentsAmount(group.getStudentsAmount())
                 .headmanId(group.getHeadmanId())
                 .build();
     }
