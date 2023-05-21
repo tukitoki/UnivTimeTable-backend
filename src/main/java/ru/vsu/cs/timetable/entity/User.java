@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.model;
+package ru.vsu.cs.timetable.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnTransformer;
-import ru.vsu.cs.timetable.model.enums.UserRole;
+import ru.vsu.cs.timetable.entity.enums.UserRole;
 
 @Getter
 @Setter

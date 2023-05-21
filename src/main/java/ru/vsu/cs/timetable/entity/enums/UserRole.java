@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.model.enums;
+package ru.vsu.cs.timetable.entity.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ru.vsu.cs.timetable.model.enums.Authority.*;
+import static ru.vsu.cs.timetable.entity.enums.Authority.*;
 
 @Getter
 @RequiredArgsConstructor

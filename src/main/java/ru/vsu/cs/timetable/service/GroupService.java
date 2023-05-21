@@ -7,7 +7,7 @@ import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
 import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.model.Group;
+import ru.vsu.cs.timetable.entity.Group;
 
 @Validated
 public interface GroupService {

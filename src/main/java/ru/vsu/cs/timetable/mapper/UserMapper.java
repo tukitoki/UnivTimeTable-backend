@@ -3,11 +3,11 @@ package ru.vsu.cs.timetable.mapper;
 import org.springframework.stereotype.Component;
 import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.UserResponse;
-import ru.vsu.cs.timetable.model.Faculty;
-import ru.vsu.cs.timetable.model.Group;
-import ru.vsu.cs.timetable.model.University;
-import ru.vsu.cs.timetable.model.User;
-import ru.vsu.cs.timetable.model.enums.UserRole;
+import ru.vsu.cs.timetable.entity.Faculty;
+import ru.vsu.cs.timetable.entity.Group;
+import ru.vsu.cs.timetable.entity.University;
+import ru.vsu.cs.timetable.entity.User;
+import ru.vsu.cs.timetable.entity.enums.UserRole;
 
 @Component
 public class UserMapper {

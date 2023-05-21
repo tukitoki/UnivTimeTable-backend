@@ -1,25 +1,26 @@
-package ru.vsu.cs.timetable.controller.advice;
+package ru.vsu.cs.timetable.controller.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.vsu.cs.timetable.exception.AudienceException;
-import ru.vsu.cs.timetable.exception.EquipmentException;
+import ru.vsu.cs.timetable.exception.UniversityException;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @RestControllerAdvice
-public class EquipmentExceptionHandler {
+public class UniversityExceptionHandler {
 
-    @ExceptionHandler(EquipmentException.class)
-    public ResponseEntity<ErrorMessage> handleAuthException(EquipmentException ex) {
-        EquipmentException.CODE code = ex.getCode();
+    @ExceptionHandler(UniversityException.class)
+    public ResponseEntity<ErrorMessage> handleUniversityException(UniversityException ex) {
+        UniversityException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case EQUIPMENT_NOT_EXIST -> BAD_REQUEST;
+            case ID_NOT_FOUND, UNIVERSITY_NAME_NOT_FOUND -> NOT_FOUND;
+            case UNIVERSITY_ALREADY_PRESENT -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();

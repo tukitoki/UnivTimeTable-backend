@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
-import ru.vsu.cs.timetable.model.User;
+import ru.vsu.cs.timetable.entity.User;
 
 import java.util.List;
 

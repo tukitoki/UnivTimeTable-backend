@@ -14,7 +14,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_USER_AUTHORITY')")
-@RequestMapping
 @RestController
 public class UserController implements UserApi {
 

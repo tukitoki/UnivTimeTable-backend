@@ -10,7 +10,6 @@ import ru.vsu.cs.timetable.service.AudienceService;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_AUDIENCE_AUTHORITY')")
-@RequestMapping()
 @RestController
 public class AudienceController implements AudienceApi {
 

@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.model;
+package ru.vsu.cs.timetable.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnTransformer;
-import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
 
 import java.util.List;
 

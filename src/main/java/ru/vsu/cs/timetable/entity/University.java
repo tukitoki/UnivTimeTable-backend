@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.model;
+package ru.vsu.cs.timetable.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,11 +13,9 @@ import java.util.List;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "faculty", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name", "university_id"})
-})
+@Table(name = "university")
 @Entity
-public class Faculty {
+public class University {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +24,13 @@ public class Faculty {
     @NotNull
     @Column(name = "name", nullable = false, unique = true)
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "university_id", nullable = false)
-    private University university;
-    @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL)
-    private List<Group> groups;
-    @OneToMany(mappedBy = "faculty")
+    @NotNull
+    @Column(name = "city", nullable = false)
+    private String city;
+    @OneToMany(mappedBy = "university")
+    private List<User> users;
+    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
+    private List<Faculty> faculties;
+    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private List<Audience> audiences;
 }

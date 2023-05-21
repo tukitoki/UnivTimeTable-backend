@@ -2,10 +2,10 @@ package ru.vsu.cs.timetable.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
-import ru.vsu.cs.timetable.model.Audience;
-import ru.vsu.cs.timetable.model.Equipment;
-import ru.vsu.cs.timetable.model.Faculty;
-import ru.vsu.cs.timetable.model.University;
+import ru.vsu.cs.timetable.entity.Audience;
+import ru.vsu.cs.timetable.entity.Equipment;
+import ru.vsu.cs.timetable.entity.Faculty;
+import ru.vsu.cs.timetable.entity.University;
 
 import java.util.Set;
 

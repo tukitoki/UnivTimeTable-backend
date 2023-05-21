@@ -2,9 +2,9 @@ package ru.vsu.cs.timetable.repository;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.repository.CrudRepository;
-import ru.vsu.cs.timetable.model.Audience;
-import ru.vsu.cs.timetable.model.Faculty;
-import ru.vsu.cs.timetable.model.University;
+import ru.vsu.cs.timetable.entity.Audience;
+import ru.vsu.cs.timetable.entity.Faculty;
+import ru.vsu.cs.timetable.entity.University;
 
 import java.util.Optional;
 

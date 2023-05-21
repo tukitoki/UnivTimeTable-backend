@@ -2,8 +2,8 @@ package ru.vsu.cs.timetable.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
-import ru.vsu.cs.timetable.model.Group;
-import ru.vsu.cs.timetable.model.User;
+import ru.vsu.cs.timetable.entity.Group;
+import ru.vsu.cs.timetable.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
