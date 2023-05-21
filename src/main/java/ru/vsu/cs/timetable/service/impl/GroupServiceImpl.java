@@ -38,9 +38,9 @@ import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 @Service
 public class GroupServiceImpl implements GroupService {
 
+    private final FacultyService facultyService;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-    private final FacultyService facultyService;
     private final GroupMapper groupMapper;
     private final UserMapper userMapper;
     private final EntityManager entityManager;

@@ -3,9 +3,9 @@ package ru.vsu.cs.timetable.dto.univ_requests;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import ru.vsu.cs.timetable.dto.group.GroupResponse;
 
 import java.util.List;
-import java.util.Map;
 
 @Setter
 @Getter
@@ -14,5 +14,5 @@ public class ShowSendRequestDto {
 
     private List<String> typesOfClass;
     private List<String> equipments;
-    private Map<Integer, List<Integer>> groupsOfCourse;
+    private List<GroupResponse> groupsOfCourse;
 }

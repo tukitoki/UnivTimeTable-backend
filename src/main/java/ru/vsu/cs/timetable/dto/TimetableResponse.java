@@ -3,6 +3,7 @@ package ru.vsu.cs.timetable.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import ru.vsu.cs.timetable.dto.univ_class.ClassDto;
 
 import java.util.List;
 import java.util.Map;

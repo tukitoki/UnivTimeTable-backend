@@ -13,5 +13,4 @@ import java.util.List;
 public class ShowCreateGroupDto {
 
     private List<UserResponse> userResponses;
-
 }

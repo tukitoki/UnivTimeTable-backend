@@ -27,7 +27,10 @@ public interface RequestApi {
     @Operation(
             summary = "Показ информациии для страницы подачи заявки на составление"
     )
-    ShowSendRequestDto showSendRequest();
+    ShowSendRequestDto showSendRequest(
+            @Parameter(hidden = true)
+            Authentication authentication
+    );
 
     @Operation(
             summary = "Отправка заявка на перенос занятия"
@@ -42,5 +45,8 @@ public interface RequestApi {
     @Operation(
             summary = "Показ информациии для страницы подачи заявки на перенос"
     )
-    MoveClassResponse showMoveClass();
+    MoveClassResponse showMoveClass(
+            @Parameter(hidden = true)
+            Authentication authentication
+    );
 }

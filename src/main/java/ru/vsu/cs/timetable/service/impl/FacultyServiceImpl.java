@@ -33,9 +33,9 @@ import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 @Service
 public class FacultyServiceImpl implements FacultyService {
 
-    private final FacultyRepository facultyRepository;
     private final UniversityService universityService;
     private final FacultyMapper facultyMapper;
+    private final FacultyRepository facultyRepository;
     private final EntityManager entityManager;
 
     @Override

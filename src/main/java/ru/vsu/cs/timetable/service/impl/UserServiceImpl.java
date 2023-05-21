@@ -39,13 +39,13 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final UniversityService universityService;
     private final GroupService groupService;
     private final FacultyService facultyService;
     private final UserMapper userMapper;
     private final UniversityMapper universityMapper;
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
 

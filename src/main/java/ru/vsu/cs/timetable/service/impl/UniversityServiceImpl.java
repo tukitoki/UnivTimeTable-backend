@@ -32,9 +32,9 @@ import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 @Service
 public class UniversityServiceImpl implements UniversityService {
 
+    private final UniversityMapper universityMapper;
     private final UniversityRepository universityRepository;
     private final UserRepository userRepository;
-    private final UniversityMapper universityMapper;
     private final EntityManager entityManager;
 
     @Override

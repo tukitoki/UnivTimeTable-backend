@@ -22,11 +22,11 @@ import java.util.Set;
 @Service
 public class AudienceServiceImpl implements AudienceService {
 
-    private final AudienceRepository audienceRepository;
-    private final EquipmentRepository equipmentRepository;
     private final UniversityService universityService;
     private final FacultyService facultyService;
     private final AudienceMapper audienceMapper;
+    private final AudienceRepository audienceRepository;
+    private final EquipmentRepository equipmentRepository;
 
     @Override
     public void createAudience(CreateAudienceRequest createAudienceRequest,
