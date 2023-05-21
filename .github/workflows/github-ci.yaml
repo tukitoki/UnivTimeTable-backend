@@ -2,11 +2,12 @@ name: JavaCI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -26,18 +27,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
-      - name: copy files
-        run: |
-          echo "${{ SECRETS.ENV_FILE }}" >> .env
-          set -eu
-          mkdir "$HOME/.ssh"
-          echo "${{ secrets.KEY }}" > "$HOME/.ssh/key"
-          chmod 600 "$HOME/.ssh/key"
-          rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/tokichii/timetable
-          rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/tokichii/timetable
+      - name: context
+        uses: okteto/context@latest
+        with:
+          token: ${{ secrets.OKTETO_TOKEN }}
+
       - name: deploy
-        run: |
-          ssh -tt -i $HOME/.ssh/key -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-          'cd $HOME/timetable ; sudo docker-compose --env-file .env pull; sudo docker-compose --env-file .env down --timeout=20; sudo docker-compose --env-file .env up -d ; sudo docker image prune -f || true'
+        uses: okteto/pipeline@latest
+        with:
+          name: timetable
+          timeout: 8m
+          variables: ${{ secrets.ENV_FILE }}
