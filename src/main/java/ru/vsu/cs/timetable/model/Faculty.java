@@ -13,7 +13,9 @@ import java.util.List;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "faculty")
+@Table(name = "faculty", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "university_id"})
+})
 @Entity
 public class Faculty {
 

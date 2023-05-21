@@ -20,7 +20,7 @@ public class FacultyExceptionHandler {
         FacultyException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
             case ID_NOT_FOUND -> NOT_FOUND;
-            case NAME_ALREADY_PRESENT -> BAD_REQUEST;
+            case UNIV_FACULTY_ALREADY_PRESENT -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();

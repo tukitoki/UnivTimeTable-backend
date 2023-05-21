@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import ru.vsu.cs.timetable.dto.group.CreateGroupRequest;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
 import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
@@ -19,7 +18,7 @@ public interface GroupApi {
     )
     GroupPageDto getFacultyGroups(
             @Parameter(description = "Номер страницы")
-            int pageNumber,
+            int currentPage,
             @Parameter(description = "Количество элементов на странице")
             int pageSize,
             @Parameter(description = "Курс для фильтрации")
@@ -33,11 +32,19 @@ public interface GroupApi {
     );
 
     @Operation(
+            summary = "Получение группы по id"
+    )
+    GroupDto getGroupById(
+            @Parameter(description = "Id группы")
+            Long id
+    );
+
+    @Operation(
             summary = "Создание группы конкретного факульета"
     )
     void createGroup(
             @Parameter(description = "Параметры для создания группы")
-            CreateGroupRequest createGroupRequest,
+            GroupDto groupDto,
             @Parameter(description = "Id факультета, группа для которого создается")
             Long facultyId
     );

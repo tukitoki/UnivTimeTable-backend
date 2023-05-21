@@ -1,0 +1,2 @@
+ALTER TABLE class
+ADD COLUMN week_type VARCHAR(20);

@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnTransformer;
 import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
 import ru.vsu.cs.timetable.model.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.WeekType;
 
 import java.sql.Time;
 import java.util.Set;
@@ -32,15 +33,20 @@ public class Class {
     @Column(name = "start_time", nullable = false)
     private Time startTime;
     @NotNull
-    @ColumnTransformer(read = "UPPER(name)", write = "LOWER(?)")
+    @ColumnTransformer(read = "UPPER(type_class)", write = "LOWER(?)")
     @Enumerated(EnumType.STRING)
     @Column(name = "type_class", nullable = false)
     private TypeClass typeClass;
     @NotNull
-    @ColumnTransformer(read = "UPPER(dayOfWeek)", write = "LOWER(?)")
+    @ColumnTransformer(read = "UPPER(day_of_week)", write = "LOWER(?)")
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", nullable = false)
     private DayOfWeekEnum dayOfWeek;
+    @NotNull
+    @ColumnTransformer(read = "UPPER(week_type)", write = "LOWER(?)")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "week_type", nullable = false)
+    private WeekType weekType;
     @NotNull
     @ManyToOne
     @JoinColumn(name = "lecturer_id", nullable = false)

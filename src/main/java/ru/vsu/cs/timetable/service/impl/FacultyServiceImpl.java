@@ -75,8 +75,9 @@ public class FacultyServiceImpl implements FacultyService {
     public void createFaculty(CreateFacultyRequest createFacultyRequest, Long univId) {
         University university = universityService.findUnivById(univId);
 
-        if (facultyRepository.findByName(createFacultyRequest.getName()).isPresent()) {
-            throw FacultyException.CODE.NAME_ALREADY_PRESENT.get();
+        if (facultyRepository.findByNameAndUniversity(createFacultyRequest.getName(),
+                university).isPresent()) {
+            throw FacultyException.CODE.UNIV_FACULTY_ALREADY_PRESENT.get();
         }
 
         Faculty faculty = Faculty.builder()

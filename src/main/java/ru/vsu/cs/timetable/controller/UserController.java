@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UserApi;
@@ -39,6 +40,7 @@ public class UserController implements UserApi {
     }
 
     @Override
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/user/create")
     public void createUser(@RequestBody UserDto userDto) {
         userService.createUser(userDto);

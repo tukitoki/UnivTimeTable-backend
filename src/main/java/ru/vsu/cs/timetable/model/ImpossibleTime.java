@@ -24,7 +24,7 @@ public class ImpossibleTime {
     @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
-    @ColumnTransformer(read = "UPPER(dayOfWeek)", write = "LOWER(?)")
+    @ColumnTransformer(read = "UPPER(day_of_week)", write = "LOWER(?)")
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", nullable = false)
     private DayOfWeekEnum dayOfWeek;
