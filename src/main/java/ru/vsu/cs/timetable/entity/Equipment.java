@@ -1,11 +1,9 @@
-package ru.vsu.cs.timetable.model;
+package ru.vsu.cs.timetable.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnTransformer;
-import ru.vsu.cs.timetable.model.enums.EquipmentName;
 
 import java.util.Set;
 
@@ -20,10 +18,8 @@ public class Equipment {
     @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
-    @ColumnTransformer(read = "UPPER(name)", write = "LOWER(?)")
-    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false)
-    private EquipmentName name;
+    private String name;
     @NotNull
     @Column(name = "display_name", nullable = false)
     private String displayName;

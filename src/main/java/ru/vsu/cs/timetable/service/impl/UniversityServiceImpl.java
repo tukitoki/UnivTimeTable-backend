@@ -18,7 +18,7 @@ import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
 import ru.vsu.cs.timetable.exception.UniversityException;
 import ru.vsu.cs.timetable.mapper.UniversityMapper;
-import ru.vsu.cs.timetable.model.University;
+import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.repository.UniversityRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 import ru.vsu.cs.timetable.service.UniversityService;

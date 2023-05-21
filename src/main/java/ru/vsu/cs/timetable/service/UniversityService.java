@@ -7,7 +7,7 @@ import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.dto.university.CreateUnivRequest;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
-import ru.vsu.cs.timetable.model.University;
+import ru.vsu.cs.timetable.entity.University;
 
 import java.util.List;
 

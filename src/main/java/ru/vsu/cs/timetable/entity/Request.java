@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.model;
+package ru.vsu.cs.timetable.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnTransformer;
-import ru.vsu.cs.timetable.model.enums.TypeClass;
+import ru.vsu.cs.timetable.entity.enums.TypeClass;
 
 import java.util.Set;
 

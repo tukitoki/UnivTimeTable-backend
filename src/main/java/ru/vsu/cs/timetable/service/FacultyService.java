@@ -7,7 +7,7 @@ import ru.vsu.cs.timetable.dto.faculty.CreateFacultyRequest;
 import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
 import ru.vsu.cs.timetable.dto.faculty.FacultyPageDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.model.Faculty;
+import ru.vsu.cs.timetable.entity.Faculty;
 
 @Validated
 public interface FacultyService {

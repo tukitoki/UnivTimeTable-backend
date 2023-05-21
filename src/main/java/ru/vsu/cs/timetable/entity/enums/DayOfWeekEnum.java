@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.model.enums;
+package ru.vsu.cs.timetable.entity.enums;
 
 public enum DayOfWeekEnum {
     MONDAY("Понедельник"),

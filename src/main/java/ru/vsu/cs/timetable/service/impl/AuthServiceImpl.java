@@ -6,7 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import ru.vsu.cs.timetable.dto.user.JwtDto;
 import ru.vsu.cs.timetable.dto.user.UserLoginDto;
-import ru.vsu.cs.timetable.model.User;
+import ru.vsu.cs.timetable.entity.User;
 import ru.vsu.cs.timetable.security.JwtTokenProvider;
 import ru.vsu.cs.timetable.service.AuthService;
 import ru.vsu.cs.timetable.service.UserService;

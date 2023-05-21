@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
-import ru.vsu.cs.timetable.model.Faculty;
+import ru.vsu.cs.timetable.entity.Faculty;
 
 import java.util.List;
 

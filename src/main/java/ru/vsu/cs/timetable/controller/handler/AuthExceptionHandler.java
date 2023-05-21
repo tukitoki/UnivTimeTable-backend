@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.controller.advice;
+package ru.vsu.cs.timetable.controller.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
