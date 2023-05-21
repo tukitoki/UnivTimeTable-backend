@@ -54,7 +54,7 @@ public class GroupServiceImpl implements GroupService {
                 .stream()
                 .map(groupMapper::toDto)
                 .toList();
-        List<Integer> courses = groupRepository.findAllCourses();
+        List<Integer> courses = groupRepository.findAllCoursesByFaculty(facultyId);
 
         var pageModel = PageModel.of(groupDtos, currentPage, page.getTotalElements(),
                 pageSize, page.getTotalPages());
@@ -133,7 +133,7 @@ public class GroupServiceImpl implements GroupService {
         if (groupDto.getHeadmanId() == null) {
             newGroup = groupMapper.toEntity(groupDto);
             newGroup.setUsers(new ArrayList<>());
-        } else if (groupDto.getHeadmanId().equals(oldGroup.getHeadmanId())){
+        } else if (groupDto.getHeadmanId().equals(oldGroup.getHeadmanId())) {
             ignoreProperties.add("users");
             newGroup = groupMapper.toEntity(groupDto);
         } else {

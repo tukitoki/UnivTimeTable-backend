@@ -16,8 +16,9 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
                                                                @NotNull Integer courseNumber);
 
     @Query(value = """
-            SELECT g.courseNumber
+            SELECT DISTINCT g.courseNumber
             FROM Group g
+            WHERE g.faculty.id = :facultyId
             """)
-    List<Integer> findAllCourses();
+    List<Integer> findAllCoursesByFaculty(Long facultyId);
 }
