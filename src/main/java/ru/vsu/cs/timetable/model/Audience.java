@@ -13,7 +13,9 @@ import java.util.Set;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "audience")
+@Table(name = "audience", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"audience_number", "faculty_id", "university_id"})
+})
 @Entity
 public class Audience {
 

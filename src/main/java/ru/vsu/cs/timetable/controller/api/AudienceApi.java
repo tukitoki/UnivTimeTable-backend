@@ -16,7 +16,11 @@ public interface AudienceApi {
     )
     void createAudience(
             @Parameter(description = "Создание аудитории конкретного факультета")
-            CreateAudienceRequest createAudienceRequest
+            CreateAudienceRequest createAudienceRequest,
+            @Parameter(description = "Id университета")
+            Long univId,
+            @Parameter(description = "Id факультета")
+            Long facultyId
     );
 
     @Operation(

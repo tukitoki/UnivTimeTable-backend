@@ -6,23 +6,27 @@ import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.AudienceApi;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceResponse;
+import ru.vsu.cs.timetable.service.AudienceService;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_AUDIENCE_AUTHORITY')")
-@RequestMapping
+@RequestMapping()
 @RestController
 public class AudienceController implements AudienceApi {
 
-    @Override
-    @PostMapping("/audience/create")
-    public void createAudience(@RequestBody CreateAudienceRequest createAudienceRequest) {
+    private final AudienceService audienceService;
 
+    @Override
+    @PostMapping("/university/{univId}/faculty/{facultyId}/audience/create")
+    public void createAudience(@RequestBody CreateAudienceRequest createAudienceRequest,
+                               @PathVariable Long univId,
+                               @PathVariable Long facultyId) {
+        audienceService.createAudience(createAudienceRequest, univId, facultyId);
     }
 
     @Override
     @GetMapping("/audience/create")
     public CreateAudienceResponse showCreateAudience() {
-        System.out.println("dsadas");
-        return null;
+        return audienceService.showCreateAudience();
     }
 }
