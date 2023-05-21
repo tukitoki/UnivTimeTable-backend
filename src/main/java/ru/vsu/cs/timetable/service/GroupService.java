@@ -1,24 +1,31 @@
 package ru.vsu.cs.timetable.service;
 
-import ru.vsu.cs.timetable.dto.group.CreateGroupRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
 import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.model.Group;
 
+@Validated
 public interface GroupService {
 
-    GroupPageDto getFacultyGroups(int pageNumber, int pageSize, Integer course,
-                                  Integer groupNumber, SortDirection order, Long facultyId);
+    GroupPageDto getFacultyGroups(int currentPage, int pageSize, Integer course,
+                                  Integer groupNumber, SortDirection order, @NotNull Long facultyId);
 
-    Group findGroupById(Long id);
+    GroupDto getGroupById(@NotNull Long id);
 
-    void createGroup(CreateGroupRequest createGroupRequest, Long facultyId);
+    Group findGroupById(@NotNull Long id);
 
-    ShowCreateGroupDto showCreateGroup(Long facultyId);
+    void createGroup(@NotNull @Valid GroupDto groupDto,
+                     @NotNull Long facultyId);
 
-    void deleteGroup(Long id);
+    ShowCreateGroupDto showCreateGroup(@NotNull Long facultyId);
 
-    void updateGroup(GroupDto groupDto, Long id);
+    void deleteGroup(@NotNull Long id);
+
+    void updateGroup(@NotNull @Valid GroupDto groupDto,
+                     @NotNull Long id);
 }

@@ -3,7 +3,7 @@ package ru.vsu.cs.timetable.exception;
 public class GroupException extends RuntimeException {
     public enum CODE {
         ID_NOT_FOUND("Group with given id not found"),
-        GROUP_FACULTY_ALREADY_PRESENT("Group with given number and course on this faculty already present");
+        GROUP_FACULTY_ALREADY_PRESENT("Group with given number and course at this faculty already present");
         ;
 
         final String codeDescription;

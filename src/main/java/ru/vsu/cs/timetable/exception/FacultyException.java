@@ -3,7 +3,7 @@ package ru.vsu.cs.timetable.exception;
 public class FacultyException extends RuntimeException {
     public enum CODE {
         ID_NOT_FOUND("Faculty with given id not found"),
-        NAME_ALREADY_PRESENT("Faculty with given name already present"),
+        UNIV_FACULTY_ALREADY_PRESENT("Faculty with given name at this university already present"),
         ;
 
         final String codeDescription;

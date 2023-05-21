@@ -1,10 +1,10 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.GroupApi;
-import ru.vsu.cs.timetable.dto.group.CreateGroupRequest;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
 import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
@@ -22,21 +22,28 @@ public class GroupController implements GroupApi {
     @Override
     @GetMapping("/{facultyId}/groups")
     public GroupPageDto getFacultyGroups(
-            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) Integer course,
             @RequestParam(required = false) Integer groupNumber,
             @RequestParam(defaultValue = "ASC") SortDirection order,
             @PathVariable Long facultyId
     ) {
-        return groupService.getFacultyGroups(pageNumber, pageSize, course, groupNumber, order, facultyId);
+        return groupService.getFacultyGroups(currentPage, pageSize, course, groupNumber, order, facultyId);
     }
 
     @Override
+    @GetMapping("/group/{id}")
+    public GroupDto getGroupById(@PathVariable Long id) {
+        return groupService.getGroupById(id);
+    }
+
+    @Override
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{facultyId}/group")
-    public void createGroup(@RequestBody CreateGroupRequest createGroupRequest,
+    public void createGroup(@RequestBody GroupDto groupDto,
                             @PathVariable Long facultyId) {
-        groupService.createGroup(createGroupRequest, facultyId);
+        groupService.createGroup(groupDto, facultyId);
     }
 
     @Override
@@ -46,7 +53,7 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @GetMapping("/group/{id}")
+    @DeleteMapping("/group/{id}")
     public void deleteGroup(@PathVariable Long id) {
         groupService.deleteGroup(id);
     }

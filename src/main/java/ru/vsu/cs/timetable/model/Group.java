@@ -14,7 +14,9 @@ import java.util.Set;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "university_group")
+@Table(name = "university_group", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"course_number", "group_number", "faculty_id"})
+})
 @Entity
 public class Group {
 

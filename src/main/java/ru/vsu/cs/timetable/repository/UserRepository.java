@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.repository;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import ru.vsu.cs.timetable.model.User;
@@ -19,4 +20,14 @@ public interface UserRepository extends CrudRepository<User, Long> {
             FROM User u
             """)
     List<String> findAllUserCities();
+
+    @NonNull
+    List<User> findAll();
+
+    @Query(value = """
+            SELECT u
+            FROM User u
+            WHERE u.role = "HEADMAN" and u.group = null
+            """)
+    List<User> findAllFreeHeadmen();
 }

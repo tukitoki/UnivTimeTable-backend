@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.FacultyApi;
@@ -37,6 +38,7 @@ public class FacultyController implements FacultyApi {
     }
 
     @Override
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{univId}/faculty/create")
     public void createFaculty(@RequestBody CreateFacultyRequest createFacultyRequest,
                               @PathVariable Long univId) {

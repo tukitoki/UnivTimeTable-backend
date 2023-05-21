@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
-      - name: Build & push Docker image
+      - name: build & push docker image
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
           image: tokichii/demo
@@ -21,7 +21,6 @@ jobs:
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
 
   deploy:
     needs: build
