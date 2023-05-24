@@ -22,6 +22,11 @@ spring:
     hibernate:
       ddl-auto: update
 
+optaplanner:
+  solver:
+    termination:
+      spent-limit: 30m
+      best-score-limit: 0hard/0soft
 jwt:
   secret-key: ${PRIVATE_KEY:fe1501ba654b1adfaf05cc4195680bd04d6aa2afea771b30e9db3956cc411324}
   access-validity: 3600000

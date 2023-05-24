@@ -16,6 +16,7 @@
         <auth0.version>4.4.0</auth0.version>
         <spring-framework.version>6.0.8</spring-framework.version>
         <flyway-version>9.17.0</flyway-version>
+        <optaplanner-version>9.38.0.Final</optaplanner-version>
     </properties>
 
     <parent>
@@ -24,6 +25,18 @@
         <version>3.0.5</version>
         <relativePath/>
     </parent>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.optaplanner</groupId>
+                <artifactId>optaplanner-bom</artifactId>
+                <version>${optaplanner-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -46,6 +59,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.optaplanner</groupId>
+            <artifactId>optaplanner-spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
@@ -90,7 +108,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

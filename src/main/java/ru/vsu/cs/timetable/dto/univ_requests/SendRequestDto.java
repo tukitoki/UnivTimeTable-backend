@@ -1,23 +1,23 @@
 package ru.vsu.cs.timetable.dto.univ_requests;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.vsu.cs.timetable.dto.group.GroupResponse;
 
-import java.sql.Time;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 @Setter
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class SendRequestDto {
 
     private String subjectName;
-    private Integer course;
-    private Integer group;
-    private Integer subjectHourPerWeek;
+    private GroupResponse groupResponse;
+    private BigDecimal subjectHourPerWeek;
     private String typeClass;
     private List<String> equipments;
-    private Map<String, List<Time>> impossibleTime;
+    private Map<String, List<String>> impossibleTime;
 }
