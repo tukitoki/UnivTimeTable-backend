@@ -6,6 +6,7 @@ import ru.vsu.cs.timetable.entity.Audience;
 import ru.vsu.cs.timetable.entity.Equipment;
 import ru.vsu.cs.timetable.entity.Faculty;
 import ru.vsu.cs.timetable.entity.University;
+import ru.vsu.cs.timetable.planner.model.PlanningAudience;
 
 import java.util.Set;
 
@@ -22,6 +23,15 @@ public class AudienceMapper {
                 .university(univ)
                 .faculty(faculty)
                 .equipments(equipment)
+                .build();
+    }
+
+    public PlanningAudience toPlanningAudience(Audience audience) {
+        return PlanningAudience.builder()
+                .id(audience.getId())
+                .audienceNumber(audience.getAudienceNumber())
+                .capacity(audience.getCapacity())
+                .equipments(audience.getEquipments())
                 .build();
     }
 }

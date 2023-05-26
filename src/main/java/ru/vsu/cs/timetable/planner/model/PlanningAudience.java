@@ -14,8 +14,9 @@ import java.util.Set;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Audience {
+public class PlanningAudience {
 
+    private Long id;
     private Integer audienceNumber;
     private Long capacity;
     private Set<Equipment> equipments;

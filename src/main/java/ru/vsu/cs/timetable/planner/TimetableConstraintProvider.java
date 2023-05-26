@@ -6,7 +6,7 @@ import org.optaplanner.core.api.score.stream.ConstraintFactory;
 import org.optaplanner.core.api.score.stream.ConstraintProvider;
 import org.optaplanner.core.api.score.stream.Joiners;
 import ru.vsu.cs.timetable.entity.Group;
-import ru.vsu.cs.timetable.planner.model.Class;
+import ru.vsu.cs.timetable.planner.model.PlanningClass;
 
 public class TimetableConstraintProvider implements ConstraintProvider {
 
@@ -23,17 +23,17 @@ public class TimetableConstraintProvider implements ConstraintProvider {
     }
 
     private Constraint audienceConflict(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Class.class)
-                .join(Class.class,
-                        Joiners.equal(Class::getAudience),
-                        Joiners.equal(Class::getTimeslot),
-                        Joiners.lessThan(Class::getId))
+        return constraintFactory.forEach(PlanningClass.class)
+                .join(PlanningClass.class,
+                        Joiners.equal(PlanningClass::getAudience),
+                        Joiners.equal(PlanningClass::getTimeslot),
+                        Joiners.lessThan(PlanningClass::getId))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Audience conflict");
     }
 
     private Constraint audienceCapacityConflict(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Class.class)
+        return constraintFactory.forEach(PlanningClass.class)
                 .filter(aClass -> aClass.getAudience().getCapacity() <
                         aClass.getGroups().stream()
                                 .mapToInt(Group::getStudentsAmount)
@@ -44,7 +44,7 @@ public class TimetableConstraintProvider implements ConstraintProvider {
     }
 
     private Constraint audienceEquipmentConflict(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Class.class)
+        return constraintFactory.forEach(PlanningClass.class)
                 .filter(aClass ->
                         !aClass.getAudience().getEquipments().containsAll(aClass.getRequiredEquipments()))
                 .penalize(HardSoftScore.ONE_SOFT)
@@ -52,28 +52,28 @@ public class TimetableConstraintProvider implements ConstraintProvider {
     }
 
     private Constraint lecturerConflict(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Class.class)
-                .join(Class.class,
-                        Joiners.equal(Class::getTimeslot),
-                        Joiners.equal(Class::getLecturer),
-                        Joiners.lessThan(Class::getId))
+        return constraintFactory.forEach(PlanningClass.class)
+                .join(PlanningClass.class,
+                        Joiners.equal(PlanningClass::getTimeslot),
+                        Joiners.equal(PlanningClass::getLecturer),
+                        Joiners.lessThan(PlanningClass::getId))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Lecturer conflict");
     }
 
     private Constraint timeConflict(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Class.class)
+        return constraintFactory.forEach(PlanningClass.class)
                 .filter(aClass -> aClass.getImpossibleTimes().contains(aClass.getTimeslot()))
                 .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Time conflict");
     }
 
     private Constraint studentGroupConflict(ConstraintFactory constraintFactory) {
-        return constraintFactory.forEach(Class.class)
-                .join(Class.class,
-                        Joiners.equal(Class::getGroups),
-                        Joiners.equal(Class::getTimeslot),
-                        Joiners.lessThan(Class::getId))
+        return constraintFactory.forEach(PlanningClass.class)
+                .join(PlanningClass.class,
+                        Joiners.equal(PlanningClass::getGroups),
+                        Joiners.equal(PlanningClass::getTimeslot),
+                        Joiners.lessThan(PlanningClass::getId))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Student group conflict");
     }

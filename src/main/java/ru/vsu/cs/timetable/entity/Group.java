@@ -42,10 +42,7 @@ public class Group {
     private Faculty faculty;
     @OneToMany(mappedBy = "group")
     private List<User> users;
-    @ManyToMany
-    @JoinTable(name = "group_class",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "class_id"))
+    @ManyToMany(mappedBy = "groups")
     private Set<Class> classes;
 
     @Override

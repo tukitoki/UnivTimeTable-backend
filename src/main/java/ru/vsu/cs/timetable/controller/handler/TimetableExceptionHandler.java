@@ -5,20 +5,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.vsu.cs.timetable.exception.AudienceException;
+import ru.vsu.cs.timetable.exception.TimetableException;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Slf4j
 @RestControllerAdvice
-public class AudienceExceptionHandler {
+public class TimetableExceptionHandler {
 
-    @ExceptionHandler(AudienceException.class)
-    public ResponseEntity<ErrorMessage> handleAuthException(AudienceException ex) {
-        AudienceException.CODE code = ex.getCode();
+    @ExceptionHandler(TimetableException.class)
+    public ResponseEntity<ErrorMessage> handleAuthException(TimetableException ex) {
+        TimetableException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case AUDIENCE_ALREADY_EXIST, ID_NOT_FOUND -> BAD_REQUEST;
+            case ADMIN_CANT_ACCESS, TIMETABLE_CANT_BE_GENERATED, TIMETABLE_WAS_NOT_MADE -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();

@@ -5,5 +5,14 @@ public enum TypeClass {
     SEMINAR("Семинар")
     ;
 
-    TypeClass(String name) {}
+    private final String name;
+
+    TypeClass(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

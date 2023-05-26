@@ -86,6 +86,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void createUser(UserDto userDto) {
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             throw UserException.CODE.USERNAME_ALREADY_PRESENT.get();
@@ -107,7 +108,12 @@ public class UserServiceImpl implements UserService {
         String password = passwordEncoder.encode(userDto.getPassword());
 
         User user = userMapper.toEntity(userDto, univ, group, faculty, password);
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+        if (group != null) {
+            group.setHeadmanId(user.getId());
+            groupRepository.save(group);
+        }
     }
 
     @Override

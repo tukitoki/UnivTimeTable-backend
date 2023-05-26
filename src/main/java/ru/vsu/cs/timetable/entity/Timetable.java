@@ -28,6 +28,6 @@ public class Timetable {
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", nullable = false)
     private DayOfWeekEnum dayOfWeek;
-    @OneToMany(mappedBy = "timetable")
+    @OneToMany(mappedBy = "timetable", cascade = CascadeType.ALL)
     private List<Class> classes;
 }

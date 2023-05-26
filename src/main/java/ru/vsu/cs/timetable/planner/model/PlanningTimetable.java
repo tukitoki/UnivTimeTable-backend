@@ -20,16 +20,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @PlanningSolution
-public class Timetable {
+public class PlanningTimetable {
 
     @ValueRangeProvider
     @ProblemFactCollectionProperty
     private List<Timeslot> timeslots;
     @ValueRangeProvider
     @ProblemFactCollectionProperty
-    private List<Audience> audiences;
+    private List<PlanningAudience> audiences;
     @PlanningEntityCollectionProperty
-    private List<Class> classes;
+    private List<PlanningClass> classes;
     @PlanningScore
     private HardSoftScore hardSoftScore;
 }

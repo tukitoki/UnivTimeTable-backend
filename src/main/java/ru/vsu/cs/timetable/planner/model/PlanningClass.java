@@ -22,7 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @PlanningEntity
-public class Class {
+public class PlanningClass {
 
     @PlanningId
     private Long id;
@@ -30,7 +30,7 @@ public class Class {
     @PlanningVariable
     private Timeslot timeslot;
     @PlanningVariable
-    private Audience audience;
+    private PlanningAudience audience;
     private TypeClass typeClass;
     private User lecturer;
     private List<Timeslot> impossibleTimes;

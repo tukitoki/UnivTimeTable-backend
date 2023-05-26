@@ -1,34 +1,53 @@
 package ru.vsu.cs.timetable.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.cs.timetable.controller.api.TimetableApi;
 import ru.vsu.cs.timetable.dto.TimetableResponse;
 import ru.vsu.cs.timetable.service.TimetableService;
 
 @RequiredArgsConstructor
+@RequestMapping("/schedule")
 @RestController
 public class TimetableController implements TimetableApi {
 
     private final TimetableService timetableService;
 
     @Override
+    @GetMapping
     public TimetableResponse getTimetable(Authentication authentication) {
         String username = authentication.getName();
         return timetableService.getTimetable(username);
     }
 
     @Override
-    public void downloadTimetable(Authentication authentication) {
+    @SneakyThrows
+    @GetMapping("/download")
+    public void downloadTimetable(HttpServletResponse httpServletResponse, Authentication authentication) {
         String username = authentication.getName();
+
+        var workBook = timetableService.downloadTimetable(username);
+        httpServletResponse.setContentType("application/vnd.ms-excel");
+        httpServletResponse.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=timetable.xlsx");
+
+        workBook.write(httpServletResponse.getOutputStream());
+        workBook.close();
     }
 
     @Override
-    @PostMapping("/timetable/make")
+    @PreAuthorize("hasAuthority('MAKE_TIMETABLE_AUTHORITY')")
+    @PostMapping("/make")
     public void makeTimetable(Authentication authentication) {
         String username = authentication.getName();
+
         timetableService.makeTimetable(username);
     }
 }
