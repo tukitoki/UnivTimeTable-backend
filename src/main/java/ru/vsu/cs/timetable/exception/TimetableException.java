@@ -4,6 +4,7 @@ public class TimetableException extends RuntimeException {
     public enum CODE {
         ADMIN_CANT_ACCESS("Admin can't get timetable"),
         TIMETABLE_CANT_BE_GENERATED("Timetable can't be generated due some mistakes"),
+        TIMETABLE_WAS_ALREADY_MADE("Timetable for that faculty was already made"),
         TIMETABLE_WAS_NOT_MADE("Timetable for that user wasn't made"),
         ;
 

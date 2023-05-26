@@ -20,11 +20,13 @@ public interface ClassRepository extends CrudRepository<Class, Long> {
                                                                             @NotNull User lecturer,
                                                                             @NotNull DayOfWeekEnum dayOfWeek);
 
-    List<Class> findAllByGroupsContainsAndDayOfWeek(Group group,
+    List<Class> findAllByGroupsContainsAndDayOfWeek(@NotNull Group group,
                                                     @NotNull DayOfWeekEnum dayOfWeek);
 
     List<Class> findAllByLecturerAndDayOfWeek(@NotNull User lecturer,
                                               @NotNull DayOfWeekEnum dayOfWeek);
 
-    List<Class> findAllByGroupsContains(Group group);
+    List<Class> findAllByLecturer(@NotNull User lecturer);
+
+    List<Class> findAllByGroupsContains(@NotNull Group group);
 }

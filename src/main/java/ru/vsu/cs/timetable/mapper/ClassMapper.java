@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.vsu.cs.timetable.dto.ClassDto;
 import ru.vsu.cs.timetable.entity.Audience;
 import ru.vsu.cs.timetable.entity.Class;
 import ru.vsu.cs.timetable.entity.Request;
@@ -51,6 +52,17 @@ public class ClassMapper {
                 .lecturer(planningClass.getLecturer())
                 .audience(audience)
                 .groups(planningClass.getGroups())
+                .build();
+    }
+
+    public ClassDto toDto(Class aClass) {
+        return ClassDto.builder()
+                .subjectName(aClass.getSubjectName())
+                .startTime(aClass.getStartTime().toString())
+                .audience(aClass.getAudience().getAudienceNumber())
+                .dayOfWeek(aClass.getDayOfWeek().toString())
+                .typeOfClass(aClass.getTypeClass().toString())
+                .weekType(aClass.getWeekType().toString())
                 .build();
     }
 }

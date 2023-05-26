@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.cs.timetable.dto.ClassDto;
 import ru.vsu.cs.timetable.dto.TimetableResponse;
 import ru.vsu.cs.timetable.entity.Class;
 import ru.vsu.cs.timetable.entity.Request;
@@ -31,7 +32,6 @@ import ru.vsu.cs.timetable.service.TimetableService;
 import ru.vsu.cs.timetable.service.UserService;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 import static ru.vsu.cs.timetable.utils.TimeUtils.*;
 
@@ -58,11 +58,24 @@ public class TimetableServiceImpl implements TimetableService {
             throw TimetableException.CODE.ADMIN_CANT_ACCESS.get();
         }
 
-        var classes = getTimetableByUserAndCurrWeek(user);
-
-        return TimetableResponse.builder()
-                .classes(classes)
+        var timetable = TimetableResponse.builder()
+                .classes(new HashMap<>())
                 .build();
+
+        WeekType currWeek = getCurrentWeekType();
+        var classes = getTimetableByUserAndCurrWeek(user, currWeek);
+        timetable.getClasses().put(currWeek.toString(), classes);
+
+        WeekType nextWeak = currWeek == WeekType.DENOMINATOR
+                ? WeekType.NUMERATOR
+                : WeekType.DENOMINATOR;
+        classes = getTimetableByUserAndCurrWeek(user, nextWeak);
+        timetable.getClasses().put(nextWeak.toString(), classes);
+        if (timetable.countTotalClassesSize() == 0) {
+            throw TimetableException.CODE.TIMETABLE_WAS_NOT_MADE.get();
+        }
+
+        return timetable;
     }
 
     @Override
@@ -79,8 +92,11 @@ public class TimetableServiceImpl implements TimetableService {
     @Override
     @Async
     @Transactional
-    public CompletableFuture<Void> makeTimetable(String username) {
+    public void makeTimetable(String username) {
         var lecturer = userService.getUserByUsername(username);
+        if (classRepository.findAllByLecturer(lecturer).size() > 0) {
+            throw TimetableException.CODE.TIMETABLE_WAS_ALREADY_MADE.get();
+        }
 
         List<Timeslot> timeslots = getAllPossibleTimeslots();
 
@@ -116,8 +132,6 @@ public class TimetableServiceImpl implements TimetableService {
             var timetable = timetableMapper.toEntity(dayOfWeek, dayOfWeekClasses, usedAudiences);
             timetableRepository.save(timetable);
         }
-
-        return new CompletableFuture<>();
     }
 
     private List<PlanningClass> getClasses(List<Request> requests) {
@@ -159,10 +173,8 @@ public class TimetableServiceImpl implements TimetableService {
         return classes;
     }
 
-    private Map<String, List<Class>> getTimetableByUserAndCurrWeek(User user) {
-        Map<String, List<Class>> timetable = new HashMap<>();
-        WeekType currWeek = getCurrentWeekType();
-        int totalClassesSize = 0;
+    private Map<String, List<ClassDto>> getTimetableByUserAndCurrWeek(User user, WeekType currWeek) {
+        Map<String, List<ClassDto>> timetable = new HashMap<>();
 
         for (var dayOfWeek : DayOfWeekEnum.values()) {
             List<Class> classes;
@@ -177,12 +189,10 @@ public class TimetableServiceImpl implements TimetableService {
                 throw TimetableException.CODE.ADMIN_CANT_ACCESS.get();
             }
 
-            totalClassesSize += classes.size();
-            timetable.put(dayOfWeek.toString(), classes);
-        }
-
-        if (totalClassesSize == 0) {
-            throw TimetableException.CODE.TIMETABLE_WAS_NOT_MADE.get();
+            var classDtos = classes.stream()
+                    .map(classMapper::toDto)
+                    .toList();
+            timetable.put(dayOfWeek.toString(), classDtos);
         }
 
         return timetable;

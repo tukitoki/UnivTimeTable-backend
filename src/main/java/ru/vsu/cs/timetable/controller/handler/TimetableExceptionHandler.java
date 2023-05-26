@@ -18,7 +18,8 @@ public class TimetableExceptionHandler {
     public ResponseEntity<ErrorMessage> handleAuthException(TimetableException ex) {
         TimetableException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case ADMIN_CANT_ACCESS, TIMETABLE_CANT_BE_GENERATED, TIMETABLE_WAS_NOT_MADE -> BAD_REQUEST;
+            case ADMIN_CANT_ACCESS, TIMETABLE_CANT_BE_GENERATED,
+                    TIMETABLE_WAS_NOT_MADE, TIMETABLE_WAS_ALREADY_MADE -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();
