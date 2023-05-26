@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnTransformer;
 import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -33,5 +33,5 @@ public class ImpossibleTime {
     private Request request;
     @NotNull
     @Column(name = "time_from", nullable = false)
-    private Time timeFrom;
+    private LocalTime timeFrom;
 }

@@ -10,6 +10,8 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnTransformer;
 import ru.vsu.cs.timetable.entity.enums.UserRole;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -53,4 +55,17 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = true)
     private Group group;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

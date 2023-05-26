@@ -10,5 +10,14 @@ public enum DayOfWeekEnum {
     SUNDAY("Воскресенье")
     ;
 
-    DayOfWeekEnum(String name) {}
+    private final String name;
+
+    DayOfWeekEnum(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

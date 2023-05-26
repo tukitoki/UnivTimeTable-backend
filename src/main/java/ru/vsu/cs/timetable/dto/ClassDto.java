@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.Time;
-
 @Setter
 @Getter
 @AllArgsConstructor
@@ -14,8 +12,9 @@ import java.sql.Time;
 public class ClassDto {
 
     private String subjectName;
-    private Time startTime;
+    private String startTime;
     private Integer audience;
     private String dayOfWeek;
     private String typeOfClass;
+    private String weekType;
 }

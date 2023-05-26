@@ -91,7 +91,7 @@ CREATE TABLE audience_equipment
 );
 CREATE TABLE group_class
 (
-    group_id BIGINT NOT NULL REFERENCES university_group (id),
     class_id BIGINT NOT NULL REFERENCES class (id),
+    group_id BIGINT NOT NULL REFERENCES university_group (id),
     PRIMARY KEY (group_id, class_id)
 );

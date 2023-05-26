@@ -11,11 +11,13 @@
 
     <properties>
         <java.version>17</java.version>
-        <version.lombok>1.18.26</version.lombok>
-        <verison.openapi>2.0.4</verison.openapi>
+        <lombok.version>1.18.26</lombok.version>
+        <openapi.verison>2.0.4</openapi.verison>
         <auth0.version>4.4.0</auth0.version>
         <spring-framework.version>6.0.8</spring-framework.version>
-        <flyway-version>9.17.0</flyway-version>
+        <flyway.version>9.17.0</flyway.version>
+        <optaplanner.version>9.38.0.Final</optaplanner.version>
+        <apache-poi.version>5.2.0</apache-poi.version>
     </properties>
 
     <parent>
@@ -24,6 +26,18 @@
         <version>3.0.5</version>
         <relativePath/>
     </parent>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.optaplanner</groupId>
+                <artifactId>optaplanner-bom</artifactId>
+                <version>${optaplanner.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -49,9 +63,14 @@
         </dependency>
 
         <dependency>
+            <groupId>org.optaplanner</groupId>
+            <artifactId>optaplanner-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${version.lombok}</version>
+            <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -62,15 +81,26 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache-poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache-poi.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>${flyway-version}</version>
+            <version>${flyway.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${verison.openapi}</version>
+            <version>${openapi.verison}</version>
         </dependency>
 
         <dependency>
@@ -90,7 +120,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

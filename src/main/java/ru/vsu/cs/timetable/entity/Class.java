@@ -11,7 +11,7 @@ import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
 import ru.vsu.cs.timetable.entity.enums.TypeClass;
 import ru.vsu.cs.timetable.entity.enums.WeekType;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Getter
@@ -31,7 +31,7 @@ public class Class {
     private String subjectName;
     @NotNull
     @Column(name = "start_time", nullable = false)
-    private Time startTime;
+    private LocalTime startTime;
     @NotNull
     @ColumnTransformer(read = "UPPER(type_class)", write = "LOWER(?)")
     @Enumerated(EnumType.STRING)
@@ -58,6 +58,17 @@ public class Class {
     @ManyToOne
     @JoinColumn(name = "timetable_id", nullable = false)
     private Timetable timetable;
-    @ManyToMany(mappedBy = "classes")
+    @ManyToMany
+    @JoinTable(name = "group_class",
+            joinColumns = @JoinColumn(name = "class_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> groups;
+
+    @Override
+    public String toString() {
+        return subjectName +
+                ", " + typeClass +
+                ", " + lecturer.getFullName() +
+                ", " + audience.getAudienceNumber();
+    }
 }

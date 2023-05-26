@@ -3,6 +3,7 @@ package ru.vsu.cs.timetable.exception;
 public class AudienceException extends RuntimeException {
     public enum CODE {
         AUDIENCE_ALREADY_EXIST("Audience with that number already exists"),
+        ID_NOT_FOUND("Audience with given id not found"),
         ;
 
         final String codeDescription;
