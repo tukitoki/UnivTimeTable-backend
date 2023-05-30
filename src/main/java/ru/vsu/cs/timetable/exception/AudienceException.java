@@ -4,6 +4,8 @@ public class AudienceException extends RuntimeException {
     public enum CODE {
         AUDIENCE_ALREADY_EXIST("Audience with that number already exists"),
         ID_NOT_FOUND("Audience with given id not found"),
+        AUDIENCE_FACULTY_NUMBER_NOT_FOUND("Audience with given number at this faculty not found"),
+        AUDIENCE_IS_BUSY_FOR_LESSON("Audience already busy for the lesson")
         ;
 
         final String codeDescription;

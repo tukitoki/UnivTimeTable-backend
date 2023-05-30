@@ -2,8 +2,14 @@ package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceResponse;
+import ru.vsu.cs.timetable.dto.week_time.DayTimes;
+import ru.vsu.cs.timetable.entity.Class;
+import ru.vsu.cs.timetable.entity.Faculty;
+import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.entity.enums.WeekType;
 import ru.vsu.cs.timetable.exception.AudienceException;
 import ru.vsu.cs.timetable.exception.EquipmentException;
 import ru.vsu.cs.timetable.mapper.AudienceMapper;
@@ -14,19 +20,21 @@ import ru.vsu.cs.timetable.repository.EquipmentRepository;
 import ru.vsu.cs.timetable.service.AudienceService;
 import ru.vsu.cs.timetable.service.FacultyService;
 import ru.vsu.cs.timetable.service.UniversityService;
+import ru.vsu.cs.timetable.utils.TimeUtils;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalTime;
+import java.util.*;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class AudienceServiceImpl implements AudienceService {
 
-    private final AudienceRepository audienceRepository;
-    private final EquipmentRepository equipmentRepository;
     private final UniversityService universityService;
     private final FacultyService facultyService;
     private final AudienceMapper audienceMapper;
+    private final AudienceRepository audienceRepository;
+    private final EquipmentRepository equipmentRepository;
 
     @Override
     public void createAudience(CreateAudienceRequest createAudienceRequest,
@@ -54,6 +62,14 @@ public class AudienceServiceImpl implements AudienceService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Audience findAudienceByNumberAndFaculty(Integer audienceNumber, Faculty faculty) {
+        return audienceRepository.findByAudienceNumberAndFaculty(audienceNumber, faculty)
+                .orElseThrow(AudienceException.CODE.AUDIENCE_FACULTY_NUMBER_NOT_FOUND::get);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public CreateAudienceResponse showCreateAudience() {
         var equipmentNames = equipmentRepository.findAll()
                 .stream()
@@ -63,5 +79,38 @@ public class AudienceServiceImpl implements AudienceService {
         return CreateAudienceResponse.builder()
                 .equipments(equipmentNames)
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<Audience, List<DayTimes>> getFreeAudienceByFaculty(Faculty faculty) {
+        var facultyAudiences = audienceRepository.findAllByFaculty(faculty);
+        Map<Audience, List<DayTimes>> audiencesFreeTime = new HashMap<>();
+
+        facultyAudiences.forEach(audience -> {
+            List<DayTimes> dayTimes = new ArrayList<>();
+            for (var day : DayOfWeekEnum.values()) {
+                Map<WeekType, List<LocalTime>> weekTimes = new HashMap<>();
+                for (var weekType : WeekType.values()) {
+                    List<LocalTime> audienceFreeTime = TimeUtils.getPossibleClassTimes();
+                    List<LocalTime> classesTimes = audience.getClasses().stream()
+                            .filter(aClass -> aClass.getDayOfWeek() == day
+                                    && aClass.getWeekType() == weekType)
+                            .map(Class::getStartTime)
+                            .toList();
+
+                    audienceFreeTime.removeAll(classesTimes);
+                    weekTimes.put(weekType, audienceFreeTime);
+                }
+                dayTimes.add(DayTimes.builder()
+                        .dayOfWeek(day)
+                        .weekTimes(weekTimes)
+                        .build());
+            }
+
+            audiencesFreeTime.put(audience, dayTimes);
+        });
+
+        return audiencesFreeTime;
     }
 }

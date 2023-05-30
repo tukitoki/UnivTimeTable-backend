@@ -7,8 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.Authentication;
 import ru.vsu.cs.timetable.dto.univ_requests.MoveClassRequest;
 import ru.vsu.cs.timetable.dto.univ_requests.MoveClassResponse;
-import ru.vsu.cs.timetable.dto.univ_requests.SendRequestDto;
-import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequestDto;
+import ru.vsu.cs.timetable.dto.univ_requests.SendRequest;
+import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequest;
 
 @Tag(name = "Request API", description = "API для работы с заявками преподавателей")
 @SecurityRequirement(name = "bearer-key")
@@ -19,7 +19,7 @@ public interface RequestApi {
     )
     void sendRequest(
             @Parameter(description = "Вся информация о заявке преподавателя")
-            SendRequestDto sendRequestDto,
+            SendRequest sendRequest,
             @Parameter(hidden = true)
             Authentication authentication
     );
@@ -27,7 +27,10 @@ public interface RequestApi {
     @Operation(
             summary = "Показ информациии для страницы подачи заявки на составление"
     )
-    ShowSendRequestDto showSendRequest();
+    ShowSendRequest showSendRequest(
+            @Parameter(hidden = true)
+            Authentication authentication
+    );
 
     @Operation(
             summary = "Отправка заявка на перенос занятия"
@@ -42,5 +45,8 @@ public interface RequestApi {
     @Operation(
             summary = "Показ информациии для страницы подачи заявки на перенос"
     )
-    MoveClassResponse showMoveClass();
+    MoveClassResponse showMoveClass(
+            @Parameter(hidden = true)
+            Authentication authentication
+    );
 }

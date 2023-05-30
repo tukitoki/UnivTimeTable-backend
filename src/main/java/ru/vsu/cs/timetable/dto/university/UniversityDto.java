@@ -23,5 +23,5 @@ public class UniversityDto {
     @NotNull
     @NotBlank
     private String city;
-    private List<FacultyDto> faculites;
+    private List<FacultyDto> faculties;
 }

@@ -18,12 +18,12 @@ import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
 import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.UserResponse;
-import ru.vsu.cs.timetable.exception.UserException;
-import ru.vsu.cs.timetable.mapper.UniversityMapper;
-import ru.vsu.cs.timetable.mapper.UserMapper;
 import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.entity.User;
 import ru.vsu.cs.timetable.entity.enums.UserRole;
+import ru.vsu.cs.timetable.exception.UserException;
+import ru.vsu.cs.timetable.mapper.UniversityMapper;
+import ru.vsu.cs.timetable.mapper.UserMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 import ru.vsu.cs.timetable.service.FacultyService;
@@ -36,16 +36,17 @@ import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final UniversityService universityService;
     private final GroupService groupService;
     private final FacultyService facultyService;
     private final UserMapper userMapper;
     private final UniversityMapper universityMapper;
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
 
@@ -86,7 +87,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void createUser(UserDto userDto) {
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             throw UserException.CODE.USERNAME_ALREADY_PRESENT.get();
@@ -132,7 +132,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void updateUser(UserDto userDto, Long id) {
         User oldUser = getUserById(id);
 
@@ -179,7 +178,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void deleteUser(Long id) {
         User user = getUserById(id);
         if (user.getGroup() != null) {
@@ -191,15 +189,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(UserException.CODE.ID_NOT_FOUND::get);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(UserException.CODE.USERNAME_NOT_FOUND::get);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(UserException.CODE.EMAIL_NOT_FOUND::get);
     }
 
     private Page<User> filerPage(int currentPage, int pageSize, List<String> universities,

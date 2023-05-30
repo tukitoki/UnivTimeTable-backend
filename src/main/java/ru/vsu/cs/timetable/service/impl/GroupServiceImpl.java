@@ -35,17 +35,19 @@ import java.util.List;
 import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class GroupServiceImpl implements GroupService {
 
+    private final FacultyService facultyService;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-    private final FacultyService facultyService;
     private final GroupMapper groupMapper;
     private final UserMapper userMapper;
     private final EntityManager entityManager;
 
     @Override
+    @Transactional(readOnly = true)
     public GroupPageDto getFacultyGroups(int currentPage, int pageSize, Integer course,
                                          Integer groupNumber, SortDirection order, Long facultyId) {
         Page<Group> page = filerPage(currentPage, pageSize, course, groupNumber, order, facultyId);
@@ -66,6 +68,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GroupDto getGroupById(Long id) {
         Group group = findGroupById(id);
 
@@ -73,6 +76,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Group findGroupById(Long id) {
         return groupRepository.findById(id)
                 .orElseThrow(GroupException.CODE.ID_NOT_FOUND::get);
@@ -105,6 +109,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ShowCreateGroupDto showCreateGroup(Long facultyId) {
         var userResponses = userRepository.findAllFreeHeadmen()
                 .stream()
@@ -124,7 +129,6 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    @Transactional
     public void updateGroup(GroupDto groupDto, Long id) {
         Group oldGroup = findGroupById(id);
         Group newGroup;

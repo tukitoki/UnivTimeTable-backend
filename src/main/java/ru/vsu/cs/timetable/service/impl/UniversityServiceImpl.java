@@ -29,12 +29,13 @@ import java.util.List;
 import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class UniversityServiceImpl implements UniversityService {
 
+    private final UniversityMapper universityMapper;
     private final UniversityRepository universityRepository;
     private final UserRepository userRepository;
-    private final UniversityMapper universityMapper;
     private final EntityManager entityManager;
 
     @Override
@@ -65,18 +66,21 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public University findUnivById(Long id) {
         return universityRepository.findById(id)
                 .orElseThrow(UniversityException.CODE.ID_NOT_FOUND::get);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public University findUnivByName(String name) {
         return universityRepository.findByNameIgnoreCase(name)
                 .orElseThrow(UniversityException.CODE.UNIVERSITY_ALREADY_PRESENT::get);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<University> findAllUniversities() {
         return universityRepository.findAll();
     }

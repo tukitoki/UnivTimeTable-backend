@@ -30,4 +30,6 @@ public interface UserService {
     User getUserById(@NotNull Long id);
 
     User getUserByUsername(@NotNull String username);
+
+    User getUserByEmail(@NotNull String email);
 }
