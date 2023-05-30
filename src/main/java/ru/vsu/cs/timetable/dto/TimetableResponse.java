@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ru.vsu.cs.timetable.dto.univ_class.ClassDto;
+import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.entity.enums.WeekType;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,7 @@ import java.util.Map;
 @SuperBuilder
 public class TimetableResponse {
 
-    private Map<String, Map<String, List<ClassDto>>> classes;
+    private Map<WeekType, Map<DayOfWeekEnum, List<ClassDto>>> classes;
 
     public int countTotalClassesSize() {
         int totalSize = 0;

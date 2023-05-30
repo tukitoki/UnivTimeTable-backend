@@ -3,6 +3,7 @@ package ru.vsu.cs.timetable.exception;
 public class UserException extends RuntimeException {
     public enum CODE {
         USERNAME_NOT_FOUND("User with given username not found"),
+        EMAIL_NOT_FOUND("User with given email not found"),
         ID_NOT_FOUND("User with given id not found"),
         USERNAME_ALREADY_PRESENT("User with given username already present"),
         EMAIL_ALREADY_PRESENT("User with given email already present"),

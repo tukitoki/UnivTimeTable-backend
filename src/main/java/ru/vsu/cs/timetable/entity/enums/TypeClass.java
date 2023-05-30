@@ -1,5 +1,7 @@
 package ru.vsu.cs.timetable.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum TypeClass {
     LECTURE("Лекция"),
     SEMINAR("Семинар");
@@ -20,6 +22,7 @@ public enum TypeClass {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return this.name;
     }

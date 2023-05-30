@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,6 +36,8 @@ public class Audience {
     @ManyToOne
     @JoinColumn(name = "university_id", nullable = false)
     private University university;
+    @OneToMany(mappedBy = "audience", cascade = CascadeType.ALL)
+    private List<Class> classes;
     @ManyToMany
     @JoinTable(name = "audience_equipment",
             joinColumns = @JoinColumn(name = "audience_id"),

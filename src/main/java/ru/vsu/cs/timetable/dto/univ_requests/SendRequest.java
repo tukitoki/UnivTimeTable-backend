@@ -4,20 +4,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.vsu.cs.timetable.dto.group.GroupResponse;
+import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.entity.enums.TypeClass;
 
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
 @Setter
 @Getter
 @NoArgsConstructor
-public class SendRequestDto {
+public class SendRequest {
 
     private String subjectName;
     private GroupResponse groupResponse;
     private BigDecimal subjectHourPerWeek;
-    private String typeClass;
+    private TypeClass typeClass;
     private List<String> equipments;
-    private Map<String, List<String>> impossibleTime;
+    private Map<DayOfWeekEnum, List<LocalTime>> impossibleTime;
 }

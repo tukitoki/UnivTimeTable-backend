@@ -24,7 +24,7 @@ public class UniversityMapper {
                 .id(university.getId())
                 .univName(university.getName())
                 .city(university.getCity())
-                .faculites(faculties)
+                .faculties(faculties)
                 .build();
     }
 

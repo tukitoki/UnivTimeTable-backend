@@ -30,6 +30,7 @@ import java.util.List;
 import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class FacultyServiceImpl implements FacultyService {
 
@@ -66,6 +67,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Faculty findFacultyById(Long id) {
         return facultyRepository.findById(id)
                 .orElseThrow(FacultyException.CODE.ID_NOT_FOUND::get);

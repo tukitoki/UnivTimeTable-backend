@@ -10,6 +10,6 @@ import ru.vsu.cs.timetable.dto.univ_class.ClassDto;
 @NoArgsConstructor
 public class MoveClassRequest {
 
-    private ClassDto from;
-    private ClassDto to;
+    private ClassDto initClass;
+    private ClassDto classToMove;
 }

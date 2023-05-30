@@ -19,7 +19,7 @@ public class UserExceptionHandler {
     public ResponseEntity<ErrorMessage> handleUserException(UserException ex) {
         UserException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case USERNAME_NOT_FOUND, ID_NOT_FOUND -> NOT_FOUND;
+            case USERNAME_NOT_FOUND, ID_NOT_FOUND, EMAIL_NOT_FOUND -> NOT_FOUND;
             case USERNAME_ALREADY_PRESENT, EMAIL_ALREADY_PRESENT -> BAD_REQUEST;
         };
 

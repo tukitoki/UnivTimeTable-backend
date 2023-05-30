@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.vsu.cs.timetable.exception.EquipmentException;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @RestControllerAdvice
@@ -18,7 +18,7 @@ public class EquipmentExceptionHandler {
     public ResponseEntity<ErrorMessage> handleAuthException(EquipmentException ex) {
         EquipmentException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case EQUIPMENT_NOT_EXIST -> BAD_REQUEST;
+            case EQUIPMENT_NOT_EXIST -> NOT_FOUND;
         };
 
         String codeStr = code.toString();

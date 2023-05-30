@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vsu.cs.timetable.dto.ClassDto;
 import ru.vsu.cs.timetable.dto.TimetableResponse;
+import ru.vsu.cs.timetable.dto.univ_class.ClassDto;
 import ru.vsu.cs.timetable.entity.Class;
 import ru.vsu.cs.timetable.entity.Request;
 import ru.vsu.cs.timetable.entity.User;
@@ -64,13 +65,13 @@ public class TimetableServiceImpl implements TimetableService {
 
         WeekType currWeek = getCurrentWeekType();
         var classes = getTimetableByUserAndCurrWeek(user, currWeek);
-        timetable.getClasses().put(currWeek.toString(), classes);
+        timetable.getClasses().put(currWeek, classes);
 
-        WeekType nextWeak = currWeek == WeekType.DENOMINATOR
+        WeekType nextWeek = currWeek == WeekType.DENOMINATOR
                 ? WeekType.NUMERATOR
                 : WeekType.DENOMINATOR;
-        classes = getTimetableByUserAndCurrWeek(user, nextWeak);
-        timetable.getClasses().put(nextWeak.toString(), classes);
+        classes = getTimetableByUserAndCurrWeek(user, nextWeek);
+        timetable.getClasses().put(nextWeek, classes);
         if (timetable.countTotalClassesSize() == 0) {
             throw TimetableException.CODE.TIMETABLE_WAS_NOT_MADE.get();
         }
@@ -91,7 +92,7 @@ public class TimetableServiceImpl implements TimetableService {
 
     @Override
     @Async
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void makeTimetable(String username) {
         var lecturer = userService.getUserByUsername(username);
         if (classRepository.findAllByLecturer(lecturer).size() > 0) {
@@ -173,8 +174,8 @@ public class TimetableServiceImpl implements TimetableService {
         return classes;
     }
 
-    private Map<String, List<ClassDto>> getTimetableByUserAndCurrWeek(User user, WeekType currWeek) {
-        Map<String, List<ClassDto>> timetable = new HashMap<>();
+    private Map<DayOfWeekEnum, List<ClassDto>> getTimetableByUserAndCurrWeek(User user, WeekType currWeek) {
+        Map<DayOfWeekEnum, List<ClassDto>> timetable = new HashMap<>();
 
         for (var dayOfWeek : DayOfWeekEnum.values()) {
             List<Class> classes;
@@ -192,7 +193,7 @@ public class TimetableServiceImpl implements TimetableService {
             var classDtos = classes.stream()
                     .map(classMapper::toDto)
                     .toList();
-            timetable.put(dayOfWeek.toString(), classDtos);
+            timetable.put(dayOfWeek, classDtos);
         }
 
         return timetable;

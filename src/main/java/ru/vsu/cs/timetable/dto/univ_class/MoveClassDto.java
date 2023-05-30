@@ -5,13 +5,13 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 @Getter
 @Setter
 @SuperBuilder
 public class MoveClassDto {
 
-    private String subject;
-    private Map<String, List<String>> subjectTimes;
+    private Set<Integer> groups;
+    private List<ClassDto> groupClasses;
 }

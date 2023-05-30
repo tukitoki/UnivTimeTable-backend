@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.vsu.cs.timetable.exception.AudienceException;
+import ru.vsu.cs.timetable.exception.ClassException;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -13,14 +13,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @RestControllerAdvice
-public class AudienceExceptionHandler {
+public class ClassExceptionHandler {
 
-    @ExceptionHandler(AudienceException.class)
-    public ResponseEntity<ErrorMessage> handleAuthException(AudienceException ex) {
-        AudienceException.CODE code = ex.getCode();
+    @ExceptionHandler(ClassException.class)
+    public ResponseEntity<ErrorMessage> handleAuthException(ClassException ex) {
+        ClassException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case ID_NOT_FOUND, AUDIENCE_FACULTY_NUMBER_NOT_FOUND -> NOT_FOUND;
-            case AUDIENCE_ALREADY_EXIST, AUDIENCE_IS_BUSY_FOR_LESSON -> BAD_REQUEST;
+            case CLASS_SUBJECT_NOT_FOUND -> NOT_FOUND;
+            case WRONG_CLASS_FOUND, INCORRECT_CLASS_TO_MOVE -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();

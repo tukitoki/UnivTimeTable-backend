@@ -15,5 +15,7 @@ public interface AudienceRepository extends CrudRepository<Audience, Long> {
                                                                    @NotNull University university,
                                                                    @NotNull Faculty faculty);
 
+    Optional<Audience> findByAudienceNumberAndFaculty(@NotNull Integer audienceNumber, Faculty faculty);
+
     List<Audience> findAllByFaculty(Faculty faculty);
 }

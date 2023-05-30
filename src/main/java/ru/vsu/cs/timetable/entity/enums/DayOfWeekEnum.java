@@ -1,5 +1,7 @@
 package ru.vsu.cs.timetable.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum DayOfWeekEnum {
     MONDAY("Понедельник"),
     TUESDAY("Вторник"),
@@ -26,6 +28,7 @@ public enum DayOfWeekEnum {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return this.name;
     }

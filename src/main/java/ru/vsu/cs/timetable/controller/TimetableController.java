@@ -22,6 +22,7 @@ public class TimetableController implements TimetableApi {
     private final TimetableService timetableService;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('GET_SCHEDULE')")
     @GetMapping
     public TimetableResponse getTimetable(Authentication authentication) {
         String username = authentication.getName();
@@ -30,6 +31,7 @@ public class TimetableController implements TimetableApi {
 
     @Override
     @SneakyThrows
+    @PreAuthorize("hasAnyAuthority('GET_SCHEDULE')")
     @GetMapping("/download")
     public void downloadTimetable(HttpServletResponse httpServletResponse, Authentication authentication) {
         String username = authentication.getName();

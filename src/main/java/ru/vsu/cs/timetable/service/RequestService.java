@@ -5,16 +5,16 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.univ_requests.MoveClassRequest;
 import ru.vsu.cs.timetable.dto.univ_requests.MoveClassResponse;
-import ru.vsu.cs.timetable.dto.univ_requests.SendRequestDto;
-import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequestDto;
+import ru.vsu.cs.timetable.dto.univ_requests.SendRequest;
+import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequest;
 
 @Validated
 public interface RequestService {
 
-    void sendRequest(@NotNull @Valid SendRequestDto sendRequestDto,
+    void sendRequest(@NotNull @Valid SendRequest sendRequest,
                      @NotNull String username);
 
-    ShowSendRequestDto showSendRequest(String username);
+    ShowSendRequest showSendRequest(String username);
 
     void moveClass(@NotNull @Valid MoveClassRequest moveClassRequest,
                    @NotNull String username);
