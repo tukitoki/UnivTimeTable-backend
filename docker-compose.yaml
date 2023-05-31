@@ -9,9 +9,13 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
       - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - data:/tukitoki/db
+
   timetable-service:
     image: tokichii/demo:latest
     container_name: timetable
+    restart: always
     build:
       context: .
     ports:
@@ -23,3 +27,6 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - SERVER_PORT=${SERVER_PORT}
+
+volumes:
+  data:

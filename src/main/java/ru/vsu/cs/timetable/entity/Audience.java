@@ -43,4 +43,15 @@ public class Audience {
             joinColumns = @JoinColumn(name = "audience_id"),
             inverseJoinColumns = @JoinColumn(name = "equipment_id"))
     private Set<Equipment> equipments;
+
+    @Override
+    public String toString() {
+        return "Audience{" +
+                "id=" + id +
+                ", audienceNumber=" + audienceNumber +
+                ", capacity=" + capacity +
+                ", faculty=" + faculty +
+                ", equipments=" + equipments +
+                '}';
+    }
 }

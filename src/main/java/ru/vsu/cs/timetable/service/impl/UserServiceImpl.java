@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,9 +54,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserPageDto getAllUsers(int currentPage, int pageSize, List<String> universities,
-                                   List<String> roles, List<String> cities, String name) {
-        Page<User> page = filerPage(currentPage, pageSize, universities, roles, cities, name);
+    public UserPageDto getAllUsers(int currentPage, int pageSize, String university,
+                                   UserRole role, String city, String name) {
+        Page<User> page = filerPage(currentPage, pageSize, university, role, city, name);
 
         List<UserResponse> userResponses = page.getContent()
                 .stream()
@@ -124,6 +126,8 @@ public class UserServiceImpl implements UserService {
             group.setHeadmanId(user.getId());
             groupRepository.save(group);
         }
+
+        log.info("user: {}, was successful saved", user);
     }
 
     @Override
@@ -185,7 +189,9 @@ public class UserServiceImpl implements UserService {
             BeanUtils.copyProperties(newUser, oldUser, "id");
         }
 
-        userRepository.save(oldUser);
+        oldUser = userRepository.save(oldUser);
+
+        log.info("user: {}, was successful updated", oldUser);
     }
 
     @Override
@@ -197,6 +203,8 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.delete(user);
+
+        log.info("user: {}, was successful updated", user);
     }
 
     @Override
@@ -219,8 +227,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserException.CODE.EMAIL_NOT_FOUND::get);
     }
 
-    private Page<User> filerPage(int currentPage, int pageSize, List<String> universities,
-                                 List<String> roles, List<String> cities, String name) {
+    private Page<User> filerPage(int currentPage, int pageSize, String university,
+                                 UserRole role, String city, String name) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -230,20 +238,15 @@ public class UserServiceImpl implements UserService {
         query.select(root).distinct(true);
 
         List<Predicate> predicates = new ArrayList<>();
-        if (universities != null) {
-            universities.forEach(university -> {
-                var univ = universityService.findUnivByName(university);
-                predicates.add(cb.equal(root.get("university"), univ));
-            });
+        if (university != null) {
+            var univ = universityService.findUnivByName(university);
+            predicates.add(cb.equal(root.get("university"), univ));
         }
-        if (roles != null) {
-            roles.forEach(role -> {
-                var userRole = UserRole.valueOf(role);
-                predicates.add(cb.equal(root.get("role"), userRole));
-            });
+        if (role != null) {
+            predicates.add(cb.equal(root.get("role"), role));
         }
-        if (cities != null) {
-            cities.forEach(city -> predicates.add(cb.equal(root.get("city"), city)));
+        if (city != null) {
+            predicates.add(cb.equal(root.get("city"), city));
         }
         if (name != null) {
             predicates.add(cb.like(cb.lower(root.get("fullName")), "%" + name.toLowerCase() + "%"));
@@ -259,34 +262,29 @@ public class UserServiceImpl implements UserService {
         typedQuery.setMaxResults(pageable.getPageSize());
 
         List<User> users = typedQuery.getResultList();
-        long count = countFilteredUsers(universities, roles, cities, name);
+        long count = countFilteredUsers(university, role, city, name);
 
         return new PageImpl<>(users, pageable, count);
     }
 
 
-    private long countFilteredUsers(List<String> universities, List<String> roles,
-                                    List<String> cities, String name) {
+    private long countFilteredUsers(String university, UserRole role,
+                                    String city, String name) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
 
         Root<User> root = query.from(User.class);
         query.select(cb.countDistinct(root));
         List<Predicate> predicates = new ArrayList<>();
-        if (universities != null) {
-            universities.forEach(university -> {
-                var univ = universityService.findUnivByName(university);
-                predicates.add(cb.equal(root.get("university"), univ));
-            });
+        if (university != null) {
+            var univ = universityService.findUnivByName(university);
+            predicates.add(cb.equal(root.get("university"), univ));
         }
-        if (roles != null) {
-            roles.forEach(role -> {
-                var userRole = UserRole.valueOf(role);
-                predicates.add(cb.equal(root.get("role"), userRole));
-            });
+        if (role != null) {
+            predicates.add(cb.equal(root.get("role"), role));
         }
-        if (cities != null) {
-            cities.forEach(city -> predicates.add(cb.equal(root.get("city"), city)));
+        if (city != null) {
+            predicates.add(cb.equal(root.get("city"), city));
         }
         if (name != null) {
             predicates.add(cb.like(cb.lower(root.get("fullName")), "%" + name.toLowerCase() + "%"));

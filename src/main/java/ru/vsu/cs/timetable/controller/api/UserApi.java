@@ -15,6 +15,7 @@ import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.dto.user.UserResponse;
+import ru.vsu.cs.timetable.entity.enums.UserRole;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import java.util.List;
@@ -43,12 +44,12 @@ public interface UserApi {
             int currentPage,
             @Parameter(description = "Количество элементов на странице")
             int pageSize,
-            @Parameter(description = "Список вузов для фильтрации")
-            List<String> universities,
-            @Parameter(description = "Список ролей для фильтрации")
-            List<String> roles,
-            @Parameter(description = "Список городов для фильтрации")
-            List<String> cities,
+            @Parameter(description = "Вуз для фильтрации")
+            String universities,
+            @Parameter(description = "Роль для фильтрации")
+            UserRole roles,
+            @Parameter(description = "Город для фильтрации")
+            String cities,
             @Parameter(description = "ФИО для поиска")
             String name
     );

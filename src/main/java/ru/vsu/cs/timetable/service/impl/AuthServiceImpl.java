@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import ru.vsu.cs.timetable.service.AuthService;
 import ru.vsu.cs.timetable.service.UserService;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -25,6 +27,8 @@ public class AuthServiceImpl implements AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getUsername(), userLoginDto.getPassword()));
 
+        log.info("user: {} was successfully logged in", user);
+
         return new JwtDto(jwtTokenProvider.generateAccessToken(user), jwtTokenProvider.generateRefreshToken(user));
     }
 
@@ -32,6 +36,8 @@ public class AuthServiceImpl implements AuthService {
     public JwtDto refreshToken(String refreshToken) {
         String username = jwtTokenProvider.getUsernameFromJwt(refreshToken);
         User user = userService.getUserByUsername(username);
+
+        log.info("user: {} was successfully called refreshToken", user);
 
         return new JwtDto(jwtTokenProvider.generateAccessToken(user), jwtTokenProvider.generateRefreshToken(user));
     }

@@ -36,4 +36,13 @@ public class ImpossibleTime {
     @ManyToOne
     @JoinColumn(name = "request_id", nullable = false)
     private Request request;
+
+    @Override
+    public String toString() {
+        return "ImpossibleTime{" +
+                "id=" + id +
+                ", dayOfWeek=" + dayOfWeek +
+                ", timeFrom=" + timeFrom +
+                '}';
+    }
 }

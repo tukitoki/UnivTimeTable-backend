@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +34,7 @@ import java.util.List;
 import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -102,7 +104,9 @@ public class GroupServiceImpl implements GroupService {
                 .classes(new LinkedHashSet<>())
                 .build();
 
-        groupRepository.save(group);
+        group = groupRepository.save(group);
+
+        log.info("group was successful saved {}", group);
     }
 
     @Override
@@ -110,6 +114,8 @@ public class GroupServiceImpl implements GroupService {
         Group group = findGroupById(id);
 
         groupRepository.delete(group);
+
+        log.info("group was successful deleted {}", group);
     }
 
     @Override
@@ -142,7 +148,9 @@ public class GroupServiceImpl implements GroupService {
 
         BeanUtils.copyProperties(newGroup, oldGroup, ignoreProperties.toArray(String[]::new));
 
-        groupRepository.save(oldGroup);
+        oldGroup = groupRepository.save(oldGroup);
+
+        log.info("group was successful updated {}", oldGroup);
     }
 
     private Page<Group> filerPage(int currentPage, int pageSize, Integer course,

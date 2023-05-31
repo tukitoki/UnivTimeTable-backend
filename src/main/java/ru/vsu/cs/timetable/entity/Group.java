@@ -42,8 +42,16 @@ public class Group {
     private Faculty faculty;
     @OneToMany(mappedBy = "group")
     private List<User> users;
-    @ManyToMany(mappedBy = "groups")
+    @ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
     private Set<Class> classes;
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    private List<Request> requests;
+    @PreRemove
+    private void removeUsersFromGroup() {
+        for (User user : this.users) {
+            user.setGroup(null);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -56,5 +64,18 @@ public class Group {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + id +
+                ", studentsAmount=" + studentsAmount +
+                ", courseNumber=" + courseNumber +
+                ", groupNumber=" + groupNumber +
+                ", headmanId=" + headmanId +
+                ", faculty=" + faculty +
+                ", classes=" + classes +
+                '}';
     }
 }

@@ -29,8 +29,26 @@ public class Faculty {
     @ManyToOne
     @JoinColumn(name = "university_id", nullable = false)
     private University university;
+    @OneToMany(mappedBy = "faculty")
+    private List<User> users;
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL)
     private List<Group> groups;
-    @OneToMany(mappedBy = "faculty")
+    @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL)
     private List<Audience> audiences;
+
+    @PreRemove
+    private void removeEntitiesFromFaculty() {
+        for (User user : this.users) {
+            user.setFaculty(null);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Faculty{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", university=" + university +
+                '}';
+    }
 }

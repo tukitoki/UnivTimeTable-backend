@@ -68,7 +68,7 @@ public class Class {
     public String toString() {
         return subjectName +
                 ", " + typeClass +
-                ", " + lecturer.getFullName() +
-                ", " + audience.getAudienceNumber();
+                ", " + lecturer +
+                ", " + audience;
     }
 }
