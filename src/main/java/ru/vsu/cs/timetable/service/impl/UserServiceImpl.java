@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.page.PageModel;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
-import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
 import ru.vsu.cs.timetable.dto.user.UserDto;
+import ru.vsu.cs.timetable.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.dto.user.UserResponse;
 import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.entity.User;
@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public ShowUserResponse getAllUsers(int currentPage, int pageSize, List<String> universities,
-                                        List<String> roles, List<String> cities, String name) {
+    public UserPageDto getAllUsers(int currentPage, int pageSize, List<String> universities,
+                                   List<String> roles, List<String> cities, String name) {
         Page<User> page = filerPage(currentPage, pageSize, universities, roles, cities, name);
 
         List<UserResponse> userResponses = page.getContent()
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::toResponse)
                 .toList();
 
-        List<String> userRoles = getAllRoles();
+        List<UserRole> userRoles = getAllRoles();
         List<String> univNames = universityService.findAllUniversities()
                 .stream()
                 .map(University::getName)
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
         var pageModel = PageModel.of(userResponses, currentPage, page.getTotalElements(),
                 pageSize, page.getTotalPages());
 
-        return ShowUserResponse.builder()
+        return UserPageDto.builder()
                 .usersPage(pageModel)
                 .cities(userCities)
                 .universities(univNames)
@@ -81,8 +81,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<UserResponse> getFreeHeadmenByFaculty(Long facultyId) {
+        return userRepository.findAllFreeHeadmenByFaculty(facultyId)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public UserDto getUserDtoById(Long id) {
         User user = getUserById(id);
+
         return userMapper.toDto(user);
     }
 
@@ -119,7 +129,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public CreateUserResponse showCreateUser() {
-        List<String> userRoles = getAllRoles();
+        List<UserRole> userRoles = getAllRoles();
         List<UniversityDto> universities = universityService.findAllUniversities()
                 .stream()
                 .map(universityMapper::toDto)
@@ -174,6 +184,7 @@ public class UserServiceImpl implements UserService {
         } else {
             BeanUtils.copyProperties(newUser, oldUser, "id");
         }
+
         userRepository.save(oldUser);
     }
 
@@ -288,9 +299,8 @@ public class UserServiceImpl implements UserService {
         return typedQuery.getSingleResult();
     }
 
-    private List<String> getAllRoles() {
+    private List<UserRole> getAllRoles() {
         return Arrays.stream(UserRole.values())
-                .map(Enum::name)
                 .toList();
     }
 }

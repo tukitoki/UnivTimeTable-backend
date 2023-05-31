@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
-import ru.vsu.cs.timetable.dto.audience.CreateAudienceResponse;
 import ru.vsu.cs.timetable.dto.week_time.DayTimes;
 import ru.vsu.cs.timetable.entity.Audience;
 import ru.vsu.cs.timetable.entity.Faculty;
@@ -20,7 +19,7 @@ public interface AudienceService {
 
     Audience findAudienceByNumberAndFaculty(Integer audienceNumber, Faculty faculty);
 
-    CreateAudienceResponse showCreateAudience();
+    List<String> getAvailableEquipments();
 
     Map<Audience, List<DayTimes>> getFreeAudienceByFaculty(@NotNull Faculty faculty);
 }

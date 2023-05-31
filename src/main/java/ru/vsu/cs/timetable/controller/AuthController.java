@@ -1,6 +1,8 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,13 +21,17 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/login")
-    public JwtDto loginUser(@RequestBody UserLoginDto userLoginDto) {
-        return authService.loginUser(userLoginDto);
+    public ResponseEntity<JwtDto> loginUser(@RequestBody UserLoginDto userLoginDto) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(authService.loginUser(userLoginDto));
     }
 
     @Override
     @PostMapping("/refresh")
-    public JwtDto refreshToken(@RequestBody String refreshToken) {
-        return authService.refreshToken(refreshToken);
+    public ResponseEntity<JwtDto> refreshToken(@RequestBody String refreshToken) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(authService.refreshToken(refreshToken));
     }
 }

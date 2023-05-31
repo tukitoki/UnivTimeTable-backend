@@ -13,12 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.page.PageModel;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.dto.university.CreateUnivRequest;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
+import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.exception.UniversityException;
 import ru.vsu.cs.timetable.mapper.UniversityMapper;
-import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.repository.UniversityRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 import ru.vsu.cs.timetable.service.UniversityService;
@@ -86,14 +85,14 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public void createUniversity(CreateUnivRequest createUnivRequest) {
-        if (universityRepository.findByName(createUnivRequest.getUniversityName()).isPresent()) {
+    public void createUniversity(UniversityDto universityDto) {
+        if (universityRepository.findByName(universityDto.getUniversityName()).isPresent()) {
             throw UniversityException.CODE.UNIVERSITY_ALREADY_PRESENT.get();
         }
 
         University university = University.builder()
-                .name(createUnivRequest.getUniversityName())
-                .city(createUnivRequest.getCity())
+                .name(universityDto.getUniversityName())
+                .city(universityDto.getCity())
                 .build();
 
         universityRepository.save(university);
@@ -102,6 +101,11 @@ public class UniversityServiceImpl implements UniversityService {
     @Override
     public void updateUniversity(UniversityDto universityDto, Long id) {
         University oldUniv = findUnivById(id);
+
+        if (universityRepository.findByName(universityDto.getUniversityName()).isPresent()) {
+            throw UniversityException.CODE.UNIVERSITY_ALREADY_PRESENT.get();
+        }
+
         University newUniv = universityMapper.toEntity(universityDto);
 
         BeanUtils.copyProperties(newUniv, oldUniv, "id", "users", "faculties", "audiences");

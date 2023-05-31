@@ -2,12 +2,12 @@ package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.GroupApi;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
-import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.service.GroupService;
 
@@ -21,7 +21,7 @@ public class GroupController implements GroupApi {
 
     @Override
     @GetMapping("/{facultyId}/groups")
-    public GroupPageDto getFacultyGroups(
+    public ResponseEntity<GroupPageDto> getFacultyGroups(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) Integer course,
@@ -29,39 +29,49 @@ public class GroupController implements GroupApi {
             @RequestParam(defaultValue = "ASC") SortDirection order,
             @PathVariable Long facultyId
     ) {
-        return groupService.getFacultyGroups(currentPage, pageSize, course, groupNumber, order, facultyId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(groupService.getFacultyGroups(currentPage, pageSize, course, groupNumber, order, facultyId));
     }
 
     @Override
     @GetMapping("/group/{id}")
-    public GroupDto getGroupById(@PathVariable Long id) {
-        return groupService.getGroupById(id);
+    public ResponseEntity<GroupDto> getGroupById(@PathVariable Long id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(groupService.getGroupById(id));
     }
 
     @Override
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{facultyId}/group")
-    public void createGroup(@RequestBody GroupDto groupDto,
+    public ResponseEntity<Void> createGroup(@RequestBody GroupDto groupDto,
                             @PathVariable Long facultyId) {
         groupService.createGroup(groupDto, facultyId);
-    }
 
-    @Override
-    @GetMapping("/{facultyId}/group")
-    public ShowCreateGroupDto showCreateGroup(@PathVariable Long facultyId) {
-        return groupService.showCreateGroup(facultyId);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
     @Override
     @DeleteMapping("/group/{id}")
-    public void deleteGroup(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
         groupService.deleteGroup(id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 
     @Override
     @PutMapping("/group/{id}")
-    public void updateGroup(@RequestBody GroupDto groupDto,
+    public ResponseEntity<Void> updateGroup(@RequestBody GroupDto groupDto,
                             @PathVariable Long id) {
         groupService.updateGroup(groupDto, id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 }

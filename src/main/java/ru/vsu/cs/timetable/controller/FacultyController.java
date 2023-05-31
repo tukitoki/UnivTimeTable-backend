@@ -2,6 +2,7 @@ package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.FacultyApi;
@@ -21,40 +22,55 @@ public class FacultyController implements FacultyApi {
 
     @Override
     @GetMapping("/{univId}/faculties")
-    public FacultyPageDto getFacultiesByUniversity(
+    public ResponseEntity<FacultyPageDto> getFacultiesByUniversity(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "ASC") SortDirection order,
             @PathVariable Long univId
     ) {
-        return facultyService.getFacultiesByUniversity(currentPage, pageSize, name, order, univId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(facultyService.getFacultiesByUniversity(currentPage, pageSize, name, order, univId));
     }
 
     @Override
     @GetMapping("/faculty/{id}")
-    public FacultyDto getFacultyById(@PathVariable Long id) {
-        return facultyService.getFacultyById(id);
+    public ResponseEntity<FacultyDto> getFacultyById(@PathVariable Long id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(facultyService.getFacultyById(id));
     }
 
     @Override
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{univId}/faculty/create")
-    public void createFaculty(@RequestBody CreateFacultyRequest createFacultyRequest,
+    public ResponseEntity<Void> createFaculty(@RequestBody CreateFacultyRequest createFacultyRequest,
                               @PathVariable Long univId) {
         facultyService.createFaculty(createFacultyRequest, univId);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
     @Override
     @DeleteMapping("/faculty/{id}")
-    public void deleteFaculty(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 
     @Override
     @PutMapping("/faculty/{id}")
-    public void updateFaculty(@RequestBody FacultyDto facultyDto,
+    public ResponseEntity<Void> updateFaculty(@RequestBody FacultyDto facultyDto,
                               @PathVariable Long id) {
         facultyService.updateFaculty(facultyDto, id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 }

@@ -9,6 +9,7 @@ import ru.vsu.cs.timetable.exception.TimetableException;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Slf4j
 @RestControllerAdvice
@@ -18,8 +19,9 @@ public class TimetableExceptionHandler {
     public ResponseEntity<ErrorMessage> handleAuthException(TimetableException ex) {
         TimetableException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case ADMIN_CANT_ACCESS, TIMETABLE_CANT_BE_GENERATED,
-                    TIMETABLE_WAS_NOT_MADE, TIMETABLE_WAS_ALREADY_MADE -> BAD_REQUEST;
+            case ADMIN_CANT_ACCESS -> FORBIDDEN;
+            case TIMETABLE_CANT_BE_GENERATED, TIMETABLE_WAS_NOT_MADE,
+                    TIMETABLE_WAS_ALREADY_MADE -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();
