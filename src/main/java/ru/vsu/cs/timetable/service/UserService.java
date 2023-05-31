@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
-import ru.vsu.cs.timetable.dto.user.ShowUserResponse;
+import ru.vsu.cs.timetable.dto.user.UserPageDto;
+import ru.vsu.cs.timetable.dto.user.UserResponse;
 import ru.vsu.cs.timetable.entity.User;
 
 import java.util.List;
@@ -13,8 +14,10 @@ import java.util.List;
 @Validated
 public interface UserService {
 
-    ShowUserResponse getAllUsers(int currentPage, int pageSize, List<String> universities,
-                                 List<String> roles, List<String> cities, String name);
+    UserPageDto getAllUsers(int currentPage, int pageSize, List<String> universities,
+                            List<String> roles, List<String> cities, String name);
+
+    List<UserResponse> getFreeHeadmenByFaculty(@NotNull Long facultyId);
 
     UserDto getUserDtoById(@NotNull Long id);
 

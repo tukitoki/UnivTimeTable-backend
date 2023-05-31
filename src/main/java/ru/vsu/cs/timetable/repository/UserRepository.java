@@ -28,6 +28,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
             SELECT u
             FROM User u
             WHERE u.role = "HEADMAN" and u.group = null
+            and u.faculty = :facultyId
             """)
-    List<User> findAllFreeHeadmen();
+    List<User> findAllFreeHeadmenByFaculty(@NotNull Long facultyId);
 }

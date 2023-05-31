@@ -2,11 +2,11 @@ package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UniversityApi;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.dto.university.CreateUnivRequest;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
 import ru.vsu.cs.timetable.service.UniversityService;
@@ -21,38 +21,53 @@ public class UniversityController implements UniversityApi {
 
     @Override
     @GetMapping()
-    public UniversityPageDto getAllUniversities(
+    public ResponseEntity<UniversityPageDto> getAllUniversities(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(required = false) String universityName,
             @RequestParam(defaultValue = "ASC") SortDirection order
     ) {
-        return universityService.getAllUniversities(currentPage, pageSize, universityName, order);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(universityService.getAllUniversities(currentPage, pageSize, universityName, order));
     }
 
     @Override
     @GetMapping("/{id}")
-    public UniversityDto getUniversityById(@PathVariable Long id) {
-        return universityService.getUniversityById(id);
+    public ResponseEntity<UniversityDto> getUniversityById(@PathVariable Long id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(universityService.getUniversityById(id));
     }
 
     @Override
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public void createUniversity(@RequestBody CreateUnivRequest createUnivRequest) {
+    public ResponseEntity<Void> createUniversity(@RequestBody UniversityDto createUnivRequest) {
         universityService.createUniversity(createUnivRequest);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
     @Override
     @PutMapping("/{id}")
-    public void updateUniversity(@RequestBody UniversityDto universityDto,
-                                 @PathVariable Long id) {
+    public ResponseEntity<Void> updateUniversity(@RequestBody UniversityDto universityDto,
+                                                   @PathVariable Long id) {
         universityService.updateUniversity(universityDto, id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public void deleteUniversity(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUniversity(@PathVariable Long id) {
         universityService.deleteUniversity(id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 }

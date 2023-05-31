@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.config;
+package ru.vsu.cs.timetable.config.swagger;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

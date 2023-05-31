@@ -102,6 +102,12 @@ public class FacultyServiceImpl implements FacultyService {
         Faculty oldFaculty = findFacultyById(id);
         Faculty newFaculty = facultyMapper.toEntity(facultyDto);
 
+        var optionalFaculty = facultyRepository.findByNameAndUniversity(facultyDto.getName(),
+                oldFaculty.getUniversity());
+        if (optionalFaculty.isPresent() && !oldFaculty.getName().equals(newFaculty.getName())) {
+            throw FacultyException.CODE.UNIV_FACULTY_ALREADY_PRESENT.get();
+        }
+
         BeanUtils.copyProperties(newFaculty, oldFaculty, "id", "university", "groups", "audiences");
         facultyRepository.save(oldFaculty);
     }
