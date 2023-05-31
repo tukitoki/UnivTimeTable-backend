@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
@@ -25,6 +26,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class AudienceServiceImpl implements AudienceService {
@@ -57,7 +59,10 @@ public class AudienceServiceImpl implements AudienceService {
         });
 
         Audience audience = audienceMapper.toEntity(createAudienceRequest, univ, faculty, equipment);
-        audienceRepository.save(audience);
+
+        audience = audienceRepository.save(audience);
+
+        log.info("audience was saved {}", audience);
     }
 
     @Override

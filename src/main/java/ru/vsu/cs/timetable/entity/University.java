@@ -33,4 +33,13 @@ public class University {
     private List<Faculty> faculties;
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private List<Audience> audiences;
+
+    @Override
+    public String toString() {
+        return "University{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }

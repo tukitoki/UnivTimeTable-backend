@@ -8,14 +8,15 @@ import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.dto.user.UserResponse;
 import ru.vsu.cs.timetable.entity.User;
+import ru.vsu.cs.timetable.entity.enums.UserRole;
 
 import java.util.List;
 
 @Validated
 public interface UserService {
 
-    UserPageDto getAllUsers(int currentPage, int pageSize, List<String> universities,
-                            List<String> roles, List<String> cities, String name);
+    UserPageDto getAllUsers(int currentPage, int pageSize, String university,
+                            UserRole role, String city, String name);
 
     List<UserResponse> getFreeHeadmenByFaculty(@NotNull Long facultyId);
 

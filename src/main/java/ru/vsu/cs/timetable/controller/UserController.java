@@ -10,6 +10,7 @@ import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.dto.user.UserResponse;
+import ru.vsu.cs.timetable.entity.enums.UserRole;
 import ru.vsu.cs.timetable.service.UserService;
 
 import java.util.List;
@@ -27,14 +28,14 @@ public class UserController implements UserApi {
     public ResponseEntity<UserPageDto> getAllUsers(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam(required = false) List<String> universities,
-            @RequestParam(required = false) List<String> roles,
-            @RequestParam(required = false) List<String> cities,
+            @RequestParam(required = false) String university,
+            @RequestParam(required = false) UserRole role,
+            @RequestParam(required = false) String city,
             @RequestParam(required = false) String name
     ) {
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.getAllUsers(currentPage, pageSize, universities, roles, cities, name));
+                .status(HttpStatus.CREATED)
+                .body(userService.getAllUsers(currentPage, pageSize, university, role, city, name));
     }
 
     @Override

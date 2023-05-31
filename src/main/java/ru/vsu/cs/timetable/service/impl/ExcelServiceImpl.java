@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -20,6 +21,7 @@ import static ru.vsu.cs.timetable.utils.TimeUtils.ACADEMICAL_PAIR_MINUTES;
 import static ru.vsu.cs.timetable.utils.TimeUtils.getPossibleClassTimes;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class ExcelServiceImpl implements ExcelService {
 
@@ -87,6 +89,8 @@ public class ExcelServiceImpl implements ExcelService {
             }
             rowIndex++;
         }
+
+        log.info("Excel file was successful generated");
 
         return workbook;
     }

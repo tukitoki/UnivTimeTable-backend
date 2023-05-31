@@ -16,7 +16,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmail(@NotNull String email);
 
     @Query(value = """
-            SELECT u.city
+            SELECT DISTINCT u.city
             FROM User u
             """)
     List<String> findAllUserCities();

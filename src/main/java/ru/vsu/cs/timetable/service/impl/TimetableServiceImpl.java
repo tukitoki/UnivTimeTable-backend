@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ import java.util.*;
 import static ru.vsu.cs.timetable.utils.TimeUtils.*;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class TimetableServiceImpl implements TimetableService {
 
@@ -75,6 +77,8 @@ public class TimetableServiceImpl implements TimetableService {
         if (timetable.countTotalClassesSize() == 0) {
             throw TimetableException.CODE.TIMETABLE_WAS_NOT_MADE.get();
         }
+
+        log.info("user: {}, was successful called get timetable: {}", user, timetable);
 
         return timetable;
     }
@@ -133,6 +137,8 @@ public class TimetableServiceImpl implements TimetableService {
             var timetable = timetableMapper.toEntity(dayOfWeek, dayOfWeekClasses, usedAudiences);
             timetableRepository.save(timetable);
         }
+
+        log.info("user: {}, was successful called make timetable", lecturer);
     }
 
     private List<PlanningClass> getClasses(List<Request> requests) {
