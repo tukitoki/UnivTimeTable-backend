@@ -35,11 +35,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         try {
             String token = getTokenFromRequest(request);
 
-            log.info("token with value: {} was sent", token);
-
             if (token != null) {
                 Authentication authentication = jwtTokenProvider.getAuthTokenFromJwt(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                log.warn("null token was sent");
             }
 
             filterChain.doFilter(request, response);
