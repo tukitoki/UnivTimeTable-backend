@@ -13,7 +13,7 @@ services:
       - data:/tukitoki/db
 
   timetable-service:
-    image: tokichii/demo:latest
+    image: tokichii/timetable:latest
     container_name: timetable
     restart: always
     build:
