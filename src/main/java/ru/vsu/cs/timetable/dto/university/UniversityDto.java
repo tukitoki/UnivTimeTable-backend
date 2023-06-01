@@ -6,9 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
-
-import java.util.List;
 
 @Setter
 @Getter
@@ -19,9 +16,8 @@ public class UniversityDto {
     private Long id;
     @NotNull
     @NotBlank
-    private String univName;
+    private String universityName;
     @NotNull
     @NotBlank
     private String city;
-    private List<FacultyDto> faculties;
 }

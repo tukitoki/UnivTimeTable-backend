@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
+import ru.vsu.cs.timetable.entity.enums.UserRole;
 
 import java.util.List;
 
@@ -12,6 +13,6 @@ import java.util.List;
 @SuperBuilder
 public class CreateUserResponse {
 
-    private List<String> roles;
+    private List<UserRole> roles;
     private List<UniversityDto> universityDtos;
 }

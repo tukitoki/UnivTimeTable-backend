@@ -2,9 +2,9 @@ name: JavaCI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
 
@@ -16,7 +16,7 @@ jobs:
       - name: build & push docker image
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
-          image: tokichii/demo
+          image: tokichii/timetable
           tags: latest
           registry: docker.io
           dockerfile: Dockerfile

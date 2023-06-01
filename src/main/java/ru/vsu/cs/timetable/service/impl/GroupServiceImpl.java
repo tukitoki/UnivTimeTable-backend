@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,16 +14,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
-import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
 import ru.vsu.cs.timetable.dto.page.PageModel;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.exception.GroupException;
-import ru.vsu.cs.timetable.exception.UserException;
-import ru.vsu.cs.timetable.mapper.GroupMapper;
-import ru.vsu.cs.timetable.mapper.UserMapper;
 import ru.vsu.cs.timetable.entity.Faculty;
 import ru.vsu.cs.timetable.entity.Group;
 import ru.vsu.cs.timetable.entity.User;
+import ru.vsu.cs.timetable.exception.GroupException;
+import ru.vsu.cs.timetable.exception.UserException;
+import ru.vsu.cs.timetable.mapper.GroupMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 import ru.vsu.cs.timetable.service.FacultyService;
@@ -35,6 +34,7 @@ import java.util.List;
 import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -43,7 +43,6 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final GroupMapper groupMapper;
-    private final UserMapper userMapper;
     private final EntityManager entityManager;
 
     @Override
@@ -105,20 +104,9 @@ public class GroupServiceImpl implements GroupService {
                 .classes(new LinkedHashSet<>())
                 .build();
 
-        groupRepository.save(group);
-    }
+        group = groupRepository.save(group);
 
-    @Override
-    @Transactional(readOnly = true)
-    public ShowCreateGroupDto showCreateGroup(Long facultyId) {
-        var userResponses = userRepository.findAllFreeHeadmen()
-                .stream()
-                .map(userMapper::toResponse)
-                .toList();
-
-        return ShowCreateGroupDto.builder()
-                .userResponses(userResponses)
-                .build();
+        log.info("group was successful saved {}", group);
     }
 
     @Override
@@ -126,6 +114,8 @@ public class GroupServiceImpl implements GroupService {
         Group group = findGroupById(id);
 
         groupRepository.delete(group);
+
+        log.info("group was successful deleted {}", group);
     }
 
     @Override
@@ -149,9 +139,18 @@ public class GroupServiceImpl implements GroupService {
             newGroup = groupMapper.toEntity(groupDto, headman);
         }
 
+        var optionalGroup = groupRepository.findByFacultyAndGroupNumberAndCourseNumber(oldGroup.getFaculty(),
+                newGroup.getGroupNumber(), newGroup.getGroupNumber());
+        if (optionalGroup.isPresent() && !oldGroup.getGroupNumber().equals(newGroup.getGroupNumber())
+                && !oldGroup.getCourseNumber().equals(newGroup.getGroupNumber())) {
+            throw GroupException.CODE.GROUP_FACULTY_ALREADY_PRESENT.get();
+        }
+
         BeanUtils.copyProperties(newGroup, oldGroup, ignoreProperties.toArray(String[]::new));
 
-        groupRepository.save(oldGroup);
+        oldGroup = groupRepository.save(oldGroup);
+
+        log.info("group was successful updated {}", oldGroup);
     }
 
     private Page<Group> filerPage(int currentPage, int pageSize, Integer course,

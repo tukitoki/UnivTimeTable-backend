@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.dto.university.CreateUnivRequest;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
 import ru.vsu.cs.timetable.entity.University;
@@ -25,7 +24,7 @@ public interface UniversityService {
 
     List<University> findAllUniversities();
 
-    void createUniversity(@NotNull @Valid CreateUnivRequest createUnivRequest);
+    void createUniversity(@NotNull @Valid UniversityDto createUnivRequest);
 
     void updateUniversity(@NotNull @Valid UniversityDto universityDto,
                           @NotNull Long id);

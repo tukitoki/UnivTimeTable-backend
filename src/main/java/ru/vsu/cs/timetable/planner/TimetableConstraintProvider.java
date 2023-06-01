@@ -8,6 +8,8 @@ import org.optaplanner.core.api.score.stream.Joiners;
 import ru.vsu.cs.timetable.entity.Group;
 import ru.vsu.cs.timetable.planner.model.PlanningClass;
 
+import java.time.LocalTime;
+
 public class TimetableConstraintProvider implements ConstraintProvider {
 
     @Override
@@ -18,6 +20,7 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                 audienceCapacityConflict(constraintFactory),
                 studentGroupConflict(constraintFactory),
                 audienceEquipmentConflict(constraintFactory),
+                impossibleTimeConflict(constraintFactory),
                 timeConflict(constraintFactory)
         };
     }
@@ -34,8 +37,8 @@ public class TimetableConstraintProvider implements ConstraintProvider {
 
     private Constraint audienceCapacityConflict(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
-                .filter(aClass -> aClass.getAudience().getCapacity() <
-                        aClass.getGroups().stream()
+                .filter(aClass ->
+                        aClass.getAudience().getCapacity() < aClass.getGroups().stream()
                                 .mapToInt(Group::getStudentsAmount)
                                 .sum()
                         && !aClass.getAudience().getEquipments().containsAll(aClass.getRequiredEquipments()))
@@ -61,11 +64,11 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                 .asConstraint("Lecturer conflict");
     }
 
-    private Constraint timeConflict(ConstraintFactory constraintFactory) {
+    private Constraint impossibleTimeConflict(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
                 .filter(aClass -> aClass.getImpossibleTimes().contains(aClass.getTimeslot()))
                 .penalize(HardSoftScore.ONE_SOFT)
-                .asConstraint("Time conflict");
+                .asConstraint("Impossible time conflict");
     }
 
     private Constraint studentGroupConflict(ConstraintFactory constraintFactory) {
@@ -76,5 +79,12 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                         Joiners.lessThan(PlanningClass::getId))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Student group conflict");
+    }
+
+    private Constraint timeConflict(ConstraintFactory constraintFactory) {
+        return constraintFactory.forEach(PlanningClass.class)
+                .filter(aClass -> aClass.getTimeslot().getStartTime().isAfter(LocalTime.of(16, 45)))
+                .penalize(HardSoftScore.ONE_SOFT)
+                .asConstraint("Time conflict before 16:45");
     }
 }

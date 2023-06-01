@@ -41,4 +41,12 @@ public class Equipment {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Override
+    public String toString() {
+        return "Equipment{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

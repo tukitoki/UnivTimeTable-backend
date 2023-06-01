@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -34,6 +35,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -66,7 +68,9 @@ public class RequestServiceImpl implements RequestService {
 
         var request = requestMapper.toEntity(sendRequest, lecturer, group, impossibleTimes, requestEquipment);
 
-        requestRepository.save(request);
+        request = requestRepository.save(request);
+
+        log.info("lecturer: {}  was successful saved request {}", lecturer, request);
     }
 
     @Override
@@ -108,11 +112,11 @@ public class RequestServiceImpl implements RequestService {
         var initClassDto = moveClassRequest.getInitClass();
         var classDtoToMove = moveClassRequest.getClassToMove();
 
-        var initClass = classRepository.findClassToMove(initClassDto.getSubjectName(), initClassDto.getStartTime(),
+        Class initClass = classRepository.findClassToMove(initClassDto.getSubjectName(), initClassDto.getStartTime(),
                         initClassDto.getAudience(), initClassDto.getDayOfWeek(),
                         initClassDto.getTypeOfClass(), initClassDto.getWeekType(), lecturer)
                 .orElseThrow(ClassException.CODE.INCORRECT_CLASS_TO_MOVE::get);
-        var classToMove = classMapper.toEntity(classDtoToMove);
+        Class classToMove = classMapper.toEntity(classDtoToMove);
 
         var audience = audienceService.findAudienceByNumberAndFaculty(classDtoToMove.getAudience(),
                 lecturer.getFaculty());
@@ -128,7 +132,11 @@ public class RequestServiceImpl implements RequestService {
         classToMove.setAudience(audience);
         copyClassProperties(classToMove, initClass);
 
-        classRepository.save(initClass);
+        var initClassStr = initClass.toString();
+
+        initClass = classRepository.save(initClass);
+
+        log.info("lecturer: {}, was successful moved class to {} from {}", lecturer, initClass, initClassStr);
     }
 
     @Override

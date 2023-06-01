@@ -1,6 +1,8 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -22,34 +24,48 @@ public class RequestController implements RequestApi {
     @Override
     @PreAuthorize("hasAuthority('SEND_REQUEST_AUTHORITY')")
     @PostMapping("/send")
-    public void sendRequest(@RequestBody SendRequest sendRequest,
-                            Authentication authentication) {
+    public ResponseEntity<Void> sendRequest(@RequestBody SendRequest sendRequest,
+                                            Authentication authentication) {
         String username = authentication.getName();
         requestService.sendRequest(sendRequest, username);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
     @Override
     @PreAuthorize("hasAuthority('SEND_REQUEST_AUTHORITY')")
     @GetMapping("/send")
-    public ShowSendRequest showSendRequest(Authentication authentication) {
+    public ResponseEntity<ShowSendRequest> sendRequestInfo(Authentication authentication) {
         String username = authentication.getName();
-        return requestService.showSendRequest(username);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(requestService.showSendRequest(username));
     }
 
     @Override
     @PreAuthorize("hasAuthority('MOVE_CLASS_AUTHORITY')")
     @PostMapping("/move-class")
-    public void moveClass(@RequestBody MoveClassRequest moveClassRequest,
-                          Authentication authentication) {
+    public ResponseEntity<Void> moveClass(@RequestBody MoveClassRequest moveClassRequest,
+                                          Authentication authentication) {
         String username = authentication.getName();
         requestService.moveClass(moveClassRequest, username);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 
     @Override
     @PreAuthorize("hasAuthority('MOVE_CLASS_AUTHORITY')")
     @GetMapping("/move-class")
-    public MoveClassResponse showMoveClass(Authentication authentication) {
+    public ResponseEntity<MoveClassResponse> moveClassInfo(Authentication authentication) {
         String username = authentication.getName();
-        return requestService.showMoveClass(username);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(requestService.showMoveClass(username));
     }
 }
