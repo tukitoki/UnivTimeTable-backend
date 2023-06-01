@@ -106,7 +106,8 @@ public class UniversityServiceImpl implements UniversityService {
     public void updateUniversity(UniversityDto universityDto, Long id) {
         University oldUniv = findUnivById(id);
 
-        if (universityRepository.findByName(universityDto.getUniversityName()).isPresent()) {
+        if (!oldUniv.getName().equals(universityDto.getUniversityName())
+                && universityRepository.findByName(universityDto.getUniversityName()).isPresent()) {
             throw UniversityException.CODE.UNIVERSITY_ALREADY_PRESENT.get();
         }
 
