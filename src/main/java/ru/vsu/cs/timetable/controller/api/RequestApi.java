@@ -103,7 +103,13 @@ public interface RequestApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешная отправка информации"
+                    description = "Успешная отправка информации",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = MoveClassResponse.class)
+                            )
+                    }
             )
     })
     @Operation(
