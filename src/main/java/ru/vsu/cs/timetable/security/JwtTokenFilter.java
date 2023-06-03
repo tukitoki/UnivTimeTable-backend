@@ -34,12 +34,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         try {
             String token = getTokenFromRequest(request);
-
-            log.info("token with value: {} was sent", token);
-
+            String servletPath = request.getServletPath();
             if (token != null) {
                 Authentication authentication = jwtTokenProvider.getAuthTokenFromJwt(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else if (!servletPath.contains("swagger") && !servletPath.contains("api")) {
+                log.warn("null token was sent");
             }
 
             filterChain.doFilter(request, response);

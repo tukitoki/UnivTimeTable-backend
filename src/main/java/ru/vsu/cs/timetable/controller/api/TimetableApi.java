@@ -86,8 +86,8 @@ public interface TimetableApi {
 
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
-                    description = "Успешное составление расписания"
+                    responseCode = "200",
+                    description = "Расписание начало составляться"
             ),
             @ApiResponse(
                     responseCode = "400",

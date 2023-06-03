@@ -3,10 +3,9 @@ package ru.vsu.cs.timetable.service;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassResponse;
-import ru.vsu.cs.timetable.dto.univ_requests.SendRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequest;
+import ru.vsu.cs.timetable.dto.univ_requests.*;
+
+import java.util.List;
 
 @Validated
 public interface RequestService {
@@ -20,4 +19,6 @@ public interface RequestService {
                    @NotNull String username);
 
     MoveClassResponse showMoveClass(String username);
+
+    List<RequestDto> getAllRequests(String username);
 }

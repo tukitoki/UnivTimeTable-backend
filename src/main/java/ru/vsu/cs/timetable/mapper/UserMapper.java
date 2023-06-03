@@ -51,22 +51,22 @@ public class UserMapper {
     }
 
     public UserResponse toResponse(User user) {
-        Long univId = user.getUniversity() == null
+        String univName = user.getUniversity() == null
                 ? null
-                : user.getUniversity().getId();
-        Long facultyId = user.getFaculty() == null
+                : user.getUniversity().getName();
+        String facultyName = user.getFaculty() == null
                 ? null
-                : user.getFaculty().getId();
+                : user.getFaculty().getName();
         Integer groupId = user.getGroup() == null
                 ? null
                 : user.getGroup().getGroupNumber();
         return UserResponse.builder()
                 .id(user.getId())
-                .role(user.getRole().name())
+                .role(user.getRole())
                 .fullName(user.getFullName())
                 .city(user.getCity())
-                .universityId(univId)
-                .facultyId(facultyId)
+                .univName(univName)
+                .facultyName(facultyName)
                 .group(groupId)
                 .build();
     }

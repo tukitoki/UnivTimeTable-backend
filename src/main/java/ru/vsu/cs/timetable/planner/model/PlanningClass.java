@@ -36,4 +36,13 @@ public class PlanningClass {
     private List<Timeslot> impossibleTimes;
     private Set<Group> groups;
     private Set<Equipment> requiredEquipments;
+    private String hardViolation;
+
+    @Override
+    public String toString() {
+        return "Пара:" +
+                " " + subjectName +
+                ", " + timeslot +
+                ", " + lecturer.getFullName();
+    }
 }
