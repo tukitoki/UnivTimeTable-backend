@@ -89,8 +89,8 @@ public class GroupServiceImpl implements GroupService {
                 groupDto.getGroupNumber(), groupDto.getCourseNumber()).isPresent()) {
             throw GroupException.CODE.GROUP_FACULTY_ALREADY_PRESENT.get();
         }
-        if (groupDto.getHeadmanId() != null) {
-            userRepository.findById(groupDto.getHeadmanId())
+        if (groupDto.getHeadman() != null) {
+            userRepository.findById(groupDto.getHeadman().getId())
                     .orElseThrow(UserException.CODE.ID_NOT_FOUND::get);
         }
 
@@ -98,7 +98,7 @@ public class GroupServiceImpl implements GroupService {
                 .studentsAmount(groupDto.getStudentsAmount())
                 .courseNumber(groupDto.getCourseNumber())
                 .groupNumber(groupDto.getGroupNumber())
-                .headmanId(groupDto.getHeadmanId())
+                .headmanId(groupDto.getHeadman().getId())
                 .faculty(faculty)
                 .users(new ArrayList<>())
                 .classes(new LinkedHashSet<>())
@@ -124,14 +124,14 @@ public class GroupServiceImpl implements GroupService {
         Group newGroup;
         List<String> ignoreProperties = new ArrayList<>(List.of("id", "faculty", "classes"));
 
-        if (groupDto.getHeadmanId() == null) {
+        if (groupDto.getHeadman() == null) {
             newGroup = groupMapper.toEntity(groupDto);
             newGroup.setUsers(new ArrayList<>());
-        } else if (groupDto.getHeadmanId().equals(oldGroup.getHeadmanId())) {
+        } else if (groupDto.getHeadman().getId().equals(oldGroup.getHeadmanId())) {
             ignoreProperties.add("users");
             newGroup = groupMapper.toEntity(groupDto);
         } else {
-            User headman = userRepository.findById(groupDto.getHeadmanId())
+            User headman = userRepository.findById(groupDto.getHeadman().getId())
                     .orElseThrow(UserException.CODE.ID_NOT_FOUND::get);
             headman.setGroup(oldGroup);
             userRepository.save(headman);

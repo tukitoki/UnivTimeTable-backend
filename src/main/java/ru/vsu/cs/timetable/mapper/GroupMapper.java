@@ -1,5 +1,6 @@
 package ru.vsu.cs.timetable.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.entity.Group;
@@ -8,16 +9,26 @@ import ru.vsu.cs.timetable.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Component
 public class GroupMapper {
 
+    private final UserMapper userMapper;
+
     public GroupDto toDto(Group group) {
+        User headman = group.getUsers().stream()
+                .filter(user -> user.getId().equals(group.getHeadmanId()))
+                .findFirst()
+                .orElse(null);
+
         return GroupDto.builder()
                 .id(group.getId())
                 .groupNumber(group.getGroupNumber())
                 .courseNumber(group.getCourseNumber())
                 .studentsAmount(group.getStudentsAmount())
-                .headmanId(group.getHeadmanId())
+                .headman(headman == null
+                        ? null
+                        : userMapper.toResponse(headman))
                 .build();
     }
 
@@ -27,7 +38,7 @@ public class GroupMapper {
                 .courseNumber(groupDto.getCourseNumber())
                 .studentsAmount(groupDto.getStudentsAmount())
                 .groupNumber(groupDto.getGroupNumber())
-                .headmanId(groupDto.getHeadmanId())
+                .headmanId(groupDto.getHeadman().getId())
                 .build();
     }
 
@@ -39,7 +50,7 @@ public class GroupMapper {
                 .courseNumber(groupDto.getCourseNumber())
                 .groupNumber(groupDto.getGroupNumber())
                 .studentsAmount(groupDto.getStudentsAmount())
-                .headmanId(groupDto.getHeadmanId())
+                .headmanId(groupDto.getHeadman().getId())
                 .users(users)
                 .build();
     }

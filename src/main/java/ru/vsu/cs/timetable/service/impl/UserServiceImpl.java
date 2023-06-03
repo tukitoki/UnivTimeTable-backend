@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.page.PageModel;
-import ru.vsu.cs.timetable.dto.university.UniversityDto;
+import ru.vsu.cs.timetable.dto.university.UniversityResponse;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.UserPageDto;
@@ -134,14 +134,14 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public CreateUserResponse showCreateUser() {
         List<UserRole> userRoles = getAllRoles();
-        List<UniversityDto> universities = universityService.findAllUniversities()
+        List<UniversityResponse> universities = universityService.findAllUniversities()
                 .stream()
-                .map(universityMapper::toDto)
+                .map(universityMapper::toResponse)
                 .toList();
 
         return CreateUserResponse.builder()
                 .roles(userRoles)
-                .universityDtos(universities)
+                .universityResponses(universities)
                 .build();
     }
 

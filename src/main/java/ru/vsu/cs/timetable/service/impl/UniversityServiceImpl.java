@@ -121,7 +121,6 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    @Transactional
     public void deleteUniversity(Long id) {
         University university = findUnivById(id);
         university.getUsers().forEach(user -> {

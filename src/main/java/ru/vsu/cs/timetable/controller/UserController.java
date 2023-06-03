@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UserApi;
-import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.CreateUserResponse;
+import ru.vsu.cs.timetable.dto.user.UserDto;
 import ru.vsu.cs.timetable.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.dto.user.UserResponse;
 import ru.vsu.cs.timetable.entity.enums.UserRole;
@@ -34,7 +34,7 @@ public class UserController implements UserApi {
             @RequestParam(required = false) String name
     ) {
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .body(userService.getAllUsers(currentPage, pageSize, university, role, city, name));
     }
 
@@ -64,7 +64,7 @@ public class UserController implements UserApi {
         userService.createUser(userDto);
 
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .build();
     }
 

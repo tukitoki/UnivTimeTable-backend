@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import ru.vsu.cs.timetable.entity.enums.UserRole;
 
 @Setter
 @Getter
@@ -12,10 +13,10 @@ import lombok.experimental.SuperBuilder;
 public class UserResponse {
 
     private Long id;
-    private String role;
+    private UserRole role;
     private String fullName;
     private String city;
-    private Long universityId;
-    private Long facultyId;
+    private String univName;
+    private String facultyName;
     private Integer group;
 }

@@ -71,4 +71,18 @@ public class Class {
                 ", " + lecturer +
                 ", " + audience;
     }
+
+    public String toExcelFormat() {
+        return subjectName +
+                ", " + lecturer.getFullName() +
+                ", " + typeClass +
+                ", Аудитория: " + audience.getAudienceNumber();
+    }
+
+    public String toStringMoveClass() {
+        return "Предмет: " + subjectName +
+                ", Аудитория: " + audience.getAudienceNumber() +
+                ", День недели: " + dayOfWeek +
+                ", Тип недели: " + weekType;
+    }
 }

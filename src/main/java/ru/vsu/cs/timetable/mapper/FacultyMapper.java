@@ -3,6 +3,7 @@ package ru.vsu.cs.timetable.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
+import ru.vsu.cs.timetable.dto.faculty.FacultyResponse;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.entity.Faculty;
 
@@ -15,12 +16,19 @@ public class FacultyMapper {
     private final GroupMapper groupMapper;
 
     public FacultyDto toDto(Faculty faculty) {
+        return FacultyDto.builder()
+                .id(faculty.getId())
+                .name(faculty.getName())
+                .build();
+    }
+
+    public FacultyResponse toResponse(Faculty faculty) {
         List<GroupDto> groups = faculty.getGroups()
                 .stream()
                 .map(groupMapper::toDto)
                 .toList();
 
-        return FacultyDto.builder()
+        return FacultyResponse.builder()
                 .id(faculty.getId())
                 .name(faculty.getName())
                 .groups(groups)

@@ -131,13 +131,13 @@ public interface UserApi {
                     description = "Успешный показ информации для создании пользователя",
                     content = {
                             @Content(
-                                    schema = @Schema(implementation = UserDto.class)
+                                    schema = @Schema(implementation = CreateUserResponse.class)
                             )
                     }
             )
     })
     @Operation(
-            summary = "Показ страницы создания пользователя"
+            summary = "Показ информации для создания пользователя"
     )
     ResponseEntity<CreateUserResponse> createUserInfo();
 
