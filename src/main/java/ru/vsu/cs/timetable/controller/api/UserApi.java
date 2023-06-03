@@ -137,7 +137,7 @@ public interface UserApi {
             )
     })
     @Operation(
-            summary = "Показ страницы создания пользователя"
+            summary = "Показ информации для создания пользователя"
     )
     ResponseEntity<CreateUserResponse> createUserInfo();
 

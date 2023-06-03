@@ -32,9 +32,10 @@ public class UserDto {
     @NotNull
     @NotBlank
     private String city;
+    @Size(min = 5)
+    @Size(max = 25)
     @NotNull
     @NotBlank
-    @Size(min = 5, max = 25)
     private String password;
     private Long universityId;
     private Long facultyId;

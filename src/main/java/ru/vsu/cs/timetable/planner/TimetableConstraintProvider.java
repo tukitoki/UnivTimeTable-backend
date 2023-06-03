@@ -7,6 +7,7 @@ import org.optaplanner.core.api.score.stream.ConstraintProvider;
 import org.optaplanner.core.api.score.stream.Joiners;
 import ru.vsu.cs.timetable.entity.Group;
 import ru.vsu.cs.timetable.planner.model.PlanningClass;
+import ru.vsu.cs.timetable.planner.utils.HardViolationTemplateUtil;
 
 import java.time.LocalTime;
 
@@ -31,6 +32,13 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                         Joiners.equal(PlanningClass::getAudience),
                         Joiners.equal(PlanningClass::getTimeslot),
                         Joiners.lessThan(PlanningClass::getId))
+                .filter((planningClass, planningClass2) -> {
+                    boolean violation = planningClass.getAudience().equals(planningClass2.getAudience());
+                    if (violation) {
+                        planningClass.setHardViolation(HardViolationTemplateUtil.audienceConflict(planningClass, planningClass2));
+                    }
+                    return violation;
+                })
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Audience conflict");
     }
@@ -41,15 +49,16 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                         aClass.getAudience().getCapacity() < aClass.getGroups().stream()
                                 .mapToInt(Group::getStudentsAmount)
                                 .sum()
-                        && !aClass.getAudience().getEquipments().containsAll(aClass.getRequiredEquipments()))
-                .penalize(HardSoftScore.ONE_SOFT)
+                )
+                .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Audience capacity conflict");
     }
 
     private Constraint audienceEquipmentConflict(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
-                .filter(aClass ->
-                        !aClass.getAudience().getEquipments().containsAll(aClass.getRequiredEquipments()))
+                .filter(planningClass ->
+                        !planningClass.getAudience().getEquipments()
+                                .containsAll(planningClass.getRequiredEquipments()))
                 .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Audience equipment conflict");
     }
@@ -60,13 +69,21 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                         Joiners.equal(PlanningClass::getTimeslot),
                         Joiners.equal(PlanningClass::getLecturer),
                         Joiners.lessThan(PlanningClass::getId))
+                .filter((planningClass, planningClass2) -> {
+                    boolean violation = planningClass.getLecturer().equals(planningClass2.getLecturer());
+                    if (violation) {
+                        planningClass.setHardViolation(HardViolationTemplateUtil.lecturerConflict(planningClass, planningClass2));
+                    }
+                    return violation;
+                })
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Lecturer conflict");
     }
 
     private Constraint impossibleTimeConflict(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
-                .filter(aClass -> aClass.getImpossibleTimes().contains(aClass.getTimeslot()))
+                .filter(planningClass -> planningClass.getImpossibleTimes()
+                        .contains(planningClass.getTimeslot()))
                 .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Impossible time conflict");
     }
@@ -77,13 +94,21 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                         Joiners.equal(PlanningClass::getGroups),
                         Joiners.equal(PlanningClass::getTimeslot),
                         Joiners.lessThan(PlanningClass::getId))
+                .filter((planningClass, planningClass2) -> {
+                    boolean violation = planningClass.getGroups().equals(planningClass2.getGroups());
+                    if (violation) {
+                        planningClass.setHardViolation(HardViolationTemplateUtil.studentGroupConflict(planningClass, planningClass2));
+                    }
+                    return violation;
+                })
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Student group conflict");
     }
 
     private Constraint timeConflict(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
-                .filter(aClass -> aClass.getTimeslot().getStartTime().isAfter(LocalTime.of(16, 45)))
+                .filter(planningClass -> planningClass.getTimeslot()
+                        .getStartTime().isAfter(LocalTime.of(16, 45)))
                 .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Time conflict before 16:45");
     }

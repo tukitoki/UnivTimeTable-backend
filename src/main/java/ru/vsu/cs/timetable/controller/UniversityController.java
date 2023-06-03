@@ -53,7 +53,7 @@ public class UniversityController implements UniversityApi {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateUniversity(@RequestBody UniversityDto universityDto,
-                                                   @PathVariable Long id) {
+                                                 @PathVariable Long id) {
         universityService.updateUniversity(universityDto, id);
 
         return ResponseEntity

@@ -43,7 +43,6 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{facultyId}/group")
     public ResponseEntity<Void> createGroup(@RequestBody GroupDto groupDto,
                             @PathVariable Long facultyId) {

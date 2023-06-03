@@ -35,4 +35,12 @@ public class Timeslot {
     public int hashCode() {
         return Objects.hash(dayOfWeekEnum, startTime, endTime);
     }
+
+    @Override
+    public String toString() {
+        return "Временной промежуток:" +
+                " " + dayOfWeekEnum +
+                ", " + weekType +
+                ", " + startTime + "-" + endTime;
+    }
 }
