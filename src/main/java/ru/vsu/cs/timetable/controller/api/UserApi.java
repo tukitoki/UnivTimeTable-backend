@@ -131,7 +131,7 @@ public interface UserApi {
                     description = "Успешный показ информации для создании пользователя",
                     content = {
                             @Content(
-                                    schema = @Schema(implementation = UserDto.class)
+                                    schema = @Schema(implementation = CreateUserResponse.class)
                             )
                     }
             )

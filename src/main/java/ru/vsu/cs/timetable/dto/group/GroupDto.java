@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import ru.vsu.cs.timetable.dto.user.UserResponse;
 
 @Setter
 @Getter
@@ -24,5 +25,5 @@ public class GroupDto {
     @Positive
     private Integer studentsAmount;
     @Positive
-    private Long headmanId;
+    private UserResponse headman;
 }

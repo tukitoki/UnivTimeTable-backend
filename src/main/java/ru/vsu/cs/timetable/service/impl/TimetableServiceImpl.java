@@ -126,12 +126,12 @@ public class TimetableServiceImpl implements TimetableService {
 
         PlanningTimetable solutionTimetable = timetableSolver.solve(problemTimetable);
         if (solutionTimetable.getHardSoftScore().hardScore() < 0) {
-            String summaryViolation = solutionTimetable.getClasses().stream()
+            String summaryViolations = solutionTimetable.getClasses().stream()
                     .map(PlanningClass::getHardViolation)
                     .filter(Objects::nonNull)
                     .collect(Collectors.joining(System.lineSeparator()));
 
-            mailService.sendTimetableCantMade(lecturer.getEmail(), summaryViolation);
+            mailService.sendTimetableCantMade(lecturer.getEmail(), summaryViolations);
 
             throw TimetableException.CODE.TIMETABLE_CANT_BE_GENERATED.get();
         }
