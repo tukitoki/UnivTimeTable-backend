@@ -7,15 +7,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.vsu.cs.timetable.dto.user.UserDto;
+import ru.vsu.cs.timetable.entity.Faculty;
 import ru.vsu.cs.timetable.entity.Group;
+import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.entity.User;
 import ru.vsu.cs.timetable.entity.enums.UserRole;
 import ru.vsu.cs.timetable.mapper.UserMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
+import ru.vsu.cs.timetable.repository.UniversityRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 
 import java.util.Optional;
@@ -32,6 +34,8 @@ class UserServiceImplTest {
     @Mock
     private GroupRepository groupRepository;
     @Mock
+    private UniversityRepository universityRepository;
+    @Mock
     private UserMapper userMapper = new UserMapper();
     @InjectMocks
     private UserServiceImpl userServiceImpl;
@@ -39,6 +43,8 @@ class UserServiceImplTest {
                                                 "password","Воронеж", null, null, null);
     private Group group = new Group();
     private User user = new User();
+    private University university = new University();
+    private Faculty faculty = new Faculty();
 
     @BeforeEach
     void setUp() {
@@ -60,10 +66,6 @@ class UserServiceImplTest {
     void tearDown() {}
 
     @Test
-    void getAllUsers() {
-    }
-
-    @Test
     void getUserDtoById() {
         when(userRepository.findById(121311342L))
                 .thenReturn(Optional.of(user));
@@ -82,11 +84,16 @@ class UserServiceImplTest {
     }
 
     @Test
-    void showCreateUser() {
-    }
-
-    @Test
     void updateUser() {
+//        when(userRepository.findById(121311342L))
+//                .thenReturn(Optional.of(user));
+//        when(userRepository.findByUsername("ivan"))
+//                .thenReturn(Optional.of(user));
+//        when(userRepository.findByEmail("ivan@mail.ru"))
+//                .thenReturn(Optional.of(user));
+//
+//        when(universityRepository.findById(userDto.getUniversityId()).thenReturn(Optional.of(user.getUniversity())));
+//        when(groupRepository.findById(userDto.getGroupId());
     }
 
     @Test
