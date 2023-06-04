@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.cs.timetable.controller.api.TimetableApi;
-import ru.vsu.cs.timetable.dto.TimetableResponse;
-import ru.vsu.cs.timetable.service.TimetableService;
+import ru.vsu.cs.timetable.model.dto.TimetableResponse;
+import ru.vsu.cs.timetable.logic.service.TimetableService;
 
 @RequiredArgsConstructor
 @RequestMapping("/schedule")

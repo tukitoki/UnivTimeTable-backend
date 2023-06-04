@@ -7,8 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.RequestApi;
-import ru.vsu.cs.timetable.dto.univ_requests.*;
-import ru.vsu.cs.timetable.service.RequestService;
+import ru.vsu.cs.timetable.logic.service.RequestService;
+import ru.vsu.cs.timetable.model.dto.univ_requests.*;
 
 import java.util.List;
 
