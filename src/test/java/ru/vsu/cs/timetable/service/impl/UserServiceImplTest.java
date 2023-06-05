@@ -47,7 +47,8 @@ class UserServiceImplTest {
     private FacultyService facultyService;
     @Mock
     private PasswordEncoder passwordEncoder;
-    private final UserDto userDto = new UserDto(121311342L, "HEADMAN", "Иванов Иван Иванович", "ivan", "ivan@mail.ru",
+    private UserRole userRole = UserRole.HEADMAN;
+    private final UserDto userDto = new UserDto(121311342L, userRole, "Иванов Иван Иванович", "ivan", "ivan@mail.ru",
             "Воронеж", "password", null, null, null);
     private Group group = new Group();
     private User user = new User();
@@ -100,7 +101,7 @@ class UserServiceImplTest {
 
     @Test
     void createUser() {
-        UserDto userToCreateDto = new UserDto(4L, "HEADMAN", "Семёнов Артём Валерьевич", "Artem", "artem@mail.ru", "Воронеж",
+        UserDto userToCreateDto = new UserDto(4L, userRole, "Семёнов Артём Валерьевич", "Artem", "artem@mail.ru", "Воронеж",
                 "password", 1L, 1L, 1L);
 
         when(groupService.findGroupById(1L)).
@@ -158,7 +159,7 @@ class UserServiceImplTest {
         assert(userToUpdate.getUsername().equals("Petro"));
         assert(userToUpdate.getFaculty().getName().equals("ПММ"));
 
-        UserDto newUserDto = new UserDto(3L, "HEADMAN", "Семёнов Артём Валерьевич", "semen", "semen@mail.ru", "Воронеж",
+        UserDto newUserDto = new UserDto(3L, userRole, "Семёнов Артём Валерьевич", "semen", "semen@mail.ru", "Воронеж",
                 "password", 1L, 1L, 1L);
         User newUser = new User();
         newUser.setCity("Воронеж");
