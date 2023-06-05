@@ -107,6 +107,8 @@ public class UserServiceImpl implements UserService {
             throw UserException.CODE.EMAIL_ALREADY_PRESENT.get();
         }
 
+        validCreatingUser(userDto.getRole(), userDto.getUniversityId(), userDto.getFacultyId(), userDto.getGroupId());
+
         var univ = userDto.getUniversityId() == null
                 ? null
                 : universityService.findUnivById(userDto.getUniversityId());
@@ -178,10 +180,19 @@ public class UserServiceImpl implements UserService {
 
         if (group != null && oldUser.getGroup() == null) {
             group.setStudentsAmount(group.getStudentsAmount() + 1);
+            group.setHeadmanId(oldUser.getId());
             groupRepository.save(group);
         } else if (group == null && oldUser.getGroup() != null) {
             oldUser.getGroup().setStudentsAmount(oldUser.getGroup().getStudentsAmount() - 1);
+            oldUser.getGroup().setHeadmanId(null);
             groupRepository.save(oldUser.getGroup());
+        } else if (group != null) {
+            oldUser.getGroup().setHeadmanId(null);
+            oldUser.getGroup().setStudentsAmount(oldUser.getGroup().getStudentsAmount() - 1);
+            group.setStudentsAmount(group.getStudentsAmount() + 1);
+            group.setHeadmanId(oldUser.getId());
+            groupRepository.save(oldUser.getGroup());
+            groupRepository.save(group);
         }
 
         User newUser = userMapper.toEntity(userDto, univ, group, faculty, password);
@@ -206,7 +217,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(user);
 
-        log.info("user: {}, was successful updated", user);
+        log.info("user: {}, was successful deleted", user);
     }
 
     @Override

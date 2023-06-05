@@ -1,5 +1,6 @@
 package ru.vsu.cs.timetable.model.dto.university;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @SuperBuilder
+@Schema(description = "Полная информация о университете с группами")
 public class UniversityResponse {
 
     private Long id;

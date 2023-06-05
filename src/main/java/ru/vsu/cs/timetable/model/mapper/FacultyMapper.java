@@ -25,7 +25,6 @@ public class FacultyMapper {
     public FacultyResponse toResponse(Faculty faculty) {
         List<GroupDto> groups = faculty.getGroups()
                 .stream()
-                .filter(group -> group.getHeadmanId() == null)
                 .map(groupMapper::toDto)
                 .toList();
 

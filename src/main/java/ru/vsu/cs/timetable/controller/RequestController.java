@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +14,7 @@ import ru.vsu.cs.timetable.model.dto.univ_requests.*;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/request")
 @RestController
 public class RequestController implements RequestApi {
@@ -39,6 +41,7 @@ public class RequestController implements RequestApi {
     public ResponseEntity<ShowSendRequest> sendRequestInfo(Authentication authentication) {
         String username = authentication.getName();
 
+        log.info(requestService.showSendRequest(username).toString());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(requestService.showSendRequest(username));

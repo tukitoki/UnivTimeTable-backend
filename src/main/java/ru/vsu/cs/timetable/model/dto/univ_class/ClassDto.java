@@ -1,5 +1,6 @@
 package ru.vsu.cs.timetable.model.dto.univ_class;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @SuperBuilder
+@Schema(description = "Описание занятия")
 public class ClassDto {
 
     private String subjectName;

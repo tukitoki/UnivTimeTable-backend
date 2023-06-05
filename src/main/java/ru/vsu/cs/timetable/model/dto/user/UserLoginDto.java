@@ -1,5 +1,6 @@
 package ru.vsu.cs.timetable.model.dto.user;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Schema(description = "Информация для входа пользователя")
 public class UserLoginDto {
 
     @NotNull

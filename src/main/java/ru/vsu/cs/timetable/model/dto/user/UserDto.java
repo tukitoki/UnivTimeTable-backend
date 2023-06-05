@@ -1,5 +1,6 @@
 package ru.vsu.cs.timetable.model.dto.user;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import ru.vsu.cs.timetable.model.entity.enums.UserRole;
 @Getter
 @AllArgsConstructor
 @SuperBuilder
+@Schema(description = "Полная информация о пользователе")
 public class UserDto {
 
     private Long id;
@@ -32,10 +34,6 @@ public class UserDto {
     @NotNull
     @NotBlank
     private String city;
-    @Size(min = 5)
-    @Size(max = 25)
-    @NotNull
-    @NotBlank
     private String password;
     private Long universityId;
     private Long facultyId;

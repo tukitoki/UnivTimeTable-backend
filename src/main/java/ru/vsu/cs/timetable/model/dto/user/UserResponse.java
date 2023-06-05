@@ -1,5 +1,6 @@
 package ru.vsu.cs.timetable.model.dto.user;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import ru.vsu.cs.timetable.model.entity.enums.UserRole;
 @Getter
 @AllArgsConstructor
 @SuperBuilder
+@Schema(description = "Информация о пользователе")
 public class UserResponse {
 
     private Long id;
