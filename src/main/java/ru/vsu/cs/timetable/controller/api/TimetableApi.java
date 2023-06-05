@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.config.swagger.annotation.IncorrectUsernameResponse;
-import ru.vsu.cs.timetable.dto.TimetableResponse;
+import ru.vsu.cs.timetable.model.dto.TimetableResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 @AccessDeniedResponse
