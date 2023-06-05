@@ -18,10 +18,6 @@ class AuthServiceImplTest {
     void setUp() {
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void loginUser() {
     }
