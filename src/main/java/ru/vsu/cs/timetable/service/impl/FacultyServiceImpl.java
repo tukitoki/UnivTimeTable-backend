@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +31,7 @@ import java.util.List;
 import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -87,7 +89,9 @@ public class FacultyServiceImpl implements FacultyService {
                 .university(university)
                 .build();
 
-        facultyRepository.save(faculty);
+        faculty = facultyRepository.save(faculty);
+
+        log.info("faculty: {} was successful saved", faculty);
     }
 
     @Override
@@ -95,6 +99,8 @@ public class FacultyServiceImpl implements FacultyService {
         Faculty faculty = findFacultyById(id);
 
         facultyRepository.delete(faculty);
+
+        log.info("faculty: {} was successful deleted", faculty);
     }
 
     @Override
@@ -102,8 +108,16 @@ public class FacultyServiceImpl implements FacultyService {
         Faculty oldFaculty = findFacultyById(id);
         Faculty newFaculty = facultyMapper.toEntity(facultyDto);
 
+        var optionalFaculty = facultyRepository.findByNameAndUniversity(facultyDto.getName(),
+                oldFaculty.getUniversity());
+        if (optionalFaculty.isPresent() && !oldFaculty.getName().equals(newFaculty.getName())) {
+            throw FacultyException.CODE.UNIV_FACULTY_ALREADY_PRESENT.get();
+        }
+
         BeanUtils.copyProperties(newFaculty, oldFaculty, "id", "university", "groups", "audiences");
-        facultyRepository.save(oldFaculty);
+        oldFaculty = facultyRepository.save(oldFaculty);
+
+        log.info("faculty {} was successful updated", oldFaculty);
     }
 
     private Page<Faculty> filerPage(int currentPage, int pageSize, String name,

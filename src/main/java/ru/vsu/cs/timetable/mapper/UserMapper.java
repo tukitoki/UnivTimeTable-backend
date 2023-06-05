@@ -7,7 +7,6 @@ import ru.vsu.cs.timetable.entity.Faculty;
 import ru.vsu.cs.timetable.entity.Group;
 import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.entity.User;
-import ru.vsu.cs.timetable.entity.enums.UserRole;
 
 @Component
 public class UserMapper {
@@ -20,7 +19,7 @@ public class UserMapper {
                 .username(userDto.getUsername())
                 .city(userDto.getCity())
                 .password(password)
-                .role(UserRole.valueOf(userDto.getRole()))
+                .role(userDto.getRole())
                 .group(group)
                 .faculty(faculty)
                 .university(university)
@@ -40,7 +39,7 @@ public class UserMapper {
 
         return UserDto.builder()
                 .id(user.getId())
-                .role(user.getRole().name())
+                .role(user.getRole())
                 .fullName(user.getFullName())
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -52,22 +51,22 @@ public class UserMapper {
     }
 
     public UserResponse toResponse(User user) {
-        Long univId = user.getUniversity() == null
+        String univName = user.getUniversity() == null
                 ? null
-                : user.getUniversity().getId();
-        Long facultyId = user.getFaculty() == null
+                : user.getUniversity().getName();
+        String facultyName = user.getFaculty() == null
                 ? null
-                : user.getFaculty().getId();
+                : user.getFaculty().getName();
         Integer groupId = user.getGroup() == null
                 ? null
                 : user.getGroup().getGroupNumber();
         return UserResponse.builder()
                 .id(user.getId())
-                .role(user.getRole().name())
+                .role(user.getRole())
                 .fullName(user.getFullName())
                 .city(user.getCity())
-                .universityId(univId)
-                .facultyId(facultyId)
+                .univName(univName)
+                .facultyName(facultyName)
                 .group(groupId)
                 .build();
     }

@@ -1,14 +1,19 @@
 package ru.vsu.cs.timetable.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.vsu.cs.timetable.dto.univ_requests.RequestDto;
 import ru.vsu.cs.timetable.dto.univ_requests.SendRequest;
 import ru.vsu.cs.timetable.entity.*;
 
 import java.util.List;
 import java.util.Set;
 
+@RequiredArgsConstructor
 @Component
 public class RequestMapper {
+
+    private final UserMapper userMapper;
 
     public Request toEntity(SendRequest requestDto, User lecturer, Group group,
                             List<ImpossibleTime> impossibleTimes, Set<Equipment> equipment) {
@@ -25,5 +30,14 @@ public class RequestMapper {
         impossibleTimes.forEach(impossibleTime -> impossibleTime.setRequest(request));
 
         return request;
+    }
+
+    public RequestDto toDto(Request request) {
+        return RequestDto.builder()
+                .subjectName(request.getSubjectName())
+                .typeClass(request.getTypeClass())
+                .subjectHourPerWeek(request.getSubjectHourPerWeek())
+                .userDto(userMapper.toDto(request.getLecturer()))
+                .build();
     }
 }

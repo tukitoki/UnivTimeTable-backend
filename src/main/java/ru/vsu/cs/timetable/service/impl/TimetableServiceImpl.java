@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -29,19 +30,23 @@ import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.RequestRepository;
 import ru.vsu.cs.timetable.repository.TimetableRepository;
 import ru.vsu.cs.timetable.service.ExcelService;
+import ru.vsu.cs.timetable.service.MailService;
 import ru.vsu.cs.timetable.service.TimetableService;
 import ru.vsu.cs.timetable.service.UserService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.vsu.cs.timetable.utils.TimeUtils.*;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class TimetableServiceImpl implements TimetableService {
 
     private final UserService userService;
     private final ExcelService excelService;
+    private final MailService mailService;
     private final TimetableRepository timetableRepository;
     private final ClassRepository classRepository;
     private final RequestRepository requestRepository;
@@ -76,6 +81,8 @@ public class TimetableServiceImpl implements TimetableService {
             throw TimetableException.CODE.TIMETABLE_WAS_NOT_MADE.get();
         }
 
+        log.info("user: {}, was successful called get timetable: {}", user, timetable);
+
         return timetable;
     }
 
@@ -86,6 +93,9 @@ public class TimetableServiceImpl implements TimetableService {
         if (user.getRole() == UserRole.ADMIN) {
             throw TimetableException.CODE.ADMIN_CANT_ACCESS.get();
         }
+
+        var excel = excelService.getExcelTimetable(getTimetableByUser(user));
+        mailService.sendExcelTimetableMail(user.getEmail(), excel);
 
         return excelService.getExcelTimetable(getTimetableByUser(user));
     }
@@ -115,7 +125,14 @@ public class TimetableServiceImpl implements TimetableService {
                 .build();
 
         PlanningTimetable solutionTimetable = timetableSolver.solve(problemTimetable);
-        if (solutionTimetable.getHardSoftScore().hardScore() > 0) {
+        if (solutionTimetable.getHardSoftScore().hardScore() < 0) {
+            String summaryViolations = solutionTimetable.getClasses().stream()
+                    .map(PlanningClass::getHardViolation)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.joining(System.lineSeparator()));
+
+            mailService.sendTimetableCantMade(lecturer.getEmail(), summaryViolations);
+
             throw TimetableException.CODE.TIMETABLE_CANT_BE_GENERATED.get();
         }
 
@@ -133,6 +150,10 @@ public class TimetableServiceImpl implements TimetableService {
             var timetable = timetableMapper.toEntity(dayOfWeek, dayOfWeekClasses, usedAudiences);
             timetableRepository.save(timetable);
         }
+
+        notificationUsersAboutTimetable(planningClasses);
+
+        log.info("user: {}, was successful called make timetable", lecturer);
     }
 
     private List<PlanningClass> getClasses(List<Request> requests) {
@@ -223,5 +244,21 @@ public class TimetableServiceImpl implements TimetableService {
         }
 
         return timetable;
+    }
+
+    private void notificationUsersAboutTimetable(List<PlanningClass> classes) {
+        var lecturers = classes.stream()
+                .map(PlanningClass::getLecturer)
+                .distinct()
+                .toList();
+
+        var headmen = classes.stream()
+                .flatMap(aClass -> aClass.getGroups().stream())
+                .flatMap(group -> group.getUsers().stream())
+                .distinct()
+                .toList();
+
+        lecturers.forEach(lecturer -> mailService.sendTimetableWasMade(lecturer.getEmail()));
+        headmen.forEach(headman -> mailService.sendTimetableWasMade(headman.getEmail()));
     }
 }

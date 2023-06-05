@@ -17,10 +17,6 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void getFacultyGroups() {
-    }
-
-    @Test
     void getGroupById() {
     }
 
@@ -30,10 +26,6 @@ class GroupServiceImplTest {
 
     @Test
     void createGroup() {
-    }
-
-    @Test
-    void showCreateGroup() {
     }
 
     @Test

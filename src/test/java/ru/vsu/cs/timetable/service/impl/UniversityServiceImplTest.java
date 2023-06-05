@@ -17,10 +17,6 @@ class UniversityServiceImplTest {
     }
 
     @Test
-    void getAllUniversities() {
-    }
-
-    @Test
     void getUniversityById() {
     }
 

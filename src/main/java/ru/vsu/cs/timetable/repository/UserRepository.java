@@ -16,7 +16,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmail(@NotNull String email);
 
     @Query(value = """
-            SELECT u.city
+            SELECT DISTINCT u.city
             FROM User u
             """)
     List<String> findAllUserCities();
@@ -28,6 +28,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
             SELECT u
             FROM User u
             WHERE u.role = "HEADMAN" and u.group = null
+            and u.faculty.id = :facultyId
             """)
-    List<User> findAllFreeHeadmen();
+    List<User> findAllFreeHeadmenByFaculty(@NotNull Long facultyId);
 }

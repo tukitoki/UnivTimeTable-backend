@@ -1,21 +1,17 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.group.GroupResponse;
 import ru.vsu.cs.timetable.dto.univ_class.MoveClassDto;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassResponse;
-import ru.vsu.cs.timetable.dto.univ_requests.SendRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequest;
+import ru.vsu.cs.timetable.dto.univ_requests.*;
 import ru.vsu.cs.timetable.dto.week_time.DayTimes;
 import ru.vsu.cs.timetable.entity.Class;
-import ru.vsu.cs.timetable.entity.Equipment;
-import ru.vsu.cs.timetable.entity.Group;
-import ru.vsu.cs.timetable.entity.ImpossibleTime;
+import ru.vsu.cs.timetable.entity.*;
 import ru.vsu.cs.timetable.entity.enums.TypeClass;
 import ru.vsu.cs.timetable.exception.AudienceException;
 import ru.vsu.cs.timetable.exception.ClassException;
@@ -25,15 +21,13 @@ import ru.vsu.cs.timetable.mapper.RequestMapper;
 import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.EquipmentRepository;
 import ru.vsu.cs.timetable.repository.RequestRepository;
-import ru.vsu.cs.timetable.service.AudienceService;
-import ru.vsu.cs.timetable.service.GroupService;
-import ru.vsu.cs.timetable.service.RequestService;
-import ru.vsu.cs.timetable.service.UserService;
+import ru.vsu.cs.timetable.service.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -41,6 +35,7 @@ public class RequestServiceImpl implements RequestService {
     private final UserService userService;
     private final GroupService groupService;
     private final AudienceService audienceService;
+    private final MailService mailService;
     private final RequestMapper requestMapper;
     private final ClassMapper classMapper;
     private final RequestRepository requestRepository;
@@ -66,7 +61,9 @@ public class RequestServiceImpl implements RequestService {
 
         var request = requestMapper.toEntity(sendRequest, lecturer, group, impossibleTimes, requestEquipment);
 
-        requestRepository.save(request);
+        request = requestRepository.save(request);
+
+        log.info("lecturer: {}  was successful saved request {}", lecturer, request);
     }
 
     @Override
@@ -108,11 +105,11 @@ public class RequestServiceImpl implements RequestService {
         var initClassDto = moveClassRequest.getInitClass();
         var classDtoToMove = moveClassRequest.getClassToMove();
 
-        var initClass = classRepository.findClassToMove(initClassDto.getSubjectName(), initClassDto.getStartTime(),
+        Class initClass = classRepository.findClassToMove(initClassDto.getSubjectName(), initClassDto.getStartTime(),
                         initClassDto.getAudience(), initClassDto.getDayOfWeek(),
                         initClassDto.getTypeOfClass(), initClassDto.getWeekType(), lecturer)
                 .orElseThrow(ClassException.CODE.INCORRECT_CLASS_TO_MOVE::get);
-        var classToMove = classMapper.toEntity(classDtoToMove);
+        Class classToMove = classMapper.toEntity(classDtoToMove);
 
         var audience = audienceService.findAudienceByNumberAndFaculty(classDtoToMove.getAudience(),
                 lecturer.getFaculty());
@@ -128,7 +125,16 @@ public class RequestServiceImpl implements RequestService {
         classToMove.setAudience(audience);
         copyClassProperties(classToMove, initClass);
 
-        classRepository.save(initClass);
+        var movedClass = classRepository.save(initClass);
+
+        movedClass.getGroups().forEach(group -> {
+            if (group.getHeadmanId() != null) {
+                User headman = userService.getUserById(group.getHeadmanId());
+                mailService.sendClassChangeMail(lecturer, initClass, movedClass, headman.getEmail());
+            }
+        });
+
+        log.info("lecturer: {}, was successful moved class from {} to {}", lecturer, initClass, movedClass);
     }
 
     @Override
@@ -182,6 +188,18 @@ public class RequestServiceImpl implements RequestService {
                 .coursesClasses(coursesClasses)
                 .possibleTimesInAudience(possibleTimesInAudience)
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RequestDto> getAllRequests(String username) {
+        var lecturer = userService.getUserByUsername(username);
+
+        List<Request> requests = requestRepository.findAllByGroupFacultyOrderByTypeClass(lecturer.getFaculty());
+
+        return requests.stream()
+                .map(requestMapper::toDto)
+                .toList();
     }
 
     private void copyClassProperties(Class from, Class to) {

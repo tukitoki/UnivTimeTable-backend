@@ -3,6 +3,7 @@ package ru.vsu.cs.timetable.controller.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.vsu.cs.timetable.exception.AuthException;
@@ -28,5 +29,12 @@ public class AuthExceptionHandler {
         return ResponseEntity
                 .status(status)
                 .body(new ErrorMessage(codeStr, ex.getMessage()));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorMessage> handleAuthException(AuthenticationException ex) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(new ErrorMessage(BAD_REQUEST.name(), ex.getMessage()));
     }
 }

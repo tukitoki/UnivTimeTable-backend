@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import ru.vsu.cs.timetable.dto.group.GroupDto;
 import ru.vsu.cs.timetable.dto.group.GroupPageDto;
-import ru.vsu.cs.timetable.dto.group.ShowCreateGroupDto;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
 import ru.vsu.cs.timetable.entity.Group;
 
@@ -21,8 +20,6 @@ public interface GroupService {
 
     void createGroup(@NotNull @Valid GroupDto groupDto,
                      @NotNull Long facultyId);
-
-    ShowCreateGroupDto showCreateGroup(@NotNull Long facultyId);
 
     void deleteGroup(@NotNull Long id);
 

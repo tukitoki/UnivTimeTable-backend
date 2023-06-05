@@ -5,16 +5,23 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import ru.vsu.cs.timetable.dto.faculty.FacultyResponse;
+
+import java.util.List;
 
 @Setter
 @Getter
 @AllArgsConstructor
-public class CreateUnivRequest {
+@SuperBuilder
+public class UniversityResponse {
 
+    private Long id;
     @NotNull
     @NotBlank
     private String universityName;
     @NotNull
     @NotBlank
     private String city;
+    private List<FacultyResponse> facultyDtos;
 }

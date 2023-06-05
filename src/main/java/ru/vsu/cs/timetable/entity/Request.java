@@ -51,4 +51,17 @@ public class Request {
             joinColumns = @JoinColumn(name = "request_id"),
             inverseJoinColumns = @JoinColumn(name = "equipment_id"))
     private Set<Equipment> requiredEquipments;
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "id=" + id +
+                ", subjectName='" + subjectName + '\'' +
+                ", subjectHourPerWeek=" + subjectHourPerWeek +
+                ", typeClass=" + typeClass +
+                ", group=" + group +
+                ", impossibleTimes=" + impossibleTimes +
+                ", requiredEquipments=" + requiredEquipments +
+                '}';
+    }
 }

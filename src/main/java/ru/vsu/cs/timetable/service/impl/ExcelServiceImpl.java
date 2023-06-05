@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -16,10 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static ru.vsu.cs.timetable.utils.TimeUtils.ACADEMICAL_PAIR_MINUTES;
+import static ru.vsu.cs.timetable.utils.TimeUtils.calculateLastTimeByStart;
 import static ru.vsu.cs.timetable.utils.TimeUtils.getPossibleClassTimes;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class ExcelServiceImpl implements ExcelService {
 
@@ -35,12 +37,13 @@ public class ExcelServiceImpl implements ExcelService {
         sheet.setColumnWidth(0, FIRST_COLUMN_WIDTH);
         sheet.setColumnWidth(1, SECOND_COLUMN_WIDTH);
 
+        CellStyle headerStyle = getHeaderRowStyle(workbook);
+        CellStyle rowStyle = getRowStyle(workbook);
+
         int rowIndex = 0;
         for (var dayOfWeek : DayOfWeekEnum.values()) {
             Row header = sheet.createRow(rowIndex);
             header.setHeight((short) 1000);
-
-            CellStyle headerStyle = getHeaderRowStyle(workbook);
 
             Cell headerCell = header.createCell(0);
             headerCell.setCellValue("Время");
@@ -58,35 +61,23 @@ public class ExcelServiceImpl implements ExcelService {
                 timeCell.setCellValue(
                         startTime.toString()
                                 + " - "
-                                + startTime.plusMinutes(ACADEMICAL_PAIR_MINUTES).toString()
+                                + calculateLastTimeByStart(startTime).toString()
                 );
-                timeCell.setCellStyle(getRowStyle(workbook));
+                timeCell.setCellStyle(rowStyle);
 
-                timeCell = row.createCell(1);
-                var optClass = getByWeekTypeAndDayAndStartTime(timetable, WeekType.NUMERATOR, dayOfWeek, startTime);
-                if (optClass.isEmpty()) {
-                    timeCell.setCellValue("");
-                } else {
-                    timeCell.setCellValue(optClass.get().toString());
-                }
-                timeCell.setCellStyle(getRowStyle(workbook));
+                cellCreate(row, timetable, WeekType.NUMERATOR, dayOfWeek, startTime, rowStyle);
 
                 rowIndex++;
                 row = sheet.createRow(rowIndex);
 
-                timeCell = row.createCell(1);
-                optClass = getByWeekTypeAndDayAndStartTime(timetable, WeekType.DENOMINATOR, dayOfWeek, startTime);
-                if (optClass.isEmpty()) {
-                    timeCell.setCellValue("");
-                } else {
-                    timeCell.setCellValue(optClass.get().toString());
-                }
-                timeCell.setCellStyle(getRowStyle(workbook));
+                cellCreate(row, timetable, WeekType.DENOMINATOR, dayOfWeek, startTime, rowStyle);
 
                 sheet.addMergedRegion(new CellRangeAddress(rowIndex - 1, rowIndex, 0, 0));
             }
             rowIndex++;
         }
+
+        log.info("Excel file was successful generated");
 
         return workbook;
     }
@@ -116,6 +107,18 @@ public class ExcelServiceImpl implements ExcelService {
         headerStyle.setFont(font);
 
         return headerStyle;
+    }
+
+    private void cellCreate(Row row, Map<DayOfWeekEnum, List<Class>> timetable, WeekType weekType,
+                            DayOfWeekEnum dayOfWeek, LocalTime startTime, CellStyle rowStyle) {
+        Cell subjCell = row.createCell(1);
+        var optClass = getByWeekTypeAndDayAndStartTime(timetable, weekType, dayOfWeek, startTime);
+        if (optClass.isEmpty()) {
+            subjCell.setCellValue("");
+        } else {
+            subjCell.setCellValue(optClass.get().toExcelFormat());
+        }
+        subjCell.setCellStyle(rowStyle);
     }
 
     private Optional<Class> getByWeekTypeAndDayAndStartTime(Map<DayOfWeekEnum, List<Class>> timetable, WeekType weekType,

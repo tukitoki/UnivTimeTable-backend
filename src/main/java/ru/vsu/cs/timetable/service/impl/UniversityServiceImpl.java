@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,12 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.page.PageModel;
 import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.dto.university.CreateUnivRequest;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
+import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.exception.UniversityException;
 import ru.vsu.cs.timetable.mapper.UniversityMapper;
-import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.repository.UniversityRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 import ru.vsu.cs.timetable.service.UniversityService;
@@ -29,6 +29,7 @@ import java.util.List;
 import static ru.vsu.cs.timetable.dto.page.SortDirection.ASC;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class UniversityServiceImpl implements UniversityService {
@@ -86,30 +87,40 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public void createUniversity(CreateUnivRequest createUnivRequest) {
-        if (universityRepository.findByName(createUnivRequest.getUniversityName()).isPresent()) {
+    public void createUniversity(UniversityDto universityDto) {
+        if (universityRepository.findByName(universityDto.getUniversityName()).isPresent()) {
             throw UniversityException.CODE.UNIVERSITY_ALREADY_PRESENT.get();
         }
 
         University university = University.builder()
-                .name(createUnivRequest.getUniversityName())
-                .city(createUnivRequest.getCity())
+                .name(universityDto.getUniversityName())
+                .city(universityDto.getCity())
                 .build();
 
-        universityRepository.save(university);
+        university = universityRepository.save(university);
+
+        log.info("university: {}, was successful saved", university);
     }
 
     @Override
     public void updateUniversity(UniversityDto universityDto, Long id) {
         University oldUniv = findUnivById(id);
+
+        if (!oldUniv.getName().equals(universityDto.getUniversityName())
+                && universityRepository.findByName(universityDto.getUniversityName()).isPresent()) {
+            throw UniversityException.CODE.UNIVERSITY_ALREADY_PRESENT.get();
+        }
+
         University newUniv = universityMapper.toEntity(universityDto);
 
         BeanUtils.copyProperties(newUniv, oldUniv, "id", "users", "faculties", "audiences");
-        universityRepository.save(oldUniv);
+        oldUniv = universityRepository.save(oldUniv);
+
+        log.info("university: {}, was successful updated", oldUniv);
+
     }
 
     @Override
-    @Transactional
     public void deleteUniversity(Long id) {
         University university = findUnivById(id);
         university.getUsers().forEach(user -> {
@@ -120,6 +131,8 @@ public class UniversityServiceImpl implements UniversityService {
         });
 
         universityRepository.delete(university);
+
+        log.info("university: {}, was successful deleted", university);
     }
 
     private Page<University> filerPage(int currentPage, int pageSize,

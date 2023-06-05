@@ -1,20 +1,20 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
-import ru.vsu.cs.timetable.dto.audience.CreateAudienceResponse;
 import ru.vsu.cs.timetable.dto.week_time.DayTimes;
+import ru.vsu.cs.timetable.entity.Audience;
 import ru.vsu.cs.timetable.entity.Class;
+import ru.vsu.cs.timetable.entity.Equipment;
 import ru.vsu.cs.timetable.entity.Faculty;
 import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
 import ru.vsu.cs.timetable.entity.enums.WeekType;
 import ru.vsu.cs.timetable.exception.AudienceException;
 import ru.vsu.cs.timetable.exception.EquipmentException;
 import ru.vsu.cs.timetable.mapper.AudienceMapper;
-import ru.vsu.cs.timetable.entity.Audience;
-import ru.vsu.cs.timetable.entity.Equipment;
 import ru.vsu.cs.timetable.repository.AudienceRepository;
 import ru.vsu.cs.timetable.repository.EquipmentRepository;
 import ru.vsu.cs.timetable.service.AudienceService;
@@ -26,6 +26,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 @Service
 public class AudienceServiceImpl implements AudienceService {
@@ -58,7 +59,10 @@ public class AudienceServiceImpl implements AudienceService {
         });
 
         Audience audience = audienceMapper.toEntity(createAudienceRequest, univ, faculty, equipment);
-        audienceRepository.save(audience);
+
+        audience = audienceRepository.save(audience);
+
+        log.info("audience was saved {}", audience);
     }
 
     @Override
@@ -70,15 +74,11 @@ public class AudienceServiceImpl implements AudienceService {
 
     @Override
     @Transactional(readOnly = true)
-    public CreateAudienceResponse showCreateAudience() {
-        var equipmentNames = equipmentRepository.findAll()
+    public List<String> getAvailableEquipments() {
+        return equipmentRepository.findAll()
                 .stream()
                 .map(Equipment::getDisplayName)
                 .toList();
-
-        return CreateAudienceResponse.builder()
-                .equipments(equipmentNames)
-                .build();
     }
 
     @Override

@@ -3,10 +3,12 @@ package ru.vsu.cs.timetable.dto.user;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import ru.vsu.cs.timetable.entity.enums.UserRole;
 
 @Setter
 @Getter
@@ -16,8 +18,7 @@ public class UserDto {
 
     private Long id;
     @NotNull
-    @NotBlank
-    private String role;
+    private UserRole role;
     @NotNull
     @NotBlank
     private String fullName;
@@ -31,6 +32,8 @@ public class UserDto {
     @NotNull
     @NotBlank
     private String city;
+    @Size(min = 5)
+    @Size(max = 25)
     @NotNull
     @NotBlank
     private String password;
