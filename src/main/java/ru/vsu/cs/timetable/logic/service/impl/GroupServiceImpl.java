@@ -113,7 +113,7 @@ public class GroupServiceImpl implements GroupService {
             userRepository.save(headman);
         }
 
-        log.info("group was successful saved {}", group);
+        log.info("group was successfully saved {}", group);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class GroupServiceImpl implements GroupService {
 
         groupRepository.delete(group);
 
-        log.info("group was successful deleted {}", group);
+        log.info("group was successfully deleted {}", group);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class GroupServiceImpl implements GroupService {
 
         oldGroup = groupRepository.save(oldGroup);
 
-        log.info("group was successful updated {}", oldGroup);
+        log.info("group was successfully updated {}", oldGroup);
     }
 
     private Page<Group> filerPage(int currentPage, int pageSize, Integer course,
