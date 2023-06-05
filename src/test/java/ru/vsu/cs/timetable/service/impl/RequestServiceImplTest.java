@@ -21,14 +21,7 @@ class RequestServiceImplTest {
     }
 
     @Test
-    void showSendRequest() {
-    }
-
-    @Test
     void moveClass() {
     }
 
-    @Test
-    void showMoveClass() {
-    }
 }
