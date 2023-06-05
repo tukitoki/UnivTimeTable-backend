@@ -55,10 +55,6 @@ class AudienceServiceImplTest {
         facultyFKN.setName("ФКН");
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void createAudience() {
         List<String> equipmentToAdd = new ArrayList<>();
