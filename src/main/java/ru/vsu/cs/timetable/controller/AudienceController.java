@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.AudienceApi;
-import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.logic.service.AudienceService;
+import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ public class AudienceController implements AudienceApi {
     @Override
     @PostMapping("/university/{univId}/faculty/{facultyId}/audience/create")
     public ResponseEntity<Void> createAudience(@RequestBody CreateAudienceRequest createAudienceRequest,
-                                         @PathVariable Long univId,
-                                         @PathVariable Long facultyId) {
+                                               @PathVariable Long univId,
+                                               @PathVariable Long facultyId) {
         audienceService.createAudience(createAudienceRequest, univId, facultyId);
 
         return ResponseEntity

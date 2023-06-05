@@ -16,6 +16,8 @@ import ru.vsu.cs.timetable.model.dto.faculty.FacultyPageDto;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
+import java.util.List;
+
 @AccessDeniedResponse
 @Tag(name = "Faculty API", description = "API для работы с факультетами")
 @SecurityRequirement(name = "bearer-key")
@@ -45,6 +47,26 @@ public interface FacultyApi {
             String name,
             @Parameter(description = "Сортировка по алфавиту")
             SortDirection order,
+            @Parameter(description = "Id университета, факультеты которого нужны")
+            Long universityId
+    );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное получение факультетов",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = FacultyPageDto.class)
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Получение списка факультетов с фильтрацией и поиском"
+    )
+    ResponseEntity<List<FacultyDto>> getFacultiesByUniversity(
             @Parameter(description = "Id университета, факультеты которого нужны")
             Long universityId
     );
