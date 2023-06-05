@@ -126,14 +126,18 @@ class UserServiceImplTest {
 
         when(userMapper.toEntity(userToCreateDto, universityVSU, group, facultyFKN, userToCreate.getPassword())).
                 thenReturn(userToCreate);
-        when(userRepository.save(userToCreate)).thenReturn(userToCreate);
+        when(userRepository.findById(4L)).
+                thenReturn(Optional.of(userToCreate));
+        when(userRepository.save(userToCreate)).
+                thenReturn(userToCreate);
 
         userServiceImpl.createUser(userToCreateDto);
+        User createdUser = userServiceImpl.getUserById(4L);
 
-        assert(userToCreate.getFullName().equals("Семёнов Артём Валерьевич"));
-        assert(userToCreate.getEmail().equals("artem@mail.ru"));
-        assert(userToCreate.getUsername().equals("Artem"));
-        assert(userToCreate.getFaculty().getName().equals("ФКН"));
+        assert(createdUser.getFullName().equals("Семёнов Артём Валерьевич"));
+        assert(createdUser.getEmail().equals("artem@mail.ru"));
+        assert(createdUser.getUsername().equals("Artem"));
+        assert(createdUser.getFaculty().getName().equals("ФКН"));
     }
 
     @Test
