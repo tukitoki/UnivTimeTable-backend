@@ -3,8 +3,8 @@ package ru.vsu.cs.timetable.repository;
 import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import org.springframework.data.repository.CrudRepository;
-import ru.vsu.cs.timetable.entity.Faculty;
-import ru.vsu.cs.timetable.entity.Request;
+import ru.vsu.cs.timetable.model.entity.Faculty;
+import ru.vsu.cs.timetable.model.entity.Request;
 
 import java.util.List;
 

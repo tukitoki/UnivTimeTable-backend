@@ -20,7 +20,11 @@ public class UserExceptionHandler {
         UserException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
             case USERNAME_NOT_FOUND, ID_NOT_FOUND, EMAIL_NOT_FOUND -> NOT_FOUND;
-            case USERNAME_ALREADY_PRESENT, EMAIL_ALREADY_PRESENT -> BAD_REQUEST;
+            case USERNAME_ALREADY_PRESENT, EMAIL_ALREADY_PRESENT,
+                    ADMIN_CANT_HAVE_FACULTY, ADMIN_CANT_HAVE_GROUP, ADMIN_CANT_HAVE_UNIV,
+                    LECTURER_SHOULD_HAVE_UNIVERSITY, LECTURER_SHOULD_HAVE_FACULTY, LECTURER_CANT_HAVE_GROUP,
+                    HEADMAN_SHOULD_HAVE_FACULTY, HEADMAN_SHOULD_HAVE_GROUP, HEADMAN_SHOULD_HAVE_UNIVERSITY ->
+                    BAD_REQUEST;
         };
 
         String codeStr = code.toString();

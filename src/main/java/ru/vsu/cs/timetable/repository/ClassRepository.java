@@ -3,12 +3,12 @@ package ru.vsu.cs.timetable.repository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import ru.vsu.cs.timetable.entity.Class;
-import ru.vsu.cs.timetable.entity.Group;
-import ru.vsu.cs.timetable.entity.User;
-import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.entity.enums.TypeClass;
-import ru.vsu.cs.timetable.entity.enums.WeekType;
+import ru.vsu.cs.timetable.model.entity.Class;
+import ru.vsu.cs.timetable.model.entity.Group;
+import ru.vsu.cs.timetable.model.entity.User;
+import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
+import ru.vsu.cs.timetable.model.entity.enums.WeekType;
 
 import java.time.LocalTime;
 import java.util.List;

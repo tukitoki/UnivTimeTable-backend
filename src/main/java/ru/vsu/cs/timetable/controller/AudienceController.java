@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.AudienceApi;
-import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
-import ru.vsu.cs.timetable.service.AudienceService;
+import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
+import ru.vsu.cs.timetable.logic.service.AudienceService;
 
 import java.util.List;
 

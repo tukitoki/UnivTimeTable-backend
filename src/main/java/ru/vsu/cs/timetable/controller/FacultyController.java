@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.FacultyApi;
-import ru.vsu.cs.timetable.dto.faculty.CreateFacultyRequest;
-import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
-import ru.vsu.cs.timetable.dto.faculty.FacultyPageDto;
-import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.service.FacultyService;
+import ru.vsu.cs.timetable.model.dto.faculty.CreateFacultyRequest;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyPageDto;
+import ru.vsu.cs.timetable.model.dto.page.SortDirection;
+import ru.vsu.cs.timetable.logic.service.FacultyService;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_FACULTY_AUTHORITY')")
