@@ -8,20 +8,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.vsu.cs.timetable.dto.group.GroupDto;
-import ru.vsu.cs.timetable.dto.user.UserResponse;
-import ru.vsu.cs.timetable.entity.Class;
-import ru.vsu.cs.timetable.entity.Faculty;
-import ru.vsu.cs.timetable.entity.Group;
-import ru.vsu.cs.timetable.entity.University;
-import ru.vsu.cs.timetable.entity.User;
-import ru.vsu.cs.timetable.entity.enums.UserRole;
-import ru.vsu.cs.timetable.mapper.GroupMapper;
+import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.logic.service.GroupService;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.logic.service.impl.GroupServiceImpl;
+import ru.vsu.cs.timetable.model.dto.group.GroupDto;
+import ru.vsu.cs.timetable.model.dto.user.UserResponse;
+import ru.vsu.cs.timetable.model.entity.Class;
+import ru.vsu.cs.timetable.model.entity.*;
+import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.mapper.GroupMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
-import ru.vsu.cs.timetable.service.FacultyService;
-import ru.vsu.cs.timetable.service.GroupService;
-import ru.vsu.cs.timetable.service.UniversityService;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -100,8 +98,8 @@ class GroupServiceImplTest {
         GroupDto groupDto1 = groupServiceImpl.getGroupById(1L);
 
         assertThat(groupDto1.getId()).isNotNull();
-        assert(groupDto1.getId().equals(1L));
-        assert(groupDto1.equals(groupDto));
+        assert (groupDto1.getId().equals(1L));
+        assert (groupDto1.equals(groupDto));
     }
 
     @Test
@@ -112,11 +110,11 @@ class GroupServiceImplTest {
         Group groupToCompare = groupServiceImpl.findGroupById(1L);
 
         assertThat(group.getGroupNumber()).isNotNull();
-        assert(groupToCompare.getStudentsAmount().equals(30));
-        assert(groupToCompare.getCourseNumber().equals(3));
-        assert(groupToCompare.getGroupNumber().equals(5));
-        assert(groupToCompare.getFaculty().equals(facultyFKN));
-        assert(groupToCompare.equals(group));
+        assert (groupToCompare.getStudentsAmount().equals(30));
+        assert (groupToCompare.getCourseNumber().equals(3));
+        assert (groupToCompare.getGroupNumber().equals(5));
+        assert (groupToCompare.getFaculty().equals(facultyFKN));
+        assert (groupToCompare.equals(group));
     }
 
     @Test
@@ -201,9 +199,9 @@ class GroupServiceImplTest {
 
         groupServiceImpl.updateGroup(newGroupDto, 3L);
 
-        assert(groupToUpdate.getGroupNumber().equals(5));
-        assert(groupToUpdate.getStudentsAmount().equals(15));
-        assert(groupToUpdate.getCourseNumber().equals(2));
-        assert(groupToUpdate.getHeadmanId().equals(3L));
+        assert (groupToUpdate.getGroupNumber().equals(5));
+        assert (groupToUpdate.getStudentsAmount().equals(15));
+        assert (groupToUpdate.getCourseNumber().equals(2));
+        assert (groupToUpdate.getHeadmanId().equals(3L));
     }
 }

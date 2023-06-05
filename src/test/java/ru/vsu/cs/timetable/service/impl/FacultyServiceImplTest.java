@@ -8,13 +8,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.vsu.cs.timetable.dto.faculty.CreateFacultyRequest;
-import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
-import ru.vsu.cs.timetable.entity.Faculty;
-import ru.vsu.cs.timetable.entity.University;
-import ru.vsu.cs.timetable.mapper.FacultyMapper;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.logic.service.impl.FacultyServiceImpl;
+import ru.vsu.cs.timetable.model.dto.faculty.CreateFacultyRequest;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
+import ru.vsu.cs.timetable.model.entity.Faculty;
+import ru.vsu.cs.timetable.model.entity.University;
+import ru.vsu.cs.timetable.model.mapper.FacultyMapper;
 import ru.vsu.cs.timetable.repository.FacultyRepository;
-import ru.vsu.cs.timetable.service.UniversityService;
 
 import java.util.Optional;
 
@@ -65,9 +66,9 @@ class FacultyServiceImplTest {
         FacultyDto facultyDto = facultyServiceImpl.getFacultyById(1L);
 
         assertThat(facultyDto.getId()).isNotNull();
-        assert(facultyDto.getId().equals(1L));
-        assert(facultyDto.getName().equals("ФКН"));
-        assert(facultyDto.equals(facultyFKNDto));
+        assert (facultyDto.getId().equals(1L));
+        assert (facultyDto.getName().equals("ФКН"));
+        assert (facultyDto.equals(facultyFKNDto));
     }
 
     @Test
@@ -78,9 +79,9 @@ class FacultyServiceImplTest {
         Faculty facultyToCompare = facultyServiceImpl.findFacultyById(1L);
 
         assertThat(facultyToCompare.getName()).isNotNull();
-        assert(facultyToCompare.getId().equals(1L));
-        assert(facultyToCompare.getName().equals("ФКН"));
-        assert(facultyToCompare.equals(facultyFKN));
+        assert (facultyToCompare.getId().equals(1L));
+        assert (facultyToCompare.getName().equals("ФКН"));
+        assert (facultyToCompare.equals(facultyFKN));
     }
 
     @Test
@@ -138,6 +139,6 @@ class FacultyServiceImplTest {
 
         facultyServiceImpl.updateFaculty(newFacultyDto, 5L);
 
-        assert(facultyToUpdate.getName().equals("Математический факультет"));
+        assert (facultyToUpdate.getName().equals("Математический факультет"));
     }
 }
