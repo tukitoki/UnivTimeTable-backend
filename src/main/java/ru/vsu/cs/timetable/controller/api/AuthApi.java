@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import ru.vsu.cs.timetable.dto.user.JwtDto;
-import ru.vsu.cs.timetable.dto.user.UserLoginDto;
+import ru.vsu.cs.timetable.model.dto.user.JwtDto;
+import ru.vsu.cs.timetable.model.dto.user.UserLoginDto;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 @Tag(name = "Auth API", description = "API для входа в систему и refresh JWT-token")

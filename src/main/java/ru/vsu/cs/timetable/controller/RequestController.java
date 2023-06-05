@@ -1,19 +1,20 @@
 package ru.vsu.cs.timetable.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.RequestApi;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassResponse;
-import ru.vsu.cs.timetable.dto.univ_requests.SendRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequest;
-import ru.vsu.cs.timetable.service.RequestService;
+import ru.vsu.cs.timetable.logic.service.RequestService;
+import ru.vsu.cs.timetable.model.dto.univ_requests.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/request")
 @RestController
 public class RequestController implements RequestApi {
@@ -40,6 +41,7 @@ public class RequestController implements RequestApi {
     public ResponseEntity<ShowSendRequest> sendRequestInfo(Authentication authentication) {
         String username = authentication.getName();
 
+        log.info(requestService.showSendRequest(username).toString());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(requestService.showSendRequest(username));
@@ -67,5 +69,16 @@ public class RequestController implements RequestApi {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(requestService.showMoveClass(username));
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('MAKE_TIMETABLE_AUTHORITY')")
+    @GetMapping("/all")
+    public ResponseEntity<List<RequestDto>> getFacultyRequests(Authentication authentication) {
+        String username = authentication.getName();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(requestService.getAllRequests(username));
     }
 }

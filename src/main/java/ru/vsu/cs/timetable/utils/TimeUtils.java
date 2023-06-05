@@ -1,9 +1,9 @@
 package ru.vsu.cs.timetable.utils;
 
 import lombok.experimental.UtilityClass;
-import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.entity.enums.WeekType;
-import ru.vsu.cs.timetable.planner.model.Timeslot;
+import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.entity.enums.WeekType;
+import ru.vsu.cs.timetable.logic.planner.model.Timeslot;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -55,7 +55,7 @@ public final class TimeUtils {
                             .dayOfWeekEnum(day)
                             .weekType(weekType)
                             .startTime(time)
-                            .endTime(calculateLastTimeByStart(time))
+                            .endTime(calculateEndTimeByStart(time))
                             .build());
                 }
             });
@@ -64,7 +64,7 @@ public final class TimeUtils {
         return timeslots;
     }
 
-    public static LocalTime calculateLastTimeByStart(LocalTime startTime) {
+    public static LocalTime calculateEndTimeByStart(LocalTime startTime) {
         if (startTime.equals(LocalTime.of(18, 40))
                 || startTime.equals(LocalTime.of(20, 10))) {
             return startTime.plusMinutes(LAST_PAIR_INTERVAL_MINUTE);

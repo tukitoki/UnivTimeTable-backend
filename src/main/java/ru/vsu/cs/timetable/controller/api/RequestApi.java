@@ -2,6 +2,7 @@ package ru.vsu.cs.timetable.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,11 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.config.swagger.annotation.IncorrectUsernameResponse;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassResponse;
-import ru.vsu.cs.timetable.dto.univ_requests.SendRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.ShowSendRequest;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
+import ru.vsu.cs.timetable.model.dto.univ_requests.*;
+
+import java.util.List;
 
 @AccessDeniedResponse
 @IncorrectUsernameResponse
@@ -103,13 +103,39 @@ public interface RequestApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешная отправка информации"
+                    description = "Успешная отправка информации",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = MoveClassResponse.class)
+                            )
+                    }
             )
     })
     @Operation(
             summary = "Отправка информации для переноса занятия"
     )
     ResponseEntity<MoveClassResponse> moveClassInfo(
+            @Parameter(hidden = true)
+            Authentication authentication
+    );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное получение заявок",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = RequestDto.class))
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Получние списка заявок"
+    )
+    ResponseEntity<List<RequestDto>> getFacultyRequests(
             @Parameter(hidden = true)
             Authentication authentication
     );

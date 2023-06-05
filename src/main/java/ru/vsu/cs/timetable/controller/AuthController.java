@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.cs.timetable.controller.api.AuthApi;
-import ru.vsu.cs.timetable.dto.user.JwtDto;
-import ru.vsu.cs.timetable.dto.user.UserLoginDto;
-import ru.vsu.cs.timetable.service.AuthService;
+import ru.vsu.cs.timetable.model.dto.user.JwtDto;
+import ru.vsu.cs.timetable.model.dto.user.UserLoginDto;
+import ru.vsu.cs.timetable.logic.service.AuthService;
 
 @RequiredArgsConstructor
 @RequestMapping("/auth")

@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UniversityApi;
-import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.dto.university.UniversityDto;
-import ru.vsu.cs.timetable.dto.university.UniversityPageDto;
-import ru.vsu.cs.timetable.service.UniversityService;
+import ru.vsu.cs.timetable.model.dto.page.SortDirection;
+import ru.vsu.cs.timetable.model.dto.university.UniversityDto;
+import ru.vsu.cs.timetable.model.dto.university.UniversityPageDto;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_UNIVERSITY_AUTHORITY')")
@@ -53,7 +53,7 @@ public class UniversityController implements UniversityApi {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateUniversity(@RequestBody UniversityDto universityDto,
-                                                   @PathVariable Long id) {
+                                                 @PathVariable Long id) {
         universityService.updateUniversity(universityDto, id);
 
         return ResponseEntity

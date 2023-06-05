@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.GroupApi;
-import ru.vsu.cs.timetable.dto.group.GroupDto;
-import ru.vsu.cs.timetable.dto.group.GroupPageDto;
-import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.service.GroupService;
+import ru.vsu.cs.timetable.model.dto.group.GroupDto;
+import ru.vsu.cs.timetable.model.dto.group.GroupPageDto;
+import ru.vsu.cs.timetable.model.dto.page.SortDirection;
+import ru.vsu.cs.timetable.logic.service.GroupService;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_GROUP_AUTHORITY')")
@@ -43,12 +43,9 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{facultyId}/group")
     public ResponseEntity<Void> createGroup(@RequestBody GroupDto groupDto,
-                            @PathVariable Long facultyId) {
-        groupService.createGroup(groupDto, facultyId);
-
+                                            @PathVariable Long facultyId) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
@@ -67,7 +64,7 @@ public class GroupController implements GroupApi {
     @Override
     @PutMapping("/group/{id}")
     public ResponseEntity<Void> updateGroup(@RequestBody GroupDto groupDto,
-                            @PathVariable Long id) {
+                                            @PathVariable Long id) {
         groupService.updateGroup(groupDto, id);
 
         return ResponseEntity

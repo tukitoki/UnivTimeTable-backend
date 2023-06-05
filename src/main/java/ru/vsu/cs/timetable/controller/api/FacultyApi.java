@@ -10,11 +10,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
-import ru.vsu.cs.timetable.dto.faculty.CreateFacultyRequest;
-import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
-import ru.vsu.cs.timetable.dto.faculty.FacultyPageDto;
-import ru.vsu.cs.timetable.dto.page.SortDirection;
+import ru.vsu.cs.timetable.model.dto.faculty.CreateFacultyRequest;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyPageDto;
+import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
+
+import java.util.List;
 
 @AccessDeniedResponse
 @Tag(name = "Faculty API", description = "API для работы с факультетами")
@@ -45,6 +47,26 @@ public interface FacultyApi {
             String name,
             @Parameter(description = "Сортировка по алфавиту")
             SortDirection order,
+            @Parameter(description = "Id университета, факультеты которого нужны")
+            Long universityId
+    );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное получение факультетов",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = FacultyPageDto.class)
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Получение списка факультетов с фильтрацией и поиском"
+    )
+    ResponseEntity<List<FacultyDto>> getFacultiesByUniversity(
             @Parameter(description = "Id университета, факультеты которого нужны")
             Long universityId
     );

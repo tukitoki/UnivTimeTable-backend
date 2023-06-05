@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import ru.vsu.cs.timetable.entity.User;
+import ru.vsu.cs.timetable.model.entity.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
             SELECT u
             FROM User u
             WHERE u.role = "HEADMAN" and u.group = null
-            and u.faculty = :facultyId
+            and u.faculty.id = :facultyId
             """)
     List<User> findAllFreeHeadmenByFaculty(@NotNull Long facultyId);
 }

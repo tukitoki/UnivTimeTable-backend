@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
-import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
+import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import java.util.List;
