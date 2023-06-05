@@ -1,6 +1,5 @@
 package ru.vsu.cs.timetable.service.impl;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,16 +8,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
-import ru.vsu.cs.timetable.entity.Audience;
-import ru.vsu.cs.timetable.entity.Equipment;
-import ru.vsu.cs.timetable.entity.Faculty;
-import ru.vsu.cs.timetable.entity.University;
-import ru.vsu.cs.timetable.mapper.AudienceMapper;
+import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.logic.service.impl.AudienceServiceImpl;
+import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
+import ru.vsu.cs.timetable.model.entity.Audience;
+import ru.vsu.cs.timetable.model.entity.Equipment;
+import ru.vsu.cs.timetable.model.entity.Faculty;
+import ru.vsu.cs.timetable.model.entity.University;
+import ru.vsu.cs.timetable.model.mapper.AudienceMapper;
 import ru.vsu.cs.timetable.repository.AudienceRepository;
 import ru.vsu.cs.timetable.repository.EquipmentRepository;
-import ru.vsu.cs.timetable.service.FacultyService;
-import ru.vsu.cs.timetable.service.UniversityService;
 
 import java.util.*;
 
@@ -92,10 +92,10 @@ class AudienceServiceImplTest {
         audienceService.createAudience(createAudienceRequest, 1L, 1L);
         Audience createdAudience = audienceService.findAudienceByNumberAndFaculty(385, facultyFKN);
 
-        assert(createdAudience.getAudienceNumber().equals(385));
-        assert(createdAudience.getId().equals(1L));
-        assert(createdAudience.getCapacity().equals(30L));
-        assert(createdAudience.getFaculty().getName().equals("ФКН"));
+        assert (createdAudience.getAudienceNumber().equals(385));
+        assert (createdAudience.getId().equals(1L));
+        assert (createdAudience.getCapacity().equals(30L));
+        assert (createdAudience.getFaculty().getName().equals("ФКН"));
     }
 
     @Test
@@ -105,9 +105,9 @@ class AudienceServiceImplTest {
 
         Audience audienceToCompare = audienceService.findAudienceByNumberAndFaculty(123, facultyFKN);
 
-        assert(audienceToCompare.getId().equals(1L));
-        assert(audienceToCompare.getCapacity().equals(50L));
-        assert(audienceToCompare.getFaculty().getName().equals("ФКН"));
+        assert (audienceToCompare.getId().equals(1L));
+        assert (audienceToCompare.getCapacity().equals(50L));
+        assert (audienceToCompare.getFaculty().getName().equals("ФКН"));
     }
 
     @Test

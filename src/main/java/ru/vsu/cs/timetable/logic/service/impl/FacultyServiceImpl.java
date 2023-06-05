@@ -12,17 +12,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.cs.timetable.exception.FacultyException;
+import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
 import ru.vsu.cs.timetable.model.dto.faculty.CreateFacultyRequest;
 import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
 import ru.vsu.cs.timetable.model.dto.faculty.FacultyPageDto;
 import ru.vsu.cs.timetable.model.dto.page.PageModel;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
-import ru.vsu.cs.timetable.exception.FacultyException;
-import ru.vsu.cs.timetable.logic.service.FacultyService;
-import ru.vsu.cs.timetable.logic.service.UniversityService;
-import ru.vsu.cs.timetable.model.mapper.FacultyMapper;
 import ru.vsu.cs.timetable.model.entity.Faculty;
 import ru.vsu.cs.timetable.model.entity.University;
+import ru.vsu.cs.timetable.model.mapper.FacultyMapper;
 import ru.vsu.cs.timetable.repository.FacultyRepository;
 
 import java.util.ArrayList;
@@ -58,6 +58,13 @@ public class FacultyServiceImpl implements FacultyService {
         return FacultyPageDto.builder()
                 .facultiesPage(pageModel)
                 .build();
+    }
+
+    @Override
+    public List<FacultyDto> getFacultiesByUniversity(Long univId) {
+        return facultyRepository.findAllByUniversity_Id(univId).stream()
+                .map(facultyMapper::toDto)
+                .toList();
     }
 
     @Override

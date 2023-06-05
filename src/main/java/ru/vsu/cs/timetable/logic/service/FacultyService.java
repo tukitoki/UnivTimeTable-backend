@@ -9,11 +9,15 @@ import ru.vsu.cs.timetable.model.dto.faculty.FacultyPageDto;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.model.entity.Faculty;
 
+import java.util.List;
+
 @Validated
 public interface FacultyService {
 
     FacultyPageDto getFacultiesByUniversity(int currentPage, int pageSize, String name,
                                             SortDirection order, @NotNull Long univId);
+
+    List<FacultyDto> getFacultiesByUniversity(@NotNull Long univId);
 
     FacultyDto getFacultyById(@NotNull Long id);
 

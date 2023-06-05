@@ -94,9 +94,6 @@ public class TimetableServiceImpl implements TimetableService {
             throw TimetableException.CODE.ADMIN_CANT_ACCESS.get();
         }
 
-        var excel = excelService.getExcelTimetable(getTimetableByUser(user));
-        mailService.sendExcelTimetableMail(user.getEmail(), excel);
-
         return excelService.getExcelTimetable(getTimetableByUser(user));
     }
 
