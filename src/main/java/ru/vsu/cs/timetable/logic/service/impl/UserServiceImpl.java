@@ -13,6 +13,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.cs.timetable.exception.UserException;
+import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.logic.service.GroupService;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.logic.service.UserService;
 import ru.vsu.cs.timetable.model.dto.page.PageModel;
 import ru.vsu.cs.timetable.model.dto.university.UniversityResponse;
 import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
@@ -22,15 +27,10 @@ import ru.vsu.cs.timetable.model.dto.user.UserResponse;
 import ru.vsu.cs.timetable.model.entity.University;
 import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.model.entity.enums.UserRole;
-import ru.vsu.cs.timetable.exception.UserException;
-import ru.vsu.cs.timetable.logic.service.FacultyService;
-import ru.vsu.cs.timetable.logic.service.UniversityService;
 import ru.vsu.cs.timetable.model.mapper.UniversityMapper;
 import ru.vsu.cs.timetable.model.mapper.UserMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
-import ru.vsu.cs.timetable.logic.service.GroupService;
-import ru.vsu.cs.timetable.logic.service.UserService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,6 +160,8 @@ public class UserServiceImpl implements UserService {
                 !optionalUser.get().getUsername().equals(oldUser.getUsername())) {
             throw UserException.CODE.EMAIL_ALREADY_PRESENT.get();
         }
+
+        validCreatingUser(userDto.getRole(), userDto.getUniversityId(), userDto.getFacultyId(), userDto.getGroupId());
 
         var univ = userDto.getUniversityId() == null
                 ? null
@@ -300,5 +302,39 @@ public class UserServiceImpl implements UserService {
     private List<UserRole> getAllRoles() {
         return Arrays.stream(UserRole.values())
                 .toList();
+    }
+
+    private void validCreatingUser(UserRole role, Long univId, Long facultyId, Long groupId) {
+        if (role == UserRole.ADMIN) {
+            if (univId != null) {
+                throw UserException.CODE.ADMIN_CANT_HAVE_UNIV.get();
+            }
+            if (facultyId != null) {
+                throw UserException.CODE.ADMIN_CANT_HAVE_FACULTY.get();
+            }
+            if (groupId != null) {
+                throw UserException.CODE.ADMIN_CANT_HAVE_GROUP.get();
+            }
+        } else if (role == UserRole.LECTURER) {
+            if (univId == null) {
+                throw UserException.CODE.LECTURER_SHOULD_HAVE_UNIVERSITY.get();
+            }
+            if (facultyId == null) {
+                throw UserException.CODE.LECTURER_SHOULD_HAVE_FACULTY.get();
+            }
+            if (groupId != null) {
+                throw UserException.CODE.LECTURER_CANT_HAVE_GROUP.get();
+            }
+        } else {
+            if (univId == null) {
+                throw UserException.CODE.HEADMAN_SHOULD_HAVE_UNIVERSITY.get();
+            }
+            if (facultyId == null) {
+                throw UserException.CODE.HEADMAN_SHOULD_HAVE_FACULTY.get();
+            }
+            if (groupId == null) {
+                throw UserException.CODE.HEADMAN_SHOULD_HAVE_GROUP.get();
+            }
+        }
     }
 }

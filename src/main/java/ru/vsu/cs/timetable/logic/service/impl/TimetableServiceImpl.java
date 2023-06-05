@@ -167,8 +167,16 @@ public class TimetableServiceImpl implements TimetableService {
             boolean alreadyPresent = false;
             for (var lectureClass : lectureClasses) {
                 if (lectureClass.getLecturer().equals(request.getLecturer())
-                        && !lectureClass.getGroups().contains(request.getGroup())) {
+                        && !lectureClass.getGroups().contains(request.getGroup())
+                        && lectureClass.getGroups().stream()
+                        .anyMatch(group -> group.getCourseNumber().equals(request.getGroup().getCourseNumber()))) {
                     lectureClass.getGroups().add(request.getGroup());
+                    var planningClass = classMapper.toPlanningEntity(0L, request);
+                    planningClass.getImpossibleTimes().forEach(impossibleTime -> {
+                        if (!lectureClass.getImpossibleTimes().contains(impossibleTime)) {
+                            lectureClass.getImpossibleTimes().add(impossibleTime);
+                        }
+                    });
                     alreadyPresent = true;
                 }
             }

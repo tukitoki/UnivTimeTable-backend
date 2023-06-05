@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnTransformer;
 import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -36,6 +37,19 @@ public class ImpossibleTime {
     @ManyToOne
     @JoinColumn(name = "request_id", nullable = false)
     private Request request;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ImpossibleTime that = (ImpossibleTime) o;
+        return dayOfWeek == that.dayOfWeek && Objects.equals(timeFrom, that.timeFrom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dayOfWeek, timeFrom);
+    }
 
     @Override
     public String toString() {

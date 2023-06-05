@@ -13,6 +13,7 @@ import ru.vsu.cs.timetable.utils.TimeUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ru.vsu.cs.timetable.utils.TimeUtils.calculateEndTimeByStart;
 
@@ -30,7 +31,7 @@ public class ClassMapper {
                             .build();
                     return timeslot;
                 })
-                .toList();
+                .collect(Collectors.toList());
         return PlanningClass.builder()
                 .id(id)
                 .subjectName(request.getSubjectName())

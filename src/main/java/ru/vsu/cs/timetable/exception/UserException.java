@@ -7,6 +7,15 @@ public class UserException extends RuntimeException {
         ID_NOT_FOUND("User with given id not found"),
         USERNAME_ALREADY_PRESENT("User with given username already present"),
         EMAIL_ALREADY_PRESENT("User with given email already present"),
+        ADMIN_CANT_HAVE_UNIV("Admin can't have university"),
+        ADMIN_CANT_HAVE_FACULTY("Admin can't have faculty"),
+        ADMIN_CANT_HAVE_GROUP("Admin can't have group"),
+        LECTURER_SHOULD_HAVE_UNIVERSITY("Lecturer should have university"),
+        LECTURER_SHOULD_HAVE_FACULTY("Lecturer should have faculty"),
+        LECTURER_CANT_HAVE_GROUP("Lecturer can't have group"),
+        HEADMAN_SHOULD_HAVE_UNIVERSITY("Headman should have university"),
+        HEADMAN_SHOULD_HAVE_FACULTY("Headman should have faculty"),
+        HEADMAN_SHOULD_HAVE_GROUP("Headman should have group"),
         ;
 
         final String codeDescription;
