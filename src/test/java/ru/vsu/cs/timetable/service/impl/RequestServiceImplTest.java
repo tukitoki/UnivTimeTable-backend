@@ -12,10 +12,6 @@ class RequestServiceImplTest {
     void setUp() {
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void sendRequest() {
     }
