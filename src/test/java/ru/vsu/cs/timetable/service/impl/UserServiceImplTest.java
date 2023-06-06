@@ -228,7 +228,7 @@ class UserServiceImplTest {
 
         User userToCompare = userServiceImpl.getUserById(121311342L);
 
-        assertThat(user.getFullName()).isNotNull();
+        assertThat(userToCompare.getFullName()).isNotNull();
         assert(userToCompare.getFullName().equals("Иванов Иван Иванович"));
         assert(userToCompare.equals(user));
     }
@@ -240,7 +240,7 @@ class UserServiceImplTest {
 
         User userToCompare = userServiceImpl.getUserByUsername("ivan");
 
-        assertThat(user.getUsername()).isNotNull();
+        assertThat(userToCompare.getUsername()).isNotNull();
         assert(userToCompare.getUsername().equals("ivan"));
         assert(userToCompare.equals(user));
     }
@@ -252,7 +252,7 @@ class UserServiceImplTest {
 
         User userToCompare = userServiceImpl.getUserByEmail("ivan@mail.ru");
 
-        assertThat(user.getEmail()).isNotNull();
+        assertThat(userToCompare.getEmail()).isNotNull();
         assert(userToCompare.getEmail().equals("ivan@mail.ru"));
         assert(userToCompare.equals(user));
     }
