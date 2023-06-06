@@ -90,14 +90,15 @@ class FacultyServiceImplTest {
         createFacultyRequest.setName("РГФ");
         //т.к. id - Serial, то сервисом всегда будет создаваться факультет с id=null
 
-        when(universityService.findUnivById(1L)).
-                thenReturn(universityVSU);
-
         Faculty facultyToCreate = new Faculty();
         facultyToCreate.setName("РГФ");
         facultyToCreate.setUniversity(universityVSU);
 
-        when(facultyRepository.save(any())).thenReturn(facultyToCreate);
+        when(universityService.findUnivById(1L)).
+                thenReturn(universityVSU);
+        when(facultyRepository.save(any())).
+                thenReturn(facultyToCreate);
+
         facultyServiceImpl.createFaculty(createFacultyRequest, 1L);
     }
 
