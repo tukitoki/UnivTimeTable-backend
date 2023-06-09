@@ -62,61 +62,52 @@ class RequestServiceImplTest {
     private ClassRepository classRepository;
     @InjectMocks
     private RequestServiceImpl requestServiceImpl;
-    private UserDto lecturerDto;
     private SendRequest sendRequest;
-    private RequestDto requestDto;
-    private GroupResponse groupResponse;
     private User lecturer;
     private User headman;
     private Group group;
     private Request request;
-    private TypeClass typeClass;
     private List<ImpossibleTime> impossibleTimes;
-    private ImpossibleTime impossibleTime;
     private Set<Equipment> equipment;
-    private List<String> equipmentList;
     private Faculty facultyFKN;
-    private University universityVSU;
-    private Map<DayOfWeekEnum, List<LocalTime>> impossibleTimeMap;
     private MoveClassRequest moveClassRequest;
     private ClassDto initClassDto;
     private ClassDto classToMoveDto;
     private Class initClass;
     private Class classToMove;
     private LocalTime timeFrom;
-    private Set<Group> groupSet;
-    private Audience audienceInit;
     private Audience audienceToMove;
-    private List<Class> classList;
 
     @BeforeEach
     void setUp() {
-        classList = new ArrayList<>();
+        List<Class> classList = new ArrayList<>();
+        GroupResponse groupResponse = new GroupResponse();
+        Audience audienceInit = new Audience();
+        Set<Group> groupSet = new HashSet<>();
+        Map<DayOfWeekEnum, List<LocalTime>> impossibleTimeMap = new HashMap<>();
+        List<String> equipmentList = new ArrayList<>();
+        University universityVSU = new University();
+        ImpossibleTime impossibleTime = new ImpossibleTime();
+        TypeClass typeClass = TypeClass.LECTURE;
+        UserDto lecturerDto = new UserDto(1L, UserRole.valueOf("LECTURER"), "Иванов Иван Иванович", "ivan",
+                "ivan@mail.ru", "Воронеж", "password", null, null, null);
+
         audienceToMove = new Audience();
-        audienceInit = new Audience();
-        groupSet = new HashSet<>();
         initClass = new Class();
         classToMove = new Class();
         classToMoveDto = new ClassDto();
         initClassDto = new ClassDto();
         moveClassRequest = new MoveClassRequest();
-        impossibleTimeMap = new HashMap<>();
-        universityVSU = new University();
         facultyFKN = new Faculty();
         facultyFKN = new Faculty();
-        equipmentList = new ArrayList<>();
         equipment = new HashSet<>();
-        impossibleTime = new ImpossibleTime();
-        impossibleTimes= new ArrayList<>();
-        typeClass = TypeClass.LECTURE;
+        impossibleTimes = new ArrayList<>();
         request = new Request();
         group = new Group();
         lecturer = new User();
         headman = new User();
-        groupResponse = new GroupResponse();
         sendRequest = new SendRequest();
-        lecturerDto = new UserDto(1L, UserRole.valueOf("LECTURER"), "Иванов Иван Иванович", "ivan",
-                "ivan@mail.ru", "Воронеж", "password", null, null, null);
+
 
         lecturer.setCity("Воронеж");
         lecturer.setEmail("ivan@mail.ru");
@@ -137,12 +128,12 @@ class RequestServiceImplTest {
         headman.setPassword("password");
         headman.setGroup(group);
 
-        requestDto = RequestDto.builder()
-                        .subjectName("ТФКП")
-                        .subjectHourPerWeek(BigDecimal.valueOf(2))
-                        .typeClass(typeClass)
-                        .userDto(lecturerDto)
-                        .build();
+        RequestDto requestDto = RequestDto.builder()
+                .subjectName("ТФКП")
+                .subjectHourPerWeek(BigDecimal.valueOf(2))
+                .typeClass(typeClass)
+                .userDto(lecturerDto)
+                .build();
 
         requestDto.setSubjectName("ТФКП");
         requestDto.setSubjectHourPerWeek(BigDecimal.valueOf(2));
@@ -198,8 +189,6 @@ class RequestServiceImplTest {
         classToMoveDto.setSubjectName("ТФКП");
         classToMoveDto.setTypeOfClass(TypeClass.LECTURE);
         classToMoveDto.setWeekType(WeekType.DENOMINATOR);
-
-//        classList.set(0, initClass);
 
         audienceInit.setId(1L);
         audienceInit.setAudienceNumber(285);
@@ -265,9 +254,6 @@ class RequestServiceImplTest {
                 thenReturn(initClass);
         when(userService.getUserById(2L)).
                 thenReturn(headman);
-//        when(mailService.sendClassChangeMail(lecturer, initClass, classToMove, headman.getEmail())).
-//                thenReturn();
-
 
         requestServiceImpl.moveClass(moveClassRequest, "ivan");
     }

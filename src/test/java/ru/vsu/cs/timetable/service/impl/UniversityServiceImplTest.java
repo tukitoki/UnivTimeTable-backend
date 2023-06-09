@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -9,10 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.vsu.cs.timetable.dto.university.UniversityDto;
-import ru.vsu.cs.timetable.entity.Faculty;
 import ru.vsu.cs.timetable.entity.University;
 import ru.vsu.cs.timetable.entity.User;
-import ru.vsu.cs.timetable.entity.enums.UserRole;
 import ru.vsu.cs.timetable.mapper.UniversityMapper;
 import ru.vsu.cs.timetable.repository.UniversityRepository;
 import ru.vsu.cs.timetable.service.UniversityService;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -37,12 +37,16 @@ class UniversityServiceImplTest {
     private UniversityServiceImpl universityServiceImpl;
     @Mock
     private UniversityService universityService;
-    private final UniversityDto universityVSUDto = new UniversityDto(1L, "ВГУ", "Воронеж");
-    private University universityVSU = new University();
-    private University universityVGTU = new University();
+    private UniversityDto universityVSUDto;
+    private University universityVSU;
+    private University universityVGTU;
 
     @BeforeEach
     void setUp() {
+        universityVSUDto = new UniversityDto(1L, "ВГУ", "Воронеж");
+        universityVSU = new University();
+        universityVGTU = new University();
+
         universityVSU.setId(1L);
         universityVSU.setCity("Воронеж");
         universityVSU.setName("ВГУ");
@@ -53,6 +57,7 @@ class UniversityServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully find university DTO by id")
     void getUniversityById() {
         when(universityRepository.findById(1L))
                 .thenReturn(Optional.of(universityVSU));
@@ -62,12 +67,13 @@ class UniversityServiceImplTest {
         UniversityDto universityDtoToCompare = universityServiceImpl.getUniversityById(1L);
 
         assertThat(universityDtoToCompare.getId()).isNotNull();
-        assert(universityDtoToCompare.getId().equals(1L));
-        assert(universityDtoToCompare.getUniversityName().equals("ВГУ"));
-        assert(universityDtoToCompare.equals(universityVSUDto));
+        assertEquals(universityDtoToCompare.getId(), 1L);
+        assertEquals(universityDtoToCompare.getUniversityName(), "ВГУ");
+        assertEquals(universityDtoToCompare, universityVSUDto);
     }
 
     @Test
+    @DisplayName("Should successfully find university by id")
     void findUnivById() {
         when(universityRepository.findById(1L))
                 .thenReturn(Optional.of(universityVSU));
@@ -75,13 +81,14 @@ class UniversityServiceImplTest {
         University universityToCompare = universityServiceImpl.findUnivById(1L);
 
         assertThat(universityToCompare.getName()).isNotNull();
-        assert(universityToCompare.getId().equals(1L));
-        assert(universityToCompare.getName().equals("ВГУ"));
-        assert(universityToCompare.getCity().equals("Воронеж"));
-        assert(universityToCompare.equals(universityVSU));
+        assertEquals(universityToCompare.getId(), 1L);
+        assertEquals(universityToCompare.getName(), "ВГУ");
+        assertEquals(universityToCompare.getCity(), "Воронеж");
+        assertEquals(universityToCompare, universityVSU);
     }
 
     @Test
+    @DisplayName("Should successfully find university by name")
     void findUnivByName() {
         when(universityRepository.findByNameIgnoreCase("ВГУ"))
                 .thenReturn(Optional.of(universityVSU));
@@ -89,11 +96,12 @@ class UniversityServiceImplTest {
         University universityToCompare = universityServiceImpl.findUnivByName("ВГУ");
 
         assertThat(universityToCompare.getName()).isNotNull();
-        assert(universityToCompare.getName().equals("ВГУ"));
-        assert(universityToCompare.equals(universityVSU));
+        assertEquals(universityToCompare.getName(), ("ВГУ"));
+        assertEquals(universityToCompare, universityVSU);
     }
 
     @Test
+    @DisplayName("Should successfully find all universities")
     void findAllUniversities() {
         List<University> universityList = new ArrayList<>();
         universityList.add(universityVSU);
@@ -105,12 +113,13 @@ class UniversityServiceImplTest {
         List<University> universityListToCompare = universityServiceImpl.findAllUniversities();
 
         assertThat(universityListToCompare).isNotNull();
-        assert(universityListToCompare.get(0).getName().equals("ВГУ"));
-        assert(universityListToCompare.get(1).getName().equals("ВГТУ"));
-        assert(universityListToCompare.equals(universityList));
+        assertEquals(universityListToCompare.get(0).getName(), "ВГУ");
+        assertEquals(universityListToCompare.get(1).getName(), "ВГТУ");
+        assertEquals(universityListToCompare, universityList);
     }
 
     @Test
+    @DisplayName("Should successfully create university")
     void createUniversity() {
         UniversityDto universityToCreateDto = new UniversityDto(5L, "Бауманка", "Москва");
         University universityBAYMANKA = new University();
@@ -127,6 +136,7 @@ class UniversityServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully update university")
     void updateUniversity() {
         University universityToUpdate = new University();
         universityToUpdate.setId(4L);
@@ -152,10 +162,11 @@ class UniversityServiceImplTest {
 
         universityServiceImpl.updateUniversity(newUniversityDto, 4L);
 
-        assert(universityToUpdate.getName().equals("МГУ"));
+        assertEquals(universityToUpdate.getName(), "МГУ");
     }
 
     @Test
+    @DisplayName("Should successfully delete university")
     void deleteUniversity() {
         List<User> users = new ArrayList<>();
 

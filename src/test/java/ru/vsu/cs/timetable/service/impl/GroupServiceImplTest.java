@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -50,18 +52,25 @@ class GroupServiceImplTest {
     @Mock
     private FacultyService facultyService;
 
-    private UserRole userRole = UserRole.HEADMAN;
-    private UserResponse userResponse = new UserResponse(1L, userRole, "Иванов Иван Иванович", "Воронеж", "ВГУ",
-            "ФКН", 5);
-    private final GroupDto groupDto = new GroupDto(1L, 5, 3, 30, userResponse);
-    private Group group = new Group();
-    private User user = new User();
-    private University universityVSU = new University();
-    private Faculty facultyFKN = new Faculty();
-    private Faculty facultyPMM = new Faculty();
+    private UserRole userRole;
+    private GroupDto groupDto;
+    private Group group;
+    private User user;
+    private Faculty facultyFKN;
+    private Faculty facultyPMM;
 
     @BeforeEach
     void setUp() {
+        userRole = UserRole.HEADMAN;
+        UserResponse userResponse = new UserResponse(1L, userRole, "Иванов Иван Иванович", "Воронеж", "ВГУ",
+                "ФКН", 5);
+        groupDto = new GroupDto(1L, 5, 3, 30, userResponse);
+        group = new Group();
+        user = new User();
+        University universityVSU = new University();
+        facultyFKN = new Faculty();
+        facultyPMM = new Faculty();
+
         group.setId(1L);
         group.setGroupNumber(5);
         group.setStudentsAmount(30);
@@ -91,6 +100,7 @@ class GroupServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully find group DTO by id")
     void getGroupById() {
         when(groupRepository.findById(1L))
                 .thenReturn(Optional.of(group));
@@ -100,11 +110,12 @@ class GroupServiceImplTest {
         GroupDto groupDto1 = groupServiceImpl.getGroupById(1L);
 
         assertThat(groupDto1.getId()).isNotNull();
-        assert(groupDto1.getId().equals(1L));
-        assert(groupDto1.equals(groupDto));
+        assertEquals(groupDto1.getId(), 1L);
+        assertEquals(groupDto1, groupDto);
     }
 
     @Test
+    @DisplayName("Should successfully find group by id")
     void findGroupById() {
         when(groupRepository.findById(1L))
                 .thenReturn(Optional.of(group));
@@ -112,14 +123,15 @@ class GroupServiceImplTest {
         Group groupToCompare = groupServiceImpl.findGroupById(1L);
 
         assertThat(group.getGroupNumber()).isNotNull();
-        assert(groupToCompare.getStudentsAmount().equals(30));
-        assert(groupToCompare.getCourseNumber().equals(3));
-        assert(groupToCompare.getGroupNumber().equals(5));
-        assert(groupToCompare.getFaculty().equals(facultyFKN));
-        assert(groupToCompare.equals(group));
+        assertEquals(groupToCompare.getStudentsAmount(), 30);
+        assertEquals(groupToCompare.getCourseNumber(), 3);
+        assertEquals(groupToCompare.getGroupNumber(), 5);
+        assertEquals(groupToCompare.getFaculty(), facultyFKN);
+        assertEquals(groupToCompare, group);
     }
 
     @Test
+    @DisplayName("Should successfully create group")
     void createGroup() {
         UserResponse userResponse1 = new UserResponse(2L, userRole, "Иванов Иван Иванович", "Воронеж", "ВГУ",
                 "ФКН", 5);
@@ -145,6 +157,7 @@ class GroupServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully delete group")
     void deleteGroup() {
         Group groupToDelete = new Group();
         groupToDelete.setId(2L);
@@ -159,6 +172,7 @@ class GroupServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully update group")
     void updateGroup() {
         Group groupToUpdate = new Group();
         groupToUpdate.setId(3L);
@@ -201,9 +215,9 @@ class GroupServiceImplTest {
 
         groupServiceImpl.updateGroup(newGroupDto, 3L);
 
-        assert(groupToUpdate.getGroupNumber().equals(5));
-        assert(groupToUpdate.getStudentsAmount().equals(15));
-        assert(groupToUpdate.getCourseNumber().equals(2));
-        assert(groupToUpdate.getHeadmanId().equals(3L));
+        assertEquals(groupToUpdate.getGroupNumber(), 5);
+        assertEquals(groupToUpdate.getStudentsAmount(), 15);
+        assertEquals(groupToUpdate.getCourseNumber(), 2);
+        assertEquals(groupToUpdate.getHeadmanId(), 3L);
     }
 }
