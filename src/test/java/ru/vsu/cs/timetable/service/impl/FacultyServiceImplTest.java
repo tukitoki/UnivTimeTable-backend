@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import ru.vsu.cs.timetable.repository.FacultyRepository;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -36,13 +38,18 @@ class FacultyServiceImplTest {
     @Mock
     private UniversityService universityService;
 
-    private final FacultyDto facultyFKNDto = new FacultyDto(1L, "ФКН");
-    private University universityVSU = new University();
-    private University universityVGTU = new University();
-    private Faculty facultyFKN = new Faculty();
+    private FacultyDto facultyFKNDto;
+    private University universityVSU;
+    private University universityVGTU;
+    private Faculty facultyFKN;
 
     @BeforeEach
     void setUp() {
+        facultyFKNDto = new FacultyDto(1L, "ФКН");
+        universityVSU = new University();
+        universityVGTU = new University();
+        facultyFKN = new Faculty();
+
         universityVSU.setId(1L);
         universityVSU.setCity("Воронеж");
         universityVSU.setName("ВГУ");
@@ -57,6 +64,7 @@ class FacultyServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully find group DTO by id")
     void getFacultyById() {
         when(facultyRepository.findById(1L))
                 .thenReturn(Optional.of(facultyFKN));
@@ -66,12 +74,14 @@ class FacultyServiceImplTest {
         FacultyDto facultyDto = facultyServiceImpl.getFacultyById(1L);
 
         assertThat(facultyDto.getId()).isNotNull();
-        assert (facultyDto.getId().equals(1L));
-        assert (facultyDto.getName().equals("ФКН"));
-        assert (facultyDto.equals(facultyFKNDto));
+
+        assertEquals(facultyDto.getId(), 1L);
+        assertEquals(facultyDto.getName(), "ФКН");
+        assertEquals(facultyDto, facultyFKNDto);
     }
 
     @Test
+    @DisplayName("Should successfully find group by id")
     void findFacultyById() {
         when(facultyRepository.findById(1L))
                 .thenReturn(Optional.of(facultyFKN));
@@ -79,12 +89,14 @@ class FacultyServiceImplTest {
         Faculty facultyToCompare = facultyServiceImpl.findFacultyById(1L);
 
         assertThat(facultyToCompare.getName()).isNotNull();
-        assert (facultyToCompare.getId().equals(1L));
-        assert (facultyToCompare.getName().equals("ФКН"));
-        assert (facultyToCompare.equals(facultyFKN));
+
+        assertEquals(facultyToCompare.getId(), 1L);
+        assertEquals(facultyToCompare.getName(), "ФКН");
+        assertEquals(facultyToCompare, facultyFKN);
     }
 
     @Test
+    @DisplayName("Should successfully create group")
     void createFaculty() {
         CreateFacultyRequest createFacultyRequest = new CreateFacultyRequest();
         createFacultyRequest.setName("РГФ");
@@ -103,6 +115,7 @@ class FacultyServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully delete group")
     void deleteFaculty() {
         Faculty facultyToDelete = new Faculty();
         facultyToDelete.setId(4L);
@@ -115,6 +128,7 @@ class FacultyServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully update group")
     void updateFaculty() {
         Faculty facultyToUpdate = new Faculty();
         facultyToUpdate.setId(5L);
@@ -140,6 +154,6 @@ class FacultyServiceImplTest {
 
         facultyServiceImpl.updateFaculty(newFacultyDto, 5L);
 
-        assert (facultyToUpdate.getName().equals("Математический факультет"));
+        assertEquals(facultyToUpdate.getName(), "Математический факультет");
     }
 }
