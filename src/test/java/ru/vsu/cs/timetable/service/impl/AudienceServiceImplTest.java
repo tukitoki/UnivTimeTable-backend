@@ -9,16 +9,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.vsu.cs.timetable.dto.audience.CreateAudienceRequest;
-import ru.vsu.cs.timetable.entity.Audience;
-import ru.vsu.cs.timetable.entity.Equipment;
-import ru.vsu.cs.timetable.entity.Faculty;
-import ru.vsu.cs.timetable.entity.University;
-import ru.vsu.cs.timetable.mapper.AudienceMapper;
+import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.logic.service.impl.AudienceServiceImpl;
+import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
+import ru.vsu.cs.timetable.model.entity.Audience;
+import ru.vsu.cs.timetable.model.entity.Equipment;
+import ru.vsu.cs.timetable.model.entity.Faculty;
+import ru.vsu.cs.timetable.model.entity.University;
+import ru.vsu.cs.timetable.model.mapper.AudienceMapper;
 import ru.vsu.cs.timetable.repository.AudienceRepository;
 import ru.vsu.cs.timetable.repository.EquipmentRepository;
-import ru.vsu.cs.timetable.service.FacultyService;
-import ru.vsu.cs.timetable.service.UniversityService;
 
 import java.util.*;
 

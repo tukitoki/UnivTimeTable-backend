@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import ru.vsu.cs.timetable.entity.User;
+import ru.vsu.cs.timetable.model.entity.User;
 
 import java.util.List;
 import java.util.Optional;

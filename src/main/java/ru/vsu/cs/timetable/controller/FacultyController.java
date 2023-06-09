@@ -6,11 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.FacultyApi;
-import ru.vsu.cs.timetable.dto.faculty.CreateFacultyRequest;
-import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
-import ru.vsu.cs.timetable.dto.faculty.FacultyPageDto;
-import ru.vsu.cs.timetable.dto.page.SortDirection;
-import ru.vsu.cs.timetable.service.FacultyService;
+import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.model.dto.faculty.CreateFacultyRequest;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyPageDto;
+import ru.vsu.cs.timetable.model.dto.page.SortDirection;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_FACULTY_AUTHORITY')")
@@ -35,6 +37,14 @@ public class FacultyController implements FacultyApi {
     }
 
     @Override
+    @GetMapping("/{univId}/faculties/all")
+    public ResponseEntity<List<FacultyDto>> getFacultiesByUniversity(@PathVariable Long univId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(facultyService.getFacultiesByUniversity(univId));
+    }
+
+    @Override
     @GetMapping("/faculty/{id}")
     public ResponseEntity<FacultyDto> getFacultyById(@PathVariable Long id) {
         return ResponseEntity
@@ -45,7 +55,7 @@ public class FacultyController implements FacultyApi {
     @Override
     @PostMapping("/{univId}/faculty/create")
     public ResponseEntity<Void> createFaculty(@RequestBody CreateFacultyRequest createFacultyRequest,
-                              @PathVariable Long univId) {
+                                              @PathVariable Long univId) {
         facultyService.createFaculty(createFacultyRequest, univId);
 
         return ResponseEntity
@@ -66,7 +76,7 @@ public class FacultyController implements FacultyApi {
     @Override
     @PutMapping("/faculty/{id}")
     public ResponseEntity<Void> updateFaculty(@RequestBody FacultyDto facultyDto,
-                              @PathVariable Long id) {
+                                              @PathVariable Long id) {
         facultyService.updateFaculty(facultyDto, id);
 
         return ResponseEntity

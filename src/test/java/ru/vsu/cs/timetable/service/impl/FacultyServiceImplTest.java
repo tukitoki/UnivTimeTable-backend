@@ -9,13 +9,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.vsu.cs.timetable.dto.faculty.CreateFacultyRequest;
-import ru.vsu.cs.timetable.dto.faculty.FacultyDto;
-import ru.vsu.cs.timetable.entity.Faculty;
-import ru.vsu.cs.timetable.entity.University;
-import ru.vsu.cs.timetable.mapper.FacultyMapper;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.logic.service.impl.FacultyServiceImpl;
+import ru.vsu.cs.timetable.model.dto.faculty.CreateFacultyRequest;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
+import ru.vsu.cs.timetable.model.entity.Faculty;
+import ru.vsu.cs.timetable.model.entity.University;
+import ru.vsu.cs.timetable.model.mapper.FacultyMapper;
 import ru.vsu.cs.timetable.repository.FacultyRepository;
-import ru.vsu.cs.timetable.service.UniversityService;
 
 import java.util.Optional;
 
@@ -73,6 +74,7 @@ class FacultyServiceImplTest {
         FacultyDto facultyDto = facultyServiceImpl.getFacultyById(1L);
 
         assertThat(facultyDto.getId()).isNotNull();
+
         assertEquals(facultyDto.getId(), 1L);
         assertEquals(facultyDto.getName(), "ФКН");
         assertEquals(facultyDto, facultyFKNDto);
@@ -87,6 +89,7 @@ class FacultyServiceImplTest {
         Faculty facultyToCompare = facultyServiceImpl.findFacultyById(1L);
 
         assertThat(facultyToCompare.getName()).isNotNull();
+
         assertEquals(facultyToCompare.getId(), 1L);
         assertEquals(facultyToCompare.getName(), "ФКН");
         assertEquals(facultyToCompare, facultyFKN);
