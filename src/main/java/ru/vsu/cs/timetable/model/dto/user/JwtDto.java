@@ -11,6 +11,8 @@ import lombok.Setter;
 @Schema(description = "AccessToken и RefreshToken")
 public class JwtDto {
 
+    @Schema(description = "access token")
     private String accessToken;
+    @Schema(description = "refresh token")
     private String refreshToken;
 }

@@ -10,10 +10,10 @@ import ru.vsu.cs.timetable.exception.AudienceException;
 import ru.vsu.cs.timetable.exception.ClassException;
 import ru.vsu.cs.timetable.exception.EquipmentException;
 import ru.vsu.cs.timetable.logic.service.*;
+import ru.vsu.cs.timetable.model.dto.audience.AudienceToMoveResponse;
 import ru.vsu.cs.timetable.model.dto.group.GroupResponse;
-import ru.vsu.cs.timetable.model.dto.univ_class.MoveClassDto;
+import ru.vsu.cs.timetable.model.dto.univ_class.ClassDto;
 import ru.vsu.cs.timetable.model.dto.univ_requests.*;
-import ru.vsu.cs.timetable.model.dto.week_time.DayTimes;
 import ru.vsu.cs.timetable.model.entity.Class;
 import ru.vsu.cs.timetable.model.entity.*;
 import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
@@ -142,7 +142,7 @@ public class RequestServiceImpl implements RequestService {
     public MoveClassResponse showMoveClass(String username) {
         var lecturer = userService.getUserByUsername(username);
 
-        Map<Integer, List<MoveClassDto>> coursesClasses = new TreeMap<>();
+        Map<Integer, List<ClassDto>> coursesClasses = new TreeMap<>();
 
         for (var univClass : classRepository.findAllByLecturer(lecturer)) {
             var course = univClass.getGroups().stream()
@@ -154,39 +154,27 @@ public class RequestServiceImpl implements RequestService {
                 coursesClasses.put(course, new LinkedList<>());
             }
             var courseClasses = coursesClasses.get(course);
-            var allGroups = univClass.getGroups().stream()
-                    .map(Group::getGroupNumber)
-                    .collect(Collectors.toSet());
 
-            MoveClassDto currGroupClasses = null;
-            for (var courseClass : courseClasses) {
-                if (courseClass.getGroups().equals(allGroups)) {
-                    currGroupClasses = courseClass;
-                    break;
-                }
-            }
-
-            if (currGroupClasses == null) {
-                currGroupClasses = MoveClassDto.builder()
-                        .groups(allGroups)
-                        .groupClasses(new ArrayList<>(List.of(classMapper.toDto(univClass))))
-                        .build();
-                courseClasses.add(currGroupClasses);
-            } else {
-                currGroupClasses.getGroupClasses().add(classMapper.toDto(univClass));
-            }
+            courseClasses.add(classMapper.toDto(univClass));
         }
 
         var audiencesFreeTime = audienceService.getFreeAudienceByFaculty(lecturer.getFaculty());
-        Map<Integer, List<DayTimes>> possibleTimesInAudience = new HashMap<>();
+        List<AudienceToMoveResponse> audienceToMoveResponses = new ArrayList<>();
 
         audiencesFreeTime.forEach((audience, freeTimes) -> {
-            possibleTimesInAudience.put(audience.getAudienceNumber(), freeTimes);
+            audienceToMoveResponses.add(AudienceToMoveResponse.builder()
+                    .audienceNumber(audience.getAudienceNumber())
+                    .capacity(audience.getCapacity())
+                    .dayTimes(freeTimes)
+                    .equipments(audience.getEquipments().stream()
+                            .map(Equipment::getName)
+                            .collect(Collectors.toSet()))
+                    .build());
         });
 
         return MoveClassResponse.builder()
                 .coursesClasses(coursesClasses)
-                .possibleTimesInAudience(possibleTimesInAudience)
+                .audienceToMoveResponses(audienceToMoveResponses)
                 .build();
     }
 

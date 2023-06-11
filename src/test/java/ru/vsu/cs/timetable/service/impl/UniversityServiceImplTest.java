@@ -9,13 +9,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
 import ru.vsu.cs.timetable.logic.service.impl.UniversityServiceImpl;
 import ru.vsu.cs.timetable.model.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.model.entity.University;
 import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.model.mapper.UniversityMapper;
 import ru.vsu.cs.timetable.repository.UniversityRepository;
-import ru.vsu.cs.timetable.logic.service.UniversityService;
 
 import java.util.ArrayList;
 import java.util.List;

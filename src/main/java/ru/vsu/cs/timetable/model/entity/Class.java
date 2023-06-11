@@ -64,6 +64,14 @@ public class Class {
             inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> groups;
 
+    @PreRemove
+    public void removeClassFromGroup() {
+        this.groups.forEach(group -> {
+            group.getClasses().remove(this);
+        });
+        this.groups = null;
+    }
+
     @Override
     public String toString() {
         return subjectName +

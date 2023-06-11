@@ -21,14 +21,14 @@ import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import java.util.List;
 
 @AccessDeniedResponse
-@Tag(name = "User API", description = "API для работы с пользователем")
 @SecurityRequirement(name = "bearer-key")
+@Tag(name = "User API", description = "API для работы с пользователем")
 public interface UserApi {
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение пользователей",
+                    description = "Успешный возврат пользователей",
                     content = {
                             @Content(
                                     schema = @Schema(implementation = UserPageDto.class)
@@ -37,27 +37,27 @@ public interface UserApi {
             )
     })
     @Operation(
-            summary = "Получение списка пользователей с фильтрацией и поиском"
+            summary = "Возвращает список пользователей с фильтрацией и поиском"
     )
     ResponseEntity<UserPageDto> getAllUsers(
-            @Parameter(description = "Номер страницы")
+            @Parameter(description = "Номер страницы", example = "1")
             int currentPage,
-            @Parameter(description = "Количество элементов на странице")
+            @Parameter(description = "Количество элементов на странице", example = "10")
             int pageSize,
-            @Parameter(description = "Вуз для фильтрации")
+            @Parameter(description = "Вуз для фильтрации", example = "Воронежский государственный университет")
             String universities,
-            @Parameter(description = "Роль для фильтрации")
-            UserRole roles,
-            @Parameter(description = "Город для фильтрации")
-            String cities,
-            @Parameter(description = "ФИО для поиска")
+            @Parameter(description = "Роль для фильтрации", example = "LECTURER")
+            UserRole role,
+            @Parameter(description = "Город для фильтрации", example = "Воронеж")
+            String city,
+            @Parameter(description = "ФИО для поиска", example = "Андреев Андрей Андреевич")
             String name
     );
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение свободных старост факультета",
+                    description = "Успешный возврат свободных старост факультета",
                     content = {
                             @Content(
                                     array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))
@@ -66,17 +66,17 @@ public interface UserApi {
             )
     })
     @Operation(
-            summary = "Получение свободных старост факультета"
+            summary = "Возвращает свободных старост факультета"
     )
     ResponseEntity<List<UserResponse>> getFreeHeadmenByFaculty(
-            @Parameter(description = "Id факультета")
+            @Parameter(description = "Id факультета", example = "1")
             Long facultyId
     );
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение пользователя",
+                    description = "Успешный возврат пользователя",
                     content = {
                             @Content(
                                     schema = @Schema(implementation = UserDto.class)
@@ -94,10 +94,10 @@ public interface UserApi {
             )
     })
     @Operation(
-            summary = "Получить пользователя по id"
+            summary = "Возвращает пользователя по id"
     )
     ResponseEntity<UserDto> getUserById(
-            @Parameter(description = "Id пользователя")
+            @Parameter(description = "Id пользователя", example = "1")
             Long id
     );
 
@@ -118,7 +118,7 @@ public interface UserApi {
             )
     })
     @Operation(
-            summary = "Создание пользователя"
+            summary = "Создает пользователя"
     )
     ResponseEntity<Void> createUser(
             @Parameter(description = "Параметры создания пользователя")
@@ -128,7 +128,7 @@ public interface UserApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешный показ информации для создании пользователя",
+                    description = "Успешный возврат информации для создании пользователя",
                     content = {
                             @Content(
                                     schema = @Schema(implementation = CreateUserResponse.class)
@@ -137,7 +137,7 @@ public interface UserApi {
             )
     })
     @Operation(
-            summary = "Показ информации для создания пользователя"
+            summary = "Возвращает информацию для создания пользователя"
     )
     ResponseEntity<CreateUserResponse> createUserInfo();
 
@@ -149,8 +149,8 @@ public interface UserApi {
             @ApiResponse(
                     responseCode = "400",
                     description = """
-                            Пользователь с таким username уже присутствует, \t
-                            Пользователь с таким email уже присутствует
+                            Пользователь с таким username уже существует, \t
+                            Пользователь с таким email уже существует
                             """,
                     content = {
                             @Content(
@@ -160,12 +160,12 @@ public interface UserApi {
             )
     })
     @Operation(
-            summary = "Обновление пользователя"
+            summary = "Обновляет пользователя"
     )
     ResponseEntity<Void> updateUser(
             @Parameter(description = "Новые характеристики пользователя")
             UserDto userDto,
-            @Parameter(description = "Id пользователя для редактирования")
+            @Parameter(description = "Id пользователя для редактирования", example = "1")
             Long id
     );
 
@@ -185,10 +185,10 @@ public interface UserApi {
             )
     })
     @Operation(
-            summary = "Удаление пользователя"
+            summary = "Удаляет пользователя"
     )
     ResponseEntity<Void> deleteUser(
-            @Parameter(description = "Id пользователя для удаления")
+            @Parameter(description = "Id пользователя для удаления", example = "1")
             Long id
     );
 }

@@ -12,11 +12,13 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @SuperBuilder
-@Schema(description = "Информация для создания факультета")
+@Schema(description = "Информация о факультете")
 public class FacultyDto {
 
+    @Schema(description = "Id факультета", example = "1")
     private Long id;
     @NotNull
     @NotBlank
+    @Schema(description = "Название факультета", example = "Факультет компьютерных наук")
     private String name;
 }

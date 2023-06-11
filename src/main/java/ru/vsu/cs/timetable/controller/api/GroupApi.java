@@ -16,14 +16,14 @@ import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 @AccessDeniedResponse
-@Tag(name = "Group API", description = "API для работы с группами факульетов")
 @SecurityRequirement(name = "bearer-key")
+@Tag(name = "Group API", description = "API для работы с группами факульетов")
 public interface GroupApi {
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получеие групп",
+                    description = "Успешный возврат групп",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -33,27 +33,27 @@ public interface GroupApi {
             )
     })
     @Operation(
-            summary = "Получение списка групп с фильтрацией и поиском"
+            summary = "Возвращает список групп с фильтрацией и поиском"
     )
     ResponseEntity<GroupPageDto> getFacultyGroups(
-            @Parameter(description = "Номер страницы")
+            @Parameter(description = "Номер страницы", example = "1")
             int currentPage,
-            @Parameter(description = "Количество элементов на странице")
+            @Parameter(description = "Количество элементов на странице", example = "10")
             int pageSize,
-            @Parameter(description = "Курс для фильтрации")
+            @Parameter(description = "Курс для фильтрации", example = "1")
             Integer course,
-            @Parameter(description = "Номер группы для фильтрации")
+            @Parameter(description = "Номер группы для фильтрации", example = "1")
             Integer groupNumber,
-            @Parameter(description = "")
+            @Parameter(description = "Сортировка по курсу")
             SortDirection order,
-            @Parameter(description = "Id факультета, группы которого нужны")
+            @Parameter(description = "Id факультета, группы которого нужны", example = "1")
             Long facultyId
     );
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение группы",
+                    description = "Успешный возврат группы",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -73,10 +73,10 @@ public interface GroupApi {
             )
     })
     @Operation(
-            summary = "Получение группы по id"
+            summary = "Возвращает группу по id"
     )
     ResponseEntity<GroupDto> getGroupById(
-            @Parameter(description = "Id группы")
+            @Parameter(description = "Id группы", example = "1")
             Long id
     );
 
@@ -87,7 +87,7 @@ public interface GroupApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такая группа на этом факультете уже была создана",
+                    description = "Такая группа на этом факультете уже существует",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -97,7 +97,7 @@ public interface GroupApi {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Староста для этой группы по указанному id не был найден",
+                    description = "Староста для группы по переданному id не был найден",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -107,12 +107,12 @@ public interface GroupApi {
             )
     })
     @Operation(
-            summary = "Создание группы конкретного факульета"
+            summary = "Создает группу конкретного факульета"
     )
     ResponseEntity<Void> createGroup(
             @Parameter(description = "Параметры для создания группы")
             GroupDto groupDto,
-            @Parameter(description = "Id факультета, группа для которого создается")
+            @Parameter(description = "Id факультета, группа для которого создается", example = "1")
             Long facultyId
     );
 
@@ -133,10 +133,10 @@ public interface GroupApi {
             )
     })
     @Operation(
-            summary = "Удаление группы конкретного факульета"
+            summary = "Удаляет группу по id"
     )
     ResponseEntity<Void> deleteGroup(
-            @Parameter(description = "Id группы для удаления")
+            @Parameter(description = "Id группы для удаления", example = "1")
             Long id
     );
 
@@ -147,7 +147,7 @@ public interface GroupApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такая группа на этом факультете уже была создана",
+                    description = "Группа с таким номером и курсом на этом факультете уже существует",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -157,7 +157,7 @@ public interface GroupApi {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Староста для этой группы по указанному id не был найден",
+                    description = "Староста для этой группы по переданному id не был найден",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -167,12 +167,12 @@ public interface GroupApi {
             )
     })
     @Operation(
-            summary = "Обновление группы конкретного факульета"
+            summary = "Обновляет группу по id"
     )
     ResponseEntity<Void> updateGroup(
             @Parameter(description = "Измененная версия группы")
             GroupDto groupDto,
-            @Parameter(description = "Id группы для обновления")
+            @Parameter(description = "Id группы для обновления", example = "1")
             Long id
     );
 }

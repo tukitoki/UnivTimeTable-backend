@@ -343,9 +343,6 @@ public class UserServiceImpl implements UserService {
             if (facultyId == null) {
                 throw UserException.CODE.HEADMAN_SHOULD_HAVE_FACULTY.get();
             }
-            if (groupId == null) {
-                throw UserException.CODE.HEADMAN_SHOULD_HAVE_GROUP.get();
-            }
         }
     }
 }

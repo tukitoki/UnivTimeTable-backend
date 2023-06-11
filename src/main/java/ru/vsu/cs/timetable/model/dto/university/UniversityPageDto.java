@@ -12,5 +12,6 @@ import ru.vsu.cs.timetable.model.dto.page.PageModel;
 @Schema(description = "Страница с университетами")
 public class UniversityPageDto {
 
+    @Schema(description = "Страница с университетами")
     private PageModel<UniversityDto> universitiesPage;
 }

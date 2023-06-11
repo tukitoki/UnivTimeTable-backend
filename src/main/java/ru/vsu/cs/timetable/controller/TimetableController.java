@@ -64,4 +64,16 @@ public class TimetableController implements TimetableApi {
                 .status(HttpStatus.OK)
                 .build();
     }
+
+    @Override
+    @PreAuthorize("hasAuthority('MAKE_TIMETABLE_AUTHORITY')")
+    @PostMapping("/reset")
+    public ResponseEntity<Void> resetTimetable(Authentication authentication) {
+        String username = authentication.getName();
+        timetableService.resetTimetable(username);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
 }

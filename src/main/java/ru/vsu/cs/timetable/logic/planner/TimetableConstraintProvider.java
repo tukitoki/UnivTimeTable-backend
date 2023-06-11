@@ -50,7 +50,7 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                                 .mapToInt(Group::getStudentsAmount)
                                 .sum()
                 )
-                .penalize(HardSoftScore.ONE_HARD)
+                .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Audience capacity conflict");
     }
 
@@ -108,7 +108,7 @@ public class TimetableConstraintProvider implements ConstraintProvider {
     private Constraint timeConflict(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
                 .filter(planningClass -> planningClass.getTimeslot()
-                        .getStartTime().isAfter(LocalTime.of(16, 45)))
+                        .getStartTime().isAfter(LocalTime.of(15, 10)))
                 .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Time conflict before 16:45");
     }

@@ -15,8 +15,12 @@ import java.math.BigDecimal;
 @Schema(description = "Информация о заявке")
 public class RequestDto {
 
+    @Schema(description = "Название предмета", example = "Электродинамика")
     private String subjectName;
+    @Schema(description = "Количество часов в неделю", example = "1.5")
     private BigDecimal subjectHourPerWeek;
+    @Schema(description = "Тип пары", example = "Лекция")
     private TypeClass typeClass;
+    @Schema(description = "Информация о преподавателе")
     private UserDto userDto;
 }

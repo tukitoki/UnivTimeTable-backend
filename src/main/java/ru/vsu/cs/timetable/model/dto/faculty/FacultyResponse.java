@@ -18,9 +18,12 @@ import java.util.List;
 @Schema(description = "Информация о факультете с группами")
 public class FacultyResponse {
 
+    @Schema(description = "Id факультета", example = "1")
     private Long id;
     @NotNull
     @NotBlank
+    @Schema(description = "Название факультета", example = "Факультет компьютерных наук")
     private String name;
+    @Schema(description = "Информация о группах")
     private List<GroupDto> groups;
 }

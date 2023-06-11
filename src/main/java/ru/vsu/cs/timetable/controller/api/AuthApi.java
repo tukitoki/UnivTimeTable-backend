@@ -12,13 +12,13 @@ import ru.vsu.cs.timetable.model.dto.user.JwtDto;
 import ru.vsu.cs.timetable.model.dto.user.UserLoginDto;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
-@Tag(name = "Auth API", description = "API для входа в систему и refresh JWT-token")
+@Tag(name = "Auth API", description = "API для входа в систему и refresh токена")
 public interface AuthApi {
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Вход в аккаунт успешно выполнен",
+                    description = "Успешный вход в аккаунт",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -47,7 +47,7 @@ public interface AuthApi {
                     }
             )
     })
-    @Operation(summary = "Возвращает jwt и refresh token's")
+    @Operation(summary = "Возвращает jwt и refresh токены")
     ResponseEntity<JwtDto> loginUser(
             @Parameter(description = "Почта и пароль пользователя")
             UserLoginDto userLoginDto
@@ -56,7 +56,7 @@ public interface AuthApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Refresh был успешно выполнен",
+                    description = "Успешный refresh",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -75,7 +75,7 @@ public interface AuthApi {
                     }
             )
     })
-    @Operation(summary = "Возвращает обновленные jwt и refresh token's")
+    @Operation(summary = "Возвращает обновленные jwt и refresh токены")
     ResponseEntity<JwtDto> refreshToken(
             @Parameter(description = "Refresh токен")
             String refreshToken
