@@ -13,10 +13,9 @@ import ru.vsu.cs.timetable.logic.service.FacultyService;
 import ru.vsu.cs.timetable.logic.service.UniversityService;
 import ru.vsu.cs.timetable.logic.service.impl.AudienceServiceImpl;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
-import ru.vsu.cs.timetable.model.entity.Audience;
-import ru.vsu.cs.timetable.model.entity.Equipment;
-import ru.vsu.cs.timetable.model.entity.Faculty;
-import ru.vsu.cs.timetable.model.entity.University;
+import ru.vsu.cs.timetable.model.dto.week_time.DayTimes;
+import ru.vsu.cs.timetable.model.entity.Class;
+import ru.vsu.cs.timetable.model.entity.*;
 import ru.vsu.cs.timetable.model.mapper.AudienceMapper;
 import ru.vsu.cs.timetable.repository.AudienceRepository;
 import ru.vsu.cs.timetable.repository.EquipmentRepository;
@@ -35,20 +34,21 @@ class AudienceServiceImplTest {
     @Mock
     private EquipmentRepository equipmentRepository;
     @InjectMocks
-    private AudienceServiceImpl audienceService;
+    private AudienceServiceImpl audienceServiceImpl;
     @Mock
     private UniversityService universityService;
     @Mock
     private FacultyService facultyService;
     @Mock
     private AudienceMapper audienceMapper;
-
+    private List<Audience> audienceList;
     private Audience audience;
     private Faculty facultyFKN;
     private University universityVSU;
 
     @BeforeEach
     void setUp() {
+        audienceList = new ArrayList<>();
         audience = new Audience();
         facultyFKN = new Faculty();
         universityVSU = new University();
@@ -57,8 +57,12 @@ class AudienceServiceImplTest {
         audience.setCapacity(50L);
         audience.setId(1L);
         audience.setFaculty(facultyFKN);
+
+        audienceList.add(audience);
+
         facultyFKN.setId(1L);
         facultyFKN.setName("ФКН");
+        facultyFKN.setAudiences(audienceList);
     }
 
     @Test
@@ -91,13 +95,14 @@ class AudienceServiceImplTest {
 
         when(audienceMapper.toEntity(createAudienceRequest, universityVSU, facultyFKN, equipment)).
                 thenReturn(audienceToCreate);
-        when(audienceRepository.findByAudienceNumberAndFaculty(385, facultyFKN)).thenReturn(Optional.of(audienceToCreate));
+        when(audienceRepository.findByAudienceNumberAndFaculty(385, facultyFKN)).
+                thenReturn(Optional.of(audienceToCreate));
         when(equipmentRepository.findByDisplayNameIgnoreCase(equipmentName.getDisplayName())).
                 thenReturn(Optional.of(equipmentName));
 
 
-        audienceService.createAudience(createAudienceRequest, 1L, 1L);
-        Audience createdAudience = audienceService.findAudienceByNumberAndFaculty(385, facultyFKN);
+        audienceServiceImpl.createAudience(createAudienceRequest, 1L, 1L);
+        Audience createdAudience = audienceServiceImpl.findAudienceByNumberAndFaculty(385, facultyFKN);
 
         assertEquals(createdAudience.getAudienceNumber(), 385);
         assertEquals(createdAudience.getId(), 1L);
@@ -111,7 +116,7 @@ class AudienceServiceImplTest {
         when(audienceRepository.findByAudienceNumberAndFaculty(123, audience.getFaculty()))
                 .thenReturn(Optional.of(audience));
 
-        Audience audienceToCompare = audienceService.findAudienceByNumberAndFaculty(123, facultyFKN);
+        Audience audienceToCompare = audienceServiceImpl.findAudienceByNumberAndFaculty(123, facultyFKN);
 
         assertEquals(audienceToCompare.getId(), 1L);
         assertEquals(audienceToCompare.getCapacity(), 50L);
@@ -119,6 +124,18 @@ class AudienceServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully find free audience by faculty")
     void getFreeAudienceByFaculty() {
+        Map<Audience, List<DayTimes>> freeAudiences;
+        List<Class> classList = new ArrayList<>();
+        classList.add(new Class());
+        audience.setClasses(classList);
+
+        when(audienceRepository.findAllByFaculty(facultyFKN)).thenReturn(audienceList);
+
+        freeAudiences = audienceServiceImpl.getFreeAudienceByFaculty(facultyFKN);
+
+        assertEquals(freeAudiences.size(), 1);
+        assertEquals(freeAudiences.get(audience).size(), 7);
     }
 }

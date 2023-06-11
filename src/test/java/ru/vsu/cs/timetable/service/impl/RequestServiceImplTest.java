@@ -9,27 +9,28 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.vsu.cs.timetable.dto.group.GroupResponse;
-import ru.vsu.cs.timetable.dto.univ_class.ClassDto;
-import ru.vsu.cs.timetable.dto.univ_requests.MoveClassRequest;
-import ru.vsu.cs.timetable.dto.univ_requests.RequestDto;
-import ru.vsu.cs.timetable.dto.univ_requests.SendRequest;
-import ru.vsu.cs.timetable.dto.user.UserDto;
-import ru.vsu.cs.timetable.entity.*;
-import ru.vsu.cs.timetable.entity.Class;
-import ru.vsu.cs.timetable.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.entity.enums.TypeClass;
-import ru.vsu.cs.timetable.entity.enums.UserRole;
-import ru.vsu.cs.timetable.entity.enums.WeekType;
-import ru.vsu.cs.timetable.mapper.ClassMapper;
-import ru.vsu.cs.timetable.mapper.RequestMapper;
+import ru.vsu.cs.timetable.logic.service.impl.RequestServiceImpl;
+import ru.vsu.cs.timetable.model.dto.group.GroupResponse;
+import ru.vsu.cs.timetable.model.dto.univ_class.ClassDto;
+import ru.vsu.cs.timetable.model.dto.univ_requests.MoveClassRequest;
+import ru.vsu.cs.timetable.model.dto.univ_requests.RequestDto;
+import ru.vsu.cs.timetable.model.dto.univ_requests.SendRequest;
+import ru.vsu.cs.timetable.model.dto.user.UserDto;
+import ru.vsu.cs.timetable.model.entity.*;
+import ru.vsu.cs.timetable.model.entity.Class;
+import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
+import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.entity.enums.WeekType;
+import ru.vsu.cs.timetable.model.mapper.ClassMapper;
+import ru.vsu.cs.timetable.model.mapper.RequestMapper;
 import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.EquipmentRepository;
 import ru.vsu.cs.timetable.repository.RequestRepository;
-import ru.vsu.cs.timetable.service.AudienceService;
-import ru.vsu.cs.timetable.service.GroupService;
-import ru.vsu.cs.timetable.service.MailService;
-import ru.vsu.cs.timetable.service.UserService;
+import ru.vsu.cs.timetable.logic.service.AudienceService;
+import ru.vsu.cs.timetable.logic.service.GroupService;
+import ru.vsu.cs.timetable.logic.service.MailService;
+import ru.vsu.cs.timetable.logic.service.UserService;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -257,5 +258,4 @@ class RequestServiceImplTest {
 
         requestServiceImpl.moveClass(moveClassRequest, "ivan");
     }
-
 }
