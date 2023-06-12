@@ -16,7 +16,7 @@ import ru.vsu.cs.timetable.model.dto.univ_class.ClassDto;
 import ru.vsu.cs.timetable.model.dto.univ_requests.*;
 import ru.vsu.cs.timetable.model.entity.Class;
 import ru.vsu.cs.timetable.model.entity.*;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
 import ru.vsu.cs.timetable.model.mapper.ClassMapper;
 import ru.vsu.cs.timetable.model.mapper.RequestMapper;
 import ru.vsu.cs.timetable.repository.ClassRepository;

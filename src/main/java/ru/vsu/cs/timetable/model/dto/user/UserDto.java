@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 
 @Setter
 @Getter

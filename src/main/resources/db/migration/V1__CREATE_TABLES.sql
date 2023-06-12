@@ -10,6 +10,15 @@ CREATE TABLE faculty
     name VARCHAR(100) NOT NULL,
     university_id BIGINT NOT NULL references university (id)
 );
+CREATE TABLE university_group
+(
+    id SERIAL NOT NULL PRIMARY KEY,
+    students_amount INT NOT NULL,
+    course_number INT NOT NULL,
+    group_number INT NOT NULL,
+    headman_id BIGINT,
+    faculty_id BIGINT NOT NULL REFERENCES faculty (id)
+);
 CREATE TABLE system_user
 (
     id SERIAL NOT NULL PRIMARY KEY,
@@ -20,16 +29,8 @@ CREATE TABLE system_user
     username VARCHAR(100) NOT NULL UNIQUE,
     ROLE VARCHAR(50) NOT NULL,
     faculty_id BIGINT REFERENCES faculty (id),
-    university_id BIGINT REFERENCES university (id)
-);
-CREATE TABLE university_group
-(
-    id SERIAL NOT NULL PRIMARY KEY,
-    students_amount INT NOT NULL,
-    course_number INT NOT NULL,
-    group_number INT NOT NULL,
-    headman_id BIGINT,
-    faculty_id BIGINT NOT NULL REFERENCES faculty (id)
+    university_id BIGINT REFERENCES university (id),
+    group_id BIGINT REFERENCES university_group (id)
 );
 CREATE TABLE timetable
 (

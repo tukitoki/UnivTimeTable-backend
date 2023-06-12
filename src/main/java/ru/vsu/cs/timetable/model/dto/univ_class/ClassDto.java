@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
-import ru.vsu.cs.timetable.model.entity.enums.WeekType;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.WeekType;
 
 import java.time.LocalTime;
 import java.util.List;

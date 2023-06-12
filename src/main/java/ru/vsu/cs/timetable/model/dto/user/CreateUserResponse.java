@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ru.vsu.cs.timetable.model.dto.university.UniversityResponse;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 
 import java.util.List;
 

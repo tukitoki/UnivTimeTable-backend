@@ -24,9 +24,9 @@ import ru.vsu.cs.timetable.model.entity.Class;
 import ru.vsu.cs.timetable.model.entity.Group;
 import ru.vsu.cs.timetable.model.entity.Request;
 import ru.vsu.cs.timetable.model.entity.User;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
-import ru.vsu.cs.timetable.model.entity.enums.WeekType;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.WeekType;
 import ru.vsu.cs.timetable.model.mapper.AudienceMapper;
 import ru.vsu.cs.timetable.model.mapper.ClassMapper;
 import ru.vsu.cs.timetable.model.mapper.TimetableMapper;
@@ -35,7 +35,7 @@ import ru.vsu.cs.timetable.repository.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.vsu.cs.timetable.model.entity.enums.UserRole.*;
+import static ru.vsu.cs.timetable.model.enums.UserRole.*;
 import static ru.vsu.cs.timetable.utils.TimeUtils.*;
 
 @RequiredArgsConstructor
@@ -98,7 +98,9 @@ public class TimetableServiceImpl implements TimetableService {
             throw TimetableException.CODE.ADMIN_CANT_ACCESS.get();
         }
 
-        return excelService.getExcelTimetable(getTimetableByUser(user));
+        var timetable = getTimetableByUser(user);
+
+        return excelService.getExcelTimetable(timetable, user.getRole());
     }
 
     @Override

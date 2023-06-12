@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ru.vsu.cs.timetable.model.dto.user.UserDto;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
 
 import java.math.BigDecimal;
 

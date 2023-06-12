@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.vsu.cs.timetable.model.dto.group.GroupResponse;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;

@@ -11,7 +11,7 @@ import ru.vsu.cs.timetable.logic.service.TimetableService;
 import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 
-import static ru.vsu.cs.timetable.model.entity.enums.UserRole.*;
+import static ru.vsu.cs.timetable.model.enums.UserRole.*;
 
 @RequiredArgsConstructor
 @Slf4j

@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.model.entity.enums;
+package ru.vsu.cs.timetable.model.enums;
 
 public enum Authority {
 

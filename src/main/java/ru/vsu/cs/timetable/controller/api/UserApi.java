@@ -15,7 +15,7 @@ import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.model.dto.user.UserDto;
 import ru.vsu.cs.timetable.model.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.model.dto.user.UserResponse;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import java.util.List;

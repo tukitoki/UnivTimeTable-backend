@@ -22,6 +22,6 @@ public class UserLoginDto {
     private String email;
     @NotNull
     @NotBlank
-    @Schema(description = "Пароль пользователя", example = "helloWorld123B")
+    @Schema(description = "Пароль пользователя", example = "lecturer")
     private String password;
 }

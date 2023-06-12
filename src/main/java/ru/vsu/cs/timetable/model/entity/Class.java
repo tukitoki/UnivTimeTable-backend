@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnTransformer;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
-import ru.vsu.cs.timetable.model.entity.enums.WeekType;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.WeekType;
 
 import java.time.LocalTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -80,11 +82,21 @@ public class Class {
                 ", " + audience;
     }
 
-    public String toExcelFormat() {
-        return subjectName +
+    public String toExcelFormat(UserRole userRole) {
+        StringBuilder summaryString = new StringBuilder(subjectName +
                 ", " + lecturer.getFullName() +
                 ", " + typeClass +
-                ", Аудитория: " + audience.getAudienceNumber();
+                ", Аудитория: " + audience.getAudienceNumber());
+        if (userRole == UserRole.LECTURER) {
+            String groups = ", " + getGroups().stream()
+                    .collect(Collectors.groupingBy(Group::getCourseNumber,
+                            Collectors.mapping(group -> group.getGroupNumber().toString(), Collectors.joining(", "))))
+                    .entrySet().stream()
+                    .map(entry -> "Курс: " + entry.getKey() + ", Группы: " + entry.getValue())
+                    .collect(Collectors.joining("; "));
+            summaryString.append(groups);
+        }
+        return summaryString.toString();
     }
 
     public String toStringMoveClass() {
