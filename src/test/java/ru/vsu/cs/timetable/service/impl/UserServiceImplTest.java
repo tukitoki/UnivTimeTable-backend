@@ -19,7 +19,7 @@ import ru.vsu.cs.timetable.model.entity.Faculty;
 import ru.vsu.cs.timetable.model.entity.Group;
 import ru.vsu.cs.timetable.model.entity.University;
 import ru.vsu.cs.timetable.model.entity.User;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.mapper.UserMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;

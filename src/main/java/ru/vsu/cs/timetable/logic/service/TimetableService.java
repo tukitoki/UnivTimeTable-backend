@@ -13,4 +13,6 @@ public interface TimetableService {
     Workbook downloadTimetable(@NotNull String username);
 
     void makeTimetable(@NotNull String username);
+
+    void resetTimetable(@NotNull String username);
 }

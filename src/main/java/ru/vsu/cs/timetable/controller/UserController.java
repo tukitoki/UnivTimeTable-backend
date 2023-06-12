@@ -10,7 +10,7 @@ import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.model.dto.user.UserDto;
 import ru.vsu.cs.timetable.model.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.model.dto.user.UserResponse;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.logic.service.UserService;
 
 import java.util.List;

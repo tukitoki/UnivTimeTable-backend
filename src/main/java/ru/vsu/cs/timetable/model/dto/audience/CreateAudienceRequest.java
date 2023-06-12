@@ -17,9 +17,12 @@ public class CreateAudienceRequest {
 
     @Positive
     @NotNull
+    @Schema(description = "Номер аудитории", example = "341")
     private Integer audienceNumber;
     @Positive
     @NotNull
+    @Schema(description = "Размер аудитории", example = "30")
     private Long capacity;
+    @Schema(description = "Список инвентаря", example = "[\"Компьютер\", \"Проектор\"]")
     private List<String> equipments;
 }

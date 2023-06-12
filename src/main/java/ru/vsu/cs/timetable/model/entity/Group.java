@@ -46,6 +46,7 @@ public class Group {
     private Set<Class> classes;
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<Request> requests;
+
     @PreRemove
     private void removeUsersFromGroup() {
         for (User user : this.users) {

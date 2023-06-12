@@ -11,14 +11,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
-import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
+import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 
 import java.util.List;
 
 @AccessDeniedResponse
-@Tag(name = "Audience API", description = "API для работы с аудиториями")
 @SecurityRequirement(name = "bearer-key")
+@Tag(name = "Audience API", description = "API для работы с аудиториями")
 public interface AudienceApi {
 
     @ApiResponses(value = {
@@ -28,7 +28,7 @@ public interface AudienceApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Аудитория с таким номером уже была создана",
+                    description = "Аудитория с таким номером уже существует",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -48,31 +48,33 @@ public interface AudienceApi {
             )
     })
     @Operation(
-            summary = "Создание аудитории конкретного факультета"
+            summary = "Создает новую аудиторию факультета"
     )
     ResponseEntity<Void> createAudience(
-            @Parameter(description = "Создание аудитории конкретного факультета")
+            @Parameter(description = "Информация для создания аудитории")
             CreateAudienceRequest createAudienceRequest,
-            @Parameter(description = "Id университета")
+            @Parameter(description = "Id университета", example = "1")
             Long univId,
-            @Parameter(description = "Id факультета")
+            @Parameter(description = "Id факультета", example = "1")
             Long facultyId
     );
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Инвентарь успешно получен",
+                    description = "Успешное получение инвентаря",
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = String.class)
+                                    )
                             )
                     }
             )
     })
     @Operation(
-            summary = "Получение возможного инвентаря в аудитории"
+            summary = "Возвращает возможный инвентарь аудитории"
     )
     ResponseEntity<List<String>> getAvailableEquipments();
 }

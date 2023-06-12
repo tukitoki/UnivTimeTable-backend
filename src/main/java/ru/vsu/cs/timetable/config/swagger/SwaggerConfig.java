@@ -1,7 +1,9 @@
 package ru.vsu.cs.timetable.config.swagger;
 
+import io.swagger.v3.core.util.PrimitiveType;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI OpenAPI() {
+        PrimitiveType.customClasses().put("java.time.LocalTime", PrimitiveType.PARTIAL_TIME);
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes(
@@ -26,7 +29,13 @@ public class SwaggerConfig {
                                 new SecurityScheme().type(HTTP).scheme("bearer").bearerFormat("JWT")
                         )
                 )
-                .info(new Info().title("Backend of University timetable app")
-                        .version(buildProperties.getVersion()));
+                .info(new Info()
+                        .title("Backend of University timetable app")
+                        .version(buildProperties.getVersion())
+                        .contact(new Contact()
+                                .name("tukitoki")
+                                .email("tokichiihere@gmail.com")
+                        )
+                );
     }
 }

@@ -1,28 +1,36 @@
 package ru.vsu.cs.timetable.logic.planner;
 
+import org.optaplanner.core.api.domain.constraintweight.ConstraintWeight;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
 import org.optaplanner.core.api.score.stream.ConstraintProvider;
 import org.optaplanner.core.api.score.stream.Joiners;
-import ru.vsu.cs.timetable.model.entity.Group;
 import ru.vsu.cs.timetable.logic.planner.model.PlanningClass;
 import ru.vsu.cs.timetable.logic.planner.utils.HardViolationTemplateUtil;
+import ru.vsu.cs.timetable.model.entity.Group;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 public class TimetableConstraintProvider implements ConstraintProvider {
+
+    @ConstraintWeight("FirstSoftScoreConstraint")
+    private final static HardSoftScore FIRST_SOFT_SCORE = HardSoftScore.ofSoft(1);
+    @ConstraintWeight("SecondSoftScoreConstraint")
+    private final static HardSoftScore SECOND_SOFT_SCORE = HardSoftScore.ofSoft(2);
 
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
         return new Constraint[]{
                 audienceConflict(constraintFactory),
                 lecturerConflict(constraintFactory),
-                audienceCapacityConflict(constraintFactory),
+                audienceCapacityRequired(constraintFactory),
                 studentGroupConflict(constraintFactory),
-                audienceEquipmentConflict(constraintFactory),
-                impossibleTimeConflict(constraintFactory),
-                timeConflict(constraintFactory)
+                audienceEquipmentRequired(constraintFactory),
+                preferredImpossibleTime(constraintFactory),
+                preferredTime(constraintFactory),
+                studentGroupSubjectVariety(constraintFactory)
         };
     }
 
@@ -43,24 +51,24 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                 .asConstraint("Audience conflict");
     }
 
-    private Constraint audienceCapacityConflict(ConstraintFactory constraintFactory) {
+    private Constraint audienceCapacityRequired(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
                 .filter(aClass ->
                         aClass.getAudience().getCapacity() < aClass.getGroups().stream()
                                 .mapToInt(Group::getStudentsAmount)
                                 .sum()
                 )
-                .penalize(HardSoftScore.ONE_HARD)
-                .asConstraint("Audience capacity conflict");
+                .penalize(HardSoftScore.ONE_SOFT)
+                .asConstraint("Audience capacity required");
     }
 
-    private Constraint audienceEquipmentConflict(ConstraintFactory constraintFactory) {
+    private Constraint audienceEquipmentRequired(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
                 .filter(planningClass ->
                         !planningClass.getAudience().getEquipments()
                                 .containsAll(planningClass.getRequiredEquipments()))
-                .penalize(HardSoftScore.ONE_SOFT)
-                .asConstraint("Audience equipment conflict");
+                .penalize(HardSoftScore.ONE_SOFT.multiply(FIRST_SOFT_SCORE.softScore()))
+                .asConstraint("Audience equipment required");
     }
 
     private Constraint lecturerConflict(ConstraintFactory constraintFactory) {
@@ -80,12 +88,12 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                 .asConstraint("Lecturer conflict");
     }
 
-    private Constraint impossibleTimeConflict(ConstraintFactory constraintFactory) {
+    private Constraint preferredImpossibleTime(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
                 .filter(planningClass -> planningClass.getImpossibleTimes()
                         .contains(planningClass.getTimeslot()))
                 .penalize(HardSoftScore.ONE_SOFT)
-                .asConstraint("Impossible time conflict");
+                .asConstraint("Preferred Impossible time");
     }
 
     private Constraint studentGroupConflict(ConstraintFactory constraintFactory) {
@@ -105,11 +113,27 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                 .asConstraint("Student group conflict");
     }
 
-    private Constraint timeConflict(ConstraintFactory constraintFactory) {
+    private Constraint studentGroupSubjectVariety(ConstraintFactory constraintFactory) {
+        return constraintFactory.forEach(PlanningClass.class)
+                .join(PlanningClass.class,
+                        Joiners.equal(PlanningClass::getSubjectName),
+                        Joiners.equal(PlanningClass::getGroups),
+                        Joiners.equal(planningClass -> planningClass.getTimeslot().getDayOfWeekEnum()),
+                        Joiners.equal(planningClass -> planningClass.getTimeslot().getWeekType()))
+                .filter((planningClass, planningClass2) -> {
+                    Duration between = Duration.between(planningClass.getTimeslot().getEndTime(),
+                            planningClass2.getTimeslot().getStartTime());
+                    return !between.isNegative() && between.compareTo(Duration.ofMinutes(30)) <= 0;
+                })
+                .penalize(HardSoftScore.ONE_SOFT.multiply(SECOND_SOFT_SCORE.softScore()))
+                .asConstraint("Student group subject variety");
+    }
+
+    private Constraint preferredTime(ConstraintFactory constraintFactory) {
         return constraintFactory.forEach(PlanningClass.class)
                 .filter(planningClass -> planningClass.getTimeslot()
-                        .getStartTime().isAfter(LocalTime.of(16, 45)))
-                .penalize(HardSoftScore.ONE_SOFT)
-                .asConstraint("Time conflict before 16:45");
+                        .getStartTime().isAfter(LocalTime.of(13, 25)))
+                .penalize(HardSoftScore.ONE_SOFT.multiply(SECOND_SOFT_SCORE.softScore()))
+                .asConstraint("Preferred Time are before 13:25");
     }
 }

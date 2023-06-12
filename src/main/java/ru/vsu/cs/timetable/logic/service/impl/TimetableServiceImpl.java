@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.exception.AudienceException;
 import ru.vsu.cs.timetable.exception.TimetableException;
+import ru.vsu.cs.timetable.exception.UserException;
 import ru.vsu.cs.timetable.logic.planner.TimetableSolver;
 import ru.vsu.cs.timetable.logic.planner.model.PlanningClass;
 import ru.vsu.cs.timetable.logic.planner.model.PlanningTimetable;
@@ -20,27 +21,26 @@ import ru.vsu.cs.timetable.logic.service.UserService;
 import ru.vsu.cs.timetable.model.dto.TimetableResponse;
 import ru.vsu.cs.timetable.model.dto.univ_class.ClassDto;
 import ru.vsu.cs.timetable.model.entity.Class;
+import ru.vsu.cs.timetable.model.entity.Group;
 import ru.vsu.cs.timetable.model.entity.Request;
 import ru.vsu.cs.timetable.model.entity.User;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
-import ru.vsu.cs.timetable.model.entity.enums.WeekType;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.WeekType;
 import ru.vsu.cs.timetable.model.mapper.AudienceMapper;
 import ru.vsu.cs.timetable.model.mapper.ClassMapper;
 import ru.vsu.cs.timetable.model.mapper.TimetableMapper;
-import ru.vsu.cs.timetable.repository.AudienceRepository;
-import ru.vsu.cs.timetable.repository.ClassRepository;
-import ru.vsu.cs.timetable.repository.RequestRepository;
-import ru.vsu.cs.timetable.repository.TimetableRepository;
+import ru.vsu.cs.timetable.repository.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.vsu.cs.timetable.model.entity.enums.UserRole.*;
+import static ru.vsu.cs.timetable.model.enums.UserRole.*;
 import static ru.vsu.cs.timetable.utils.TimeUtils.*;
 
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 @Service
 public class TimetableServiceImpl implements TimetableService {
 
@@ -51,6 +51,7 @@ public class TimetableServiceImpl implements TimetableService {
     private final ClassRepository classRepository;
     private final RequestRepository requestRepository;
     private final AudienceRepository audienceRepository;
+    private final GroupRepository groupRepository;
     private final ClassMapper classMapper;
     private final AudienceMapper audienceMapper;
     private final TimetableMapper timetableMapper;
@@ -62,6 +63,9 @@ public class TimetableServiceImpl implements TimetableService {
         var user = userService.getUserByUsername(username);
         if (user.getRole() == ADMIN) {
             throw TimetableException.CODE.ADMIN_CANT_ACCESS.get();
+        }
+        if (user.getRole() == HEADMAN && user.getGroup() == null) {
+            throw UserException.CODE.HEADMAN_SHOULD_HAVE_GROUP.get();
         }
 
         var timetable = TimetableResponse.builder()
@@ -81,7 +85,7 @@ public class TimetableServiceImpl implements TimetableService {
             throw TimetableException.CODE.TIMETABLE_WAS_NOT_MADE.get();
         }
 
-        log.info("user: {}, was successful called get timetable: {}", user, timetable);
+        log.info("user: {}, was successfully called get timetable: {}", user, timetable);
 
         return timetable;
     }
@@ -94,7 +98,9 @@ public class TimetableServiceImpl implements TimetableService {
             throw TimetableException.CODE.ADMIN_CANT_ACCESS.get();
         }
 
-        return excelService.getExcelTimetable(getTimetableByUser(user));
+        var timetable = getTimetableByUser(user);
+
+        return excelService.getExcelTimetable(timetable, user.getRole());
     }
 
     @Override
@@ -150,7 +156,26 @@ public class TimetableServiceImpl implements TimetableService {
 
         notificationUsersAboutTimetable(planningClasses);
 
-        log.info("user: {}, was successful called make timetable", lecturer);
+        log.info("user: {}, was successfully called make timetable", lecturer);
+    }
+
+    @Override
+    public void resetTimetable(String username) {
+        var lecturer = userService.getUserByUsername(username);
+
+        List<Group> groups = new ArrayList<>();
+        groupRepository.findAll().forEach(groups::add);
+
+        var allFacultyClasses = groups.stream()
+                .filter(group -> group.getFaculty().equals(lecturer.getFaculty()))
+                .flatMap(group -> group.getClasses().stream())
+                .distinct()
+                .toList();
+
+        classRepository.deleteAll(allFacultyClasses);
+        timetableRepository.deleteAll(timetableRepository.findAllByClassesEmpty());
+
+        log.info("user: {}, was successfully called reset timetable for faculty {}", lecturer, lecturer.getFaculty());
     }
 
     private List<PlanningClass> getClasses(List<Request> requests) {

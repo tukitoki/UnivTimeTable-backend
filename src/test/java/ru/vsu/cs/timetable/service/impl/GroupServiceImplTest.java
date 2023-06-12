@@ -17,7 +17,7 @@ import ru.vsu.cs.timetable.model.dto.group.GroupDto;
 import ru.vsu.cs.timetable.model.dto.user.UserResponse;
 import ru.vsu.cs.timetable.model.entity.Class;
 import ru.vsu.cs.timetable.model.entity.*;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.mapper.GroupMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
