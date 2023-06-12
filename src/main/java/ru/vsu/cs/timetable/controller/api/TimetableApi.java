@@ -77,7 +77,7 @@ public interface TimetableApi {
     @Operation(
             summary = "Возвращает файл с расписанием в формате .xslx"
     )
-    ResponseEntity<Void> downloadTimetable(
+    ResponseEntity<?> downloadTimetable(
             @Parameter(hidden = true)
             HttpServletResponse httpServletResponse,
             @Parameter(hidden = true)

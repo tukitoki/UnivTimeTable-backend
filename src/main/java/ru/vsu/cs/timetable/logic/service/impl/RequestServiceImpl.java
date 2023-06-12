@@ -6,14 +6,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vsu.cs.timetable.exception.AudienceException;
-import ru.vsu.cs.timetable.exception.ClassException;
-import ru.vsu.cs.timetable.exception.EquipmentException;
+import ru.vsu.cs.timetable.exception.*;
 import ru.vsu.cs.timetable.logic.service.*;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceToMoveResponse;
 import ru.vsu.cs.timetable.model.dto.group.GroupResponse;
 import ru.vsu.cs.timetable.model.dto.univ_class.ClassDto;
 import ru.vsu.cs.timetable.model.dto.univ_requests.*;
+import ru.vsu.cs.timetable.model.dto.week_time.DayTimes;
 import ru.vsu.cs.timetable.model.entity.Class;
 import ru.vsu.cs.timetable.model.entity.*;
 import ru.vsu.cs.timetable.model.enums.TypeClass;
@@ -23,6 +22,7 @@ import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.EquipmentRepository;
 import ru.vsu.cs.timetable.repository.RequestRepository;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,6 +46,10 @@ public class RequestServiceImpl implements RequestService {
     public void sendRequest(SendRequest sendRequest, String username) {
         var lecturer = userService.getUserByUsername(username);
         var group = groupService.findGroupById(sendRequest.getGroupResponse().getId());
+
+        if (sendRequest.getSubjectHourPerWeek().remainder(new BigDecimal("0.75")).compareTo(BigDecimal.ZERO) != 0) {
+            throw RequestException.CODE.WRONG_SUBJECT_HOUR_PER_WEEK.get();
+        }
 
         List<ImpossibleTime> impossibleTimes = new ArrayList<>();
         sendRequest.getImpossibleTime().forEach((day, times) ->
@@ -111,6 +115,10 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(ClassException.CODE.INCORRECT_CLASS_TO_MOVE::get);
         Class classToMove = classMapper.toEntity(classDtoToMove);
 
+        if (ifMovedClassConflict(lecturer, initClass, classToMove)) {
+            throw RequestException.CODE.MOVE_CLASS_TIME_CONFLICT.get();
+        }
+
         var audience = audienceService.findAudienceByNumberAndFaculty(classDtoToMove.getAudience(),
                 lecturer.getFaculty());
         audience.getClasses().stream()
@@ -158,7 +166,9 @@ public class RequestServiceImpl implements RequestService {
             courseClasses.add(classMapper.toDto(univClass));
         }
 
-        var audiencesFreeTime = audienceService.getFreeAudienceByFaculty(lecturer.getFaculty());
+        var audiencesFreeTime = audienceService.getFreeAudiencesByFaculty(lecturer.getFaculty());
+        removeConflictTime(audiencesFreeTime, lecturer);
+
         List<AudienceToMoveResponse> audienceToMoveResponses = new ArrayList<>();
 
         audiencesFreeTime.forEach((audience, freeTimes) -> {
@@ -167,10 +177,14 @@ public class RequestServiceImpl implements RequestService {
                     .capacity(audience.getCapacity())
                     .dayTimes(freeTimes)
                     .equipments(audience.getEquipments().stream()
-                            .map(Equipment::getName)
+                            .map(Equipment::getDisplayName)
                             .collect(Collectors.toSet()))
                     .build());
         });
+
+        if (coursesClasses.isEmpty()) {
+            throw TimetableException.CODE.TIMETABLE_WAS_NOT_MADE.get();
+        }
 
         return MoveClassResponse.builder()
                 .coursesClasses(coursesClasses)
@@ -193,5 +207,35 @@ public class RequestServiceImpl implements RequestService {
     private void copyClassProperties(Class from, Class to) {
         BeanUtils.copyProperties(from, to, "id", "subjectName", "typeClass", "lecturer",
                 "timetable", "groups");
+    }
+
+    private boolean ifMovedClassConflict(User lecturer, Class initClass, Class moveClass) {
+        for (var aClass : classRepository.findAllByLecturer(lecturer)) {
+            if (aClass.equals(initClass)) {
+                continue;
+            }
+            if (aClass.getDayOfWeek() == moveClass.getDayOfWeek() && aClass.getStartTime() == moveClass.getStartTime()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void removeConflictTime(Map<Audience, List<DayTimes>> audiencesFreeTime, User lecturer) {
+        var lecturerClasses = classRepository.findAllByLecturer(lecturer);
+        audiencesFreeTime.forEach((audience, dayTimes) -> {
+            dayTimes.forEach(dayTimes1 -> {
+                dayTimes1.getWeekTimes().forEach((weekType, localTimes) -> {
+                    lecturerClasses.stream()
+                            .filter(aClass -> aClass.getWeekType() == weekType
+                                    && localTimes.contains(aClass.getStartTime())
+                                    && aClass.getDayOfWeek() == dayTimes1.getDayOfWeek())
+                            .map(Class::getStartTime)
+                            .findFirst()
+                            .ifPresent(localTimes::remove);
+                });
+            });
+        });
     }
 }

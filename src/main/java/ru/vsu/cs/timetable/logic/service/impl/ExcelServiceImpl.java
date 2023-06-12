@@ -37,7 +37,6 @@ public class ExcelServiceImpl implements ExcelService {
         Sheet sheet = workbook.createSheet("Timetable");
         sheet.setColumnWidth(0, FIRST_COLUMN_WIDTH);
         sheet.setColumnWidth(1, SECOND_COLUMN_WIDTH);
-        sheet.autoSizeColumn(0);
 
         CellStyle headerStyle = getHeaderRowStyle(workbook);
         CellStyle rowStyle = getRowStyle(workbook);

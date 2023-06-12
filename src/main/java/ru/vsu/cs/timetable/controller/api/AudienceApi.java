@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
+import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 
 import java.util.List;
@@ -58,6 +59,27 @@ public interface AudienceApi {
             @Parameter(description = "Id факультета", example = "1")
             Long facultyId
     );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешный возврат аудиторий"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Переданного факультета по указанному id не существует",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Возвращает список аудиторий факультета"
+    )
+    ResponseEntity<List<AudienceResponse>> getAllAudiencesByFaculty(Long facultyId);
 
     @ApiResponses(value = {
             @ApiResponse(

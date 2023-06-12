@@ -16,7 +16,7 @@ public class UserResponse {
 
     @Schema(description = "Id пользователя", example = "1")
     private Long id;
-    @Schema(description = "Роль пользователя", example = "1")
+    @Schema(description = "Роль пользователя", example = "Староста")
     private UserRole role;
     @Schema(description = "Полное имя пользовател", example = "Андреев Андрей Андреевич")
     private String fullName;

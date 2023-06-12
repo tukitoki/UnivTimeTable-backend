@@ -13,6 +13,7 @@ import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.enums.WeekType;
 
 import java.time.LocalTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ public class Class {
     @ManyToOne
     @JoinColumn(name = "timetable_id", nullable = false)
     private Timetable timetable;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "group_class",
             joinColumns = @JoinColumn(name = "class_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
@@ -83,20 +84,27 @@ public class Class {
     }
 
     public String toExcelFormat(UserRole userRole) {
-        StringBuilder summaryString = new StringBuilder(subjectName +
+        StringBuilder excelFormatString = new StringBuilder(subjectName +
                 ", " + lecturer.getFullName() +
                 ", " + typeClass +
                 ", Аудитория: " + audience.getAudienceNumber());
         if (userRole == UserRole.LECTURER) {
             String groups = ", " + getGroups().stream()
-                    .collect(Collectors.groupingBy(Group::getCourseNumber,
-                            Collectors.mapping(group -> group.getGroupNumber().toString(), Collectors.joining(", "))))
+                    .collect(
+                            Collectors.groupingBy(
+                                    Group::getCourseNumber,
+                                    Collectors.mapping(
+                                            group -> group.getGroupNumber().toString(),
+                                            Collectors.joining(", ")
+                                    )
+                            )
+                    )
                     .entrySet().stream()
                     .map(entry -> "Курс: " + entry.getKey() + ", Группы: " + entry.getValue())
                     .collect(Collectors.joining("; "));
-            summaryString.append(groups);
+            excelFormatString.append(groups);
         }
-        return summaryString.toString();
+        return excelFormatString.toString();
     }
 
     public String toStringMoveClass() {
@@ -104,5 +112,18 @@ public class Class {
                 ", Аудитория: " + audience.getAudienceNumber() +
                 ", День недели: " + dayOfWeek +
                 ", Тип недели: " + weekType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Class aClass = (Class) o;
+        return Objects.equals(id, aClass.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

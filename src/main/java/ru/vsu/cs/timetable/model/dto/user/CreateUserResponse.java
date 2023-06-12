@@ -15,7 +15,7 @@ import java.util.List;
 @Schema(description = "Информация для создания пользователя")
 public class CreateUserResponse {
 
-    @Schema(description = "Список ролей", example = "[\"LECTURER\", \"HEADMAN\", \"ADMIN\"]")
+    @Schema(description = "Список ролей", example = "[\"Преподаватель\", \"Староста\", \"Администратор\"]")
     private List<UserRole> roles;
     @Schema(description = "Информация об университетах")
     private List<UniversityResponse> universityResponses;

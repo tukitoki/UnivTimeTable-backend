@@ -23,6 +23,7 @@ import ru.vsu.cs.timetable.exception.GroupException;
 import ru.vsu.cs.timetable.exception.UserException;
 import ru.vsu.cs.timetable.logic.service.FacultyService;
 import ru.vsu.cs.timetable.model.mapper.GroupMapper;
+import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 import ru.vsu.cs.timetable.logic.service.GroupService;
@@ -41,6 +42,7 @@ public class GroupServiceImpl implements GroupService {
 
     private final FacultyService facultyService;
     private final GroupRepository groupRepository;
+    private final ClassRepository classRepository;
     private final UserRepository userRepository;
     private final GroupMapper groupMapper;
     private final EntityManager entityManager;
@@ -119,6 +121,12 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void deleteGroup(Long id) {
         Group group = findGroupById(id);
+
+        classRepository.findAllByGroupsContains(group).forEach(aClass -> {
+            if (aClass.getGroups().size() == 1) {
+                classRepository.delete(aClass);
+            }
+        });
 
         groupRepository.delete(group);
 

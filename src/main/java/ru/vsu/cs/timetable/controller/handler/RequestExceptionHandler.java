@@ -2,27 +2,23 @@ package ru.vsu.cs.timetable.controller.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.vsu.cs.timetable.exception.TimetableException;
+import ru.vsu.cs.timetable.exception.RequestException;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Slf4j
 @RestControllerAdvice
-public class TimetableExceptionHandler {
+public class RequestExceptionHandler {
 
-    @ExceptionHandler(TimetableException.class)
-    public ResponseEntity<ErrorMessage> handleAuthException(TimetableException ex) {
-        TimetableException.CODE code = ex.getCode();
+    @ExceptionHandler(RequestException.class)
+    public ResponseEntity<ErrorMessage> handleAuthException(RequestException ex) {
+        RequestException.CODE code = ex.getCode();
         HttpStatus status = switch (code) {
-            case ADMIN_CANT_ACCESS -> FORBIDDEN;
-            case TIMETABLE_CANT_BE_GENERATED, TIMETABLE_WAS_NOT_MADE,
-                    TIMETABLE_WAS_ALREADY_MADE -> BAD_REQUEST;
+            case WRONG_SUBJECT_HOUR_PER_WEEK, MOVE_CLASS_TIME_CONFLICT -> BAD_REQUEST;
         };
 
         String codeStr = code.toString();
@@ -31,7 +27,6 @@ public class TimetableExceptionHandler {
 
         return ResponseEntity
                 .status(status)
-                .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(codeStr, ex.getMessage()));
     }
 }

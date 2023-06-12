@@ -17,7 +17,7 @@ public class UserPageDto {
 
     @Schema(description = "Страница с пользователями")
     private PageModel<UserResponse> usersPage;
-    @Schema(description = "Список ролей", example = "[\"LECTURER\", \"HEADMAN\", \"ADMIN\"]")
+    @Schema(description = "Список ролей", example = "[\"Преподаватель\", \"Староста\", \"Администратор\"]")
     private List<UserRole> roles;
     @Schema(description = "Список университетов", example = "[\"Воронежский государственный университет\", " +
             "\"Воронежский государственный технический университет\"]")

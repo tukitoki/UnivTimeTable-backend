@@ -133,7 +133,7 @@ class AudienceServiceImplTest {
 
         when(audienceRepository.findAllByFaculty(facultyFKN)).thenReturn(audienceList);
 
-        freeAudiences = audienceServiceImpl.getFreeAudienceByFaculty(facultyFKN);
+        freeAudiences = audienceServiceImpl.getFreeAudiencesByFaculty(facultyFKN);
 
         assertEquals(freeAudiences.size(), 1);
         assertEquals(freeAudiences.get(audience).size(), 7);
