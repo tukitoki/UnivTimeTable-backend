@@ -20,7 +20,7 @@ public class UserDto {
     @Schema(description = "Id пользователя", example = "1")
     private Long id;
     @NotNull
-    @Schema(description = "Роль пользователя", example = "LECTURER")
+    @Schema(description = "Роль пользователя", example = "Староста")
     private UserRole role;
     @NotNull
     @NotBlank

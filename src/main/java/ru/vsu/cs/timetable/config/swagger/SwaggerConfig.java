@@ -22,6 +22,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI OpenAPI() {
         PrimitiveType.customClasses().put("java.time.LocalTime", PrimitiveType.PARTIAL_TIME);
+        PrimitiveType.customClasses().put("ru.vsu.cs.timetable.model.enums.UserRole", PrimitiveType.STRING);
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes(

@@ -46,6 +46,8 @@ public class GroupController implements GroupApi {
     @PostMapping("/{facultyId}/group")
     public ResponseEntity<Void> createGroup(@RequestBody GroupDto groupDto,
                                             @PathVariable Long facultyId) {
+        groupService.createGroup(groupDto, facultyId);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();

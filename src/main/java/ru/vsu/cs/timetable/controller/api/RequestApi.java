@@ -110,6 +110,16 @@ public interface RequestApi {
                                     schema = @Schema(implementation = MoveClassResponse.class)
                             )
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Расписание ещё не было составлено",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    }
             )
     })
     @Operation(

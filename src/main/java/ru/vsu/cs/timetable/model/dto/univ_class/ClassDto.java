@@ -16,7 +16,21 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @SuperBuilder
-@Schema(description = "Описание пары")
+@Schema(description = "Описание пары", example = """
+        {
+          "subjectName": "Электродинамика",
+          "startTime": "13:25",
+          "endTime": "15:00",
+          "audience": 243,
+          "dayOfWeek": "Понедельник",
+          "typeOfClass": "Лекция",
+          "weekType": "Числитель",
+          "courseNumber": 1,
+          "groupsNumber": [1, 2],
+          "capacity": 200,
+          "equipments": ["Компьютеры", "Проектор"]
+        }
+        """)
 public class ClassDto {
 
     @Schema(description = "Название предмета", example = "Электродинамика")

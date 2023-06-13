@@ -49,6 +49,9 @@ public final class TimeUtils {
 
         List<Timeslot> timeslots = new LinkedList<>();
         for (var day : DayOfWeekEnum.values()) {
+            if (day == DayOfWeekEnum.SUNDAY) {
+                continue;
+            }
             possibleTimes.forEach(time -> {
                 for (var weekType : WeekType.values()) {
                     timeslots.add(Timeslot.builder()

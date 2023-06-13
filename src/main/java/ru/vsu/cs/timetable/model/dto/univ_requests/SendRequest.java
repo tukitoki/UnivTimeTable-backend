@@ -34,6 +34,7 @@ public class SendRequest {
               "Понедельник": ["09:45", "11:30"],
               "Вторник": ["13:25", "16:55"]
             }
-            """)
+            """
+    )
     private Map<DayOfWeekEnum, List<LocalTime>> impossibleTime;
 }

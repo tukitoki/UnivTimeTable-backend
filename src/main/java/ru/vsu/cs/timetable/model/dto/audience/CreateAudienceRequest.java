@@ -23,6 +23,6 @@ public class CreateAudienceRequest {
     @NotNull
     @Schema(description = "Размер аудитории", example = "30")
     private Long capacity;
-    @Schema(description = "Список инвентаря", example = "[\"Компьютер\", \"Проектор\"]")
+    @Schema(description = "Список инвентаря", example = "[\"Компьютеры\", \"Проектор\"]")
     private List<String> equipments;
 }

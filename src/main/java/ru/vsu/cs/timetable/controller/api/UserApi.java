@@ -46,7 +46,7 @@ public interface UserApi {
             int pageSize,
             @Parameter(description = "Вуз для фильтрации", example = "Воронежский государственный университет")
             String universities,
-            @Parameter(description = "Роль для фильтрации", example = "LECTURER")
+            @Parameter(description = "Роль для фильтрации", example = "Преподаватель")
             UserRole role,
             @Parameter(description = "Город для фильтрации", example = "Воронеж")
             String city,

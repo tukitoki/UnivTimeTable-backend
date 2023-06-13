@@ -26,7 +26,7 @@ public class UniversityResponse {
     private String universityName;
     @NotNull
     @NotBlank
-    @Schema(description = "город университета", example = "Воронеж")
+    @Schema(description = "Город университета", example = "Воронеж")
     private String city;
     @Schema(description = "Информация о факультетах")
     private List<FacultyResponse> facultyDtos;
