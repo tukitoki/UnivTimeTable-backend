@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
             groupRepository.save(group);
         }
 
-        log.info("user: {}, was successful saved", user);
+        log.info("user: {}, was successfully saved", user);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
 
         oldUser = userRepository.save(oldUser);
 
-        log.info("user: {}, was successful updated", oldUser);
+        log.info("user: {}, was successfully updated", oldUser);
     }
 
     @Override
@@ -217,7 +217,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(user);
 
-        log.info("user: {}, was successful deleted", user);
+        log.info("user: {}, was successfully deleted", user);
     }
 
     @Override

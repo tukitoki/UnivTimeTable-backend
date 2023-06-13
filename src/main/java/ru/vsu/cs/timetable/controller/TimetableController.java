@@ -7,14 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.TimetableApi;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.logic.service.TimetableService;
-import ru.vsu.cs.timetable.model.dto.TimetableResponse;
+import ru.vsu.cs.timetable.model.dto.timetable.TimetableResponse;
 
 import java.io.IOException;
 
@@ -72,7 +69,7 @@ public class TimetableController implements TimetableApi {
 
     @Override
     @PreAuthorize("hasAuthority('MAKE_TIMETABLE_AUTHORITY')")
-    @PostMapping("/reset")
+    @DeleteMapping("/reset")
     public ResponseEntity<Void> resetTimetable(Authentication authentication) {
         String username = authentication.getName();
         timetableService.resetTimetable(username);

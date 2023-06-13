@@ -58,7 +58,7 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                                 .mapToInt(Group::getStudentsAmount)
                                 .sum()
                 )
-                .penalize(HardSoftScore.ONE_SOFT)
+                .penalize(HardSoftScore.ONE_SOFT.multiply(SECOND_SOFT_SCORE.softScore()))
                 .asConstraint("Audience capacity required");
     }
 
@@ -92,7 +92,7 @@ public class TimetableConstraintProvider implements ConstraintProvider {
         return constraintFactory.forEach(PlanningClass.class)
                 .filter(planningClass -> planningClass.getImpossibleTimes()
                         .contains(planningClass.getTimeslot()))
-                .penalize(HardSoftScore.ONE_SOFT)
+                .penalize(HardSoftScore.ONE_SOFT.multiply(SECOND_SOFT_SCORE.softScore()))
                 .asConstraint("Preferred Impossible time");
     }
 
@@ -125,7 +125,7 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                             planningClass2.getTimeslot().getStartTime());
                     return !between.isNegative() && between.compareTo(Duration.ofMinutes(30)) <= 0;
                 })
-                .penalize(HardSoftScore.ONE_SOFT.multiply(SECOND_SOFT_SCORE.softScore()))
+                .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Student group subject variety");
     }
 
@@ -133,7 +133,7 @@ public class TimetableConstraintProvider implements ConstraintProvider {
         return constraintFactory.forEach(PlanningClass.class)
                 .filter(planningClass -> planningClass.getTimeslot()
                         .getStartTime().isAfter(LocalTime.of(13, 25)))
-                .penalize(HardSoftScore.ONE_SOFT.multiply(SECOND_SOFT_SCORE.softScore()))
+                .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Preferred Time are before 13:25");
     }
 }

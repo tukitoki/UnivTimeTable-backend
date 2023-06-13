@@ -11,12 +11,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
+import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
 import ru.vsu.cs.timetable.model.dto.user.UserDto;
 import ru.vsu.cs.timetable.model.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.model.dto.user.UserResponse;
 import ru.vsu.cs.timetable.model.enums.UserRole;
-import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import java.util.List;
 
@@ -108,8 +108,11 @@ public interface UserApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Пользователь с таким username уже присутствует, \t\n\"" +
-                            "Пользователь с таким email уже присутствует",
+                    description = """
+                            Пользователь с таким username уже присутствует, \t
+                            Пользователь с таким email уже присутствует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     schema = @Schema(implementation = ErrorMessage.class)

@@ -33,12 +33,15 @@ public class GroupMapper {
     }
 
     public Group toEntity(GroupDto groupDto) {
+        var headmanId = groupDto.getHeadman() == null
+                ? null
+                : groupDto.getHeadman().getId();
         return Group.builder()
                 .id(groupDto.getId())
                 .courseNumber(groupDto.getCourseNumber())
                 .studentsAmount(groupDto.getStudentsAmount())
                 .groupNumber(groupDto.getGroupNumber())
-                .headmanId(groupDto.getHeadman().getId())
+                .headmanId(headmanId)
                 .build();
     }
 

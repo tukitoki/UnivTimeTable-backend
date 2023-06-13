@@ -14,7 +14,7 @@ import org.springframework.security.core.Authentication;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.config.swagger.annotation.IncorrectUsernameResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
-import ru.vsu.cs.timetable.model.dto.TimetableResponse;
+import ru.vsu.cs.timetable.model.dto.timetable.TimetableResponse;
 
 @AccessDeniedResponse
 @IncorrectUsernameResponse
@@ -91,8 +91,10 @@ public interface TimetableApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Расписание не может быть составлено, \t\n" +
-                            "Расписание уже было составлено",
+                    description = """
+                            Расписание не может быть составлено, \t
+                            Расписание уже было составлено
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",

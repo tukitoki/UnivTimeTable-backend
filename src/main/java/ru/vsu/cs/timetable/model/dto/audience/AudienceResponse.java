@@ -15,7 +15,7 @@ public class AudienceResponse {
 
     @Schema(description = "Номер аудитории", example = "243")
     private Integer audienceNumber;
-    @Schema(description = "Размер аудитории", example = "40")
+    @Schema(description = "Вместимость аудитории", example = "40")
     private Long capacity;
     @Schema(description = "Инвентарь аудитории", example = "[\"Компьютеры\", \"Проектор\"]")
     private Set<String> equipments;

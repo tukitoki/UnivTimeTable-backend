@@ -10,10 +10,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
+import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.model.dto.group.GroupDto;
 import ru.vsu.cs.timetable.model.dto.group.GroupPageDto;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
-import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 @AccessDeniedResponse
 @SecurityRequirement(name = "bearer-key")
@@ -87,7 +87,10 @@ public interface GroupApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такая группа на этом факультете уже существует",
+                    description = """
+                            Такая группа на этом факультете уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -147,7 +150,10 @@ public interface GroupApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Группа с таким номером и курсом на этом факультете уже существует",
+                    description = """
+                            Группа с таким номером и курсом на этом факультете уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",

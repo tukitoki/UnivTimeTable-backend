@@ -24,11 +24,11 @@ public class UserDto {
     private UserRole role;
     @NotNull
     @NotBlank
-    @Schema(description = "Полное имя пользователя", example = "Андреев Андрей Андреевич")
+    @Schema(description = "ФИО пользователя", example = "Андреев Андрей Андреевич")
     private String fullName;
     @NotNull
     @NotBlank
-    @Schema(description = "Имя пользователя", example = "andreev_a_a")
+    @Schema(description = "Никнейм пользователя", example = "andreev_a_a")
     private String username;
     @NotNull
     @Email(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"

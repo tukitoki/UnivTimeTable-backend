@@ -1,4 +1,4 @@
-package ru.vsu.cs.timetable.model.dto;
+package ru.vsu.cs.timetable.model.dto.timetable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

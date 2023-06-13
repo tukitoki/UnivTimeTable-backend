@@ -1,6 +1,9 @@
 package ru.vsu.cs.timetable.model.dto.univ_requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,12 +22,20 @@ import java.util.Map;
 @Schema(description = "Информация для подачи заявки")
 public class SendRequest {
 
+    @NotNull
+    @NotBlank
     @Schema(description = "Название предмета", example = "Электродинамика")
     private String subjectName;
+    @NotNull
     @Schema(description = "Группа для проведения пары")
     private GroupResponse groupResponse;
+    @NotNull
+    @NotBlank
+    @Max(value = 10)
     @Schema(description = "Количество часов в неделю", example = "1.5")
     private BigDecimal subjectHourPerWeek;
+    @NotNull
+    @NotBlank
     @Schema(description = "Тип пары", example = "Лекция")
     private TypeClass typeClass;
     @Schema(description = "Инвентарь, нужный для проведения пары", example = "[\"Компьютеры\", \"Проектор\"]")

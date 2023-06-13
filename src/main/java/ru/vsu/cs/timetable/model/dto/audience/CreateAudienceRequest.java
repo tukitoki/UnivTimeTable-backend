@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.model.dto.audience;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,8 @@ public class CreateAudienceRequest {
     private Integer audienceNumber;
     @Positive
     @NotNull
-    @Schema(description = "Размер аудитории", example = "30")
+    @Max(value = 500)
+    @Schema(description = "Вместимость аудитории", example = "30")
     private Long capacity;
     @Schema(description = "Список инвентаря", example = "[\"Компьютеры\", \"Проектор\"]")
     private List<String> equipments;

@@ -18,7 +18,7 @@ import ru.vsu.cs.timetable.logic.service.ExcelService;
 import ru.vsu.cs.timetable.logic.service.MailService;
 import ru.vsu.cs.timetable.logic.service.TimetableService;
 import ru.vsu.cs.timetable.logic.service.UserService;
-import ru.vsu.cs.timetable.model.dto.TimetableResponse;
+import ru.vsu.cs.timetable.model.dto.timetable.TimetableResponse;
 import ru.vsu.cs.timetable.model.dto.univ_class.ClassDto;
 import ru.vsu.cs.timetable.model.entity.Class;
 import ru.vsu.cs.timetable.model.entity.Group;

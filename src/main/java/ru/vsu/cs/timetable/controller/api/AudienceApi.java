@@ -29,7 +29,10 @@ public interface AudienceApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Аудитория с таким номером уже существует",
+                    description = """
+                            Аудитория с таким номером уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",

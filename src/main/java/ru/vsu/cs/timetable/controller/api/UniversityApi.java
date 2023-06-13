@@ -10,10 +10,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
+import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.model.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.model.dto.university.UniversityPageDto;
-import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 @AccessDeniedResponse
 @SecurityRequirement(name = "bearer-key")
@@ -81,7 +81,10 @@ public interface UniversityApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такой университет уже существует",
+                    description = """
+                            Такой университет уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -105,7 +108,10 @@ public interface UniversityApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такой университет уже существует",
+                    description = """
+                            Такой университет уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",

@@ -22,6 +22,7 @@ import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.exception.GroupException;
 import ru.vsu.cs.timetable.exception.UserException;
 import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.mapper.GroupMapper;
 import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.GroupRepository;
@@ -96,6 +97,10 @@ public class GroupServiceImpl implements GroupService {
         if (groupDto.getHeadman() != null) {
             headman = userRepository.findById(groupDto.getHeadman().getId())
                     .orElseThrow(UserException.CODE.ID_NOT_FOUND::get);
+
+            if (headman.getRole() == UserRole.ADMIN) {
+                throw UserException.CODE.ADMIN_CANT_HAVE_GROUP.get();
+            }
         }
 
         Group group = Group.builder()
@@ -115,7 +120,7 @@ public class GroupServiceImpl implements GroupService {
             userRepository.save(headman);
         }
 
-        log.info("group was successfully saved {}", group);
+        log.info("group: {} was successfully saved", group);
     }
 
     @Override
@@ -141,6 +146,12 @@ public class GroupServiceImpl implements GroupService {
 
         if (groupDto.getHeadman() == null) {
             newGroup = groupMapper.toEntity(groupDto);
+            if (oldGroup.getHeadmanId() != null) {
+                var headman = userRepository.findById(oldGroup.getHeadmanId())
+                        .orElseThrow(UserException.CODE.ID_NOT_FOUND::get);
+                headman.setGroup(null);
+                userRepository.save(headman);
+            }
             newGroup.setUsers(new ArrayList<>());
         } else if (groupDto.getHeadman().getId().equals(oldGroup.getHeadmanId())) {
             ignoreProperties.add("users");

@@ -111,7 +111,10 @@ public interface FacultyApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такой факультет в этом университете уже существует",
+                    description = """
+                            Такой факультет в этом университете уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -171,7 +174,10 @@ public interface FacultyApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Факультет с таким именем уже существует",
+                    description = """
+                            Факультет с таким именем уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",

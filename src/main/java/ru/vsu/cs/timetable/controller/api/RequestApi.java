@@ -30,6 +30,10 @@ public interface RequestApi {
                     description = "Успешное отправление заявки"
             ),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "Не пройдена валидация"
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = """
                             Id переданной группы не было найдено, \t
@@ -81,7 +85,10 @@ public interface RequestApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Аудитория занята для переноса",
+                    description = """
+                            Аудитория занята для переноса, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",

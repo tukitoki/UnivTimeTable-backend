@@ -19,11 +19,12 @@ public class DayTimes {
 
     @Schema(description = "День недели", example = "Понедельник")
     private DayOfWeekEnum dayOfWeek;
-    @Schema(description = "Типа недели со свободным временем", example = """
+    @Schema(description = "Типы недели со свободным временем", example = """
             {
                 "Числитель": ["08:00:00", "09:45:00"],
                 "Знаменатель": ["15:00:00", "16:45:00"]
             }
-            """)
+            """
+    )
     private Map<WeekType, List<LocalTime>> weekTimes;
 }
