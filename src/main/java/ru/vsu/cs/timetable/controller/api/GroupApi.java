@@ -107,7 +107,7 @@ public interface GroupApi {
             )
     })
     @Operation(
-            summary = "Создает группу конкретного факульета"
+            summary = "Создает группу конкретного факультета"
     )
     ResponseEntity<Void> createGroup(
             @Parameter(description = "Параметры для создания группы")
