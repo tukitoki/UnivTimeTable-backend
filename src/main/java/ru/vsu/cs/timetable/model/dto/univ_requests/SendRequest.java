@@ -31,7 +31,7 @@ public class SendRequest {
     private GroupResponse groupResponse;
     @NotNull
     @NotBlank
-    @Max(value = 10)
+    @Max(value = 9)
     @Schema(description = "Количество часов в неделю", example = "1.5")
     private BigDecimal subjectHourPerWeek;
     @NotNull

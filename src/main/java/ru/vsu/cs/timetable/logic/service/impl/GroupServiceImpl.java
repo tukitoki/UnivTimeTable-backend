@@ -102,12 +102,15 @@ public class GroupServiceImpl implements GroupService {
                 throw UserException.CODE.ADMIN_CANT_HAVE_GROUP.get();
             }
         }
+        var headmanId = headman == null
+                ? null
+                : headman.getId();
 
         Group group = Group.builder()
                 .studentsAmount(groupDto.getStudentsAmount())
                 .courseNumber(groupDto.getCourseNumber())
                 .groupNumber(groupDto.getGroupNumber())
-                .headmanId(groupDto.getHeadman().getId())
+                .headmanId(headmanId)
                 .faculty(faculty)
                 .users(new ArrayList<>())
                 .classes(new LinkedHashSet<>())
