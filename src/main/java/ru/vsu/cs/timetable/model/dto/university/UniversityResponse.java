@@ -18,12 +18,16 @@ import java.util.List;
 @Schema(description = "Полная информация о университете с группами")
 public class UniversityResponse {
 
+    @Schema(description = "Id университета", example = "1")
     private Long id;
     @NotNull
     @NotBlank
+    @Schema(description = "Название университета", example = "Воронежский государственный университет")
     private String universityName;
     @NotNull
     @NotBlank
+    @Schema(description = "Город университета", example = "Воронеж")
     private String city;
+    @Schema(description = "Информация о факультетах")
     private List<FacultyResponse> facultyDtos;
 }

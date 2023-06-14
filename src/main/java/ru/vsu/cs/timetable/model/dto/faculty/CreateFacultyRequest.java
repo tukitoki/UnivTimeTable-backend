@@ -15,5 +15,6 @@ public class CreateFacultyRequest {
 
     @NotNull
     @NotBlank
+    @Schema(description = "Название факультета", example = "Факультет компьютерных наук")
     private String name;
 }

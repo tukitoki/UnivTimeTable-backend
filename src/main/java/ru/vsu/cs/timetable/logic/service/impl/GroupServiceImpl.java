@@ -22,7 +22,9 @@ import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.exception.GroupException;
 import ru.vsu.cs.timetable.exception.UserException;
 import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.mapper.GroupMapper;
+import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 import ru.vsu.cs.timetable.logic.service.GroupService;
@@ -41,6 +43,7 @@ public class GroupServiceImpl implements GroupService {
 
     private final FacultyService facultyService;
     private final GroupRepository groupRepository;
+    private final ClassRepository classRepository;
     private final UserRepository userRepository;
     private final GroupMapper groupMapper;
     private final EntityManager entityManager;
@@ -94,13 +97,20 @@ public class GroupServiceImpl implements GroupService {
         if (groupDto.getHeadman() != null) {
             headman = userRepository.findById(groupDto.getHeadman().getId())
                     .orElseThrow(UserException.CODE.ID_NOT_FOUND::get);
+
+            if (headman.getRole() == UserRole.ADMIN) {
+                throw UserException.CODE.ADMIN_CANT_HAVE_GROUP.get();
+            }
         }
+        var headmanId = headman == null
+                ? null
+                : headman.getId();
 
         Group group = Group.builder()
                 .studentsAmount(groupDto.getStudentsAmount())
                 .courseNumber(groupDto.getCourseNumber())
                 .groupNumber(groupDto.getGroupNumber())
-                .headmanId(groupDto.getHeadman().getId())
+                .headmanId(headmanId)
                 .faculty(faculty)
                 .users(new ArrayList<>())
                 .classes(new LinkedHashSet<>())
@@ -113,16 +123,22 @@ public class GroupServiceImpl implements GroupService {
             userRepository.save(headman);
         }
 
-        log.info("group was successful saved {}", group);
+        log.info("group: {} was successfully saved", group);
     }
 
     @Override
     public void deleteGroup(Long id) {
         Group group = findGroupById(id);
 
+        classRepository.findAllByGroupsContains(group).forEach(aClass -> {
+            if (aClass.getGroups().size() == 1) {
+                classRepository.delete(aClass);
+            }
+        });
+
         groupRepository.delete(group);
 
-        log.info("group was successful deleted {}", group);
+        log.info("group was successfully deleted {}", group);
     }
 
     @Override
@@ -133,6 +149,12 @@ public class GroupServiceImpl implements GroupService {
 
         if (groupDto.getHeadman() == null) {
             newGroup = groupMapper.toEntity(groupDto);
+            if (oldGroup.getHeadmanId() != null) {
+                var headman = userRepository.findById(oldGroup.getHeadmanId())
+                        .orElseThrow(UserException.CODE.ID_NOT_FOUND::get);
+                headman.setGroup(null);
+                userRepository.save(headman);
+            }
             newGroup.setUsers(new ArrayList<>());
         } else if (groupDto.getHeadman().getId().equals(oldGroup.getHeadmanId())) {
             ignoreProperties.add("users");
@@ -157,7 +179,7 @@ public class GroupServiceImpl implements GroupService {
 
         oldGroup = groupRepository.save(oldGroup);
 
-        log.info("group was successful updated {}", oldGroup);
+        log.info("group was successfully updated {}", oldGroup);
     }
 
     private Page<Group> filerPage(int currentPage, int pageSize, Integer course,

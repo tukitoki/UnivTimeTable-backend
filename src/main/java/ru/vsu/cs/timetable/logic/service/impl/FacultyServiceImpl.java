@@ -98,7 +98,7 @@ public class FacultyServiceImpl implements FacultyService {
 
         faculty = facultyRepository.save(faculty);
 
-        log.info("faculty: {} was successful saved", faculty);
+        log.info("faculty: {} was successfully saved", faculty);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class FacultyServiceImpl implements FacultyService {
 
         facultyRepository.delete(faculty);
 
-        log.info("faculty: {} was successful deleted", faculty);
+        log.info("faculty: {} was successfully deleted", faculty);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class FacultyServiceImpl implements FacultyService {
         BeanUtils.copyProperties(newFaculty, oldFaculty, "id", "university", "groups", "audiences");
         oldFaculty = facultyRepository.save(oldFaculty);
 
-        log.info("faculty {} was successful updated", oldFaculty);
+        log.info("faculty {} was successfully updated", oldFaculty);
     }
 
     private Page<Faculty> filerPage(int currentPage, int pageSize, String name,

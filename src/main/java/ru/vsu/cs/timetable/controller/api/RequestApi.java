@@ -20,14 +20,18 @@ import java.util.List;
 
 @AccessDeniedResponse
 @IncorrectUsernameResponse
-@Tag(name = "Request API", description = "API для работы с заявками преподавателей")
 @SecurityRequirement(name = "bearer-key")
+@Tag(name = "Request API", description = "API для работы с заявками преподавателей")
 public interface RequestApi {
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
-                    description = "Успешная отправка заявки"
+                    description = "Успешное отправление заявки"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Не пройдена валидация"
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -45,7 +49,7 @@ public interface RequestApi {
             )
     })
     @Operation(
-            summary = "Отправка заявки на составление расписания"
+            summary = "Отправляет заявку для расписания"
     )
     ResponseEntity<Void> sendRequest(
             @Parameter(description = "Вся информация о заявке преподавателя")
@@ -57,7 +61,7 @@ public interface RequestApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешная отправка информации",
+                    description = "Успешный возврат информации",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -67,7 +71,7 @@ public interface RequestApi {
             )
     })
     @Operation(
-            summary = "Показ информациии для подачи заявки на составление"
+            summary = "Возвращает информациию для заявки на составление"
     )
     ResponseEntity<ShowSendRequest> sendRequestInfo(
             @Parameter(hidden = true)
@@ -81,7 +85,10 @@ public interface RequestApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Аудитория занята для переноса",
+                    description = """
+                            Аудитория занята для переноса, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -91,7 +98,7 @@ public interface RequestApi {
             )
     })
     @Operation(
-            summary = "Отправка заявка на перенос занятия"
+            summary = "Отправляет заявку на перенос занятия"
     )
     ResponseEntity<Void> moveClass(
             @Parameter(description = "Вся информация о заявке на перенос")
@@ -110,10 +117,20 @@ public interface RequestApi {
                                     schema = @Schema(implementation = MoveClassResponse.class)
                             )
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Расписание ещё не было составлено",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    }
             )
     })
     @Operation(
-            summary = "Отправка информации для переноса занятия"
+            summary = "Отправляет информацию для переноса занятия"
     )
     ResponseEntity<MoveClassResponse> moveClassInfo(
             @Parameter(hidden = true)
@@ -133,7 +150,7 @@ public interface RequestApi {
             )
     })
     @Operation(
-            summary = "Получние списка заявок"
+            summary = "Возвращает список заявок"
     )
     ResponseEntity<List<RequestDto>> getFacultyRequests(
             @Parameter(hidden = true)

@@ -4,10 +4,8 @@ import org.springframework.stereotype.Component;
 import ru.vsu.cs.timetable.logic.planner.model.PlanningClass;
 import ru.vsu.cs.timetable.logic.planner.model.Timeslot;
 import ru.vsu.cs.timetable.model.dto.univ_class.ClassDto;
-import ru.vsu.cs.timetable.model.entity.Audience;
 import ru.vsu.cs.timetable.model.entity.Class;
-import ru.vsu.cs.timetable.model.entity.Group;
-import ru.vsu.cs.timetable.model.entity.Request;
+import ru.vsu.cs.timetable.model.entity.*;
 import ru.vsu.cs.timetable.utils.TimeUtils;
 
 import java.util.HashSet;
@@ -23,14 +21,11 @@ public class ClassMapper {
     public PlanningClass toPlanningEntity(Long id, Request request) {
         List<Timeslot> impossibleTimes = request.getImpossibleTimes()
                 .stream()
-                .map(impossibleTime -> {
-                    var timeslot = Timeslot.builder()
-                            .dayOfWeekEnum(impossibleTime.getDayOfWeek())
-                            .startTime(impossibleTime.getTimeFrom())
-                            .endTime(calculateEndTimeByStart(impossibleTime.getTimeFrom()))
-                            .build();
-                    return timeslot;
-                })
+                .map(impossibleTime -> Timeslot.builder()
+                        .dayOfWeekEnum(impossibleTime.getDayOfWeek())
+                        .startTime(impossibleTime.getTimeFrom())
+                        .endTime(calculateEndTimeByStart(impossibleTime.getTimeFrom()))
+                        .build())
                 .collect(Collectors.toList());
         return PlanningClass.builder()
                 .id(id)
@@ -85,6 +80,12 @@ public class ClassMapper {
                 .courseNumber(courseNumber)
                 .groupsNumber(aClass.getGroups().stream()
                         .map(Group::getGroupNumber)
+                        .toList())
+                .capacity(aClass.getGroups().stream()
+                        .mapToInt(Group::getStudentsAmount)
+                        .sum())
+                .equipments(aClass.getAudience().getEquipments().stream()
+                        .map(Equipment::getDisplayName)
                         .toList())
                 .build();
     }

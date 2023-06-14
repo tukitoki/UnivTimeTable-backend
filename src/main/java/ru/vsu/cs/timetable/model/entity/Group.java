@@ -42,14 +42,20 @@ public class Group {
     private Faculty faculty;
     @OneToMany(mappedBy = "group")
     private List<User> users;
-    @ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "groups")
     private Set<Class> classes;
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<Request> requests;
+
     @PreRemove
     private void removeUsersFromGroup() {
         for (User user : this.users) {
             user.setGroup(null);
+        }
+        for (Class aClass : this.classes) {
+            if (aClass.getGroups().size() > 0) {
+                aClass.getGroups().remove(this);
+            }
         }
     }
 

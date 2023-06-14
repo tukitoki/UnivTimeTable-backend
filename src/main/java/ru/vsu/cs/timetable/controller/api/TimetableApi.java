@@ -13,19 +13,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.config.swagger.annotation.IncorrectUsernameResponse;
-import ru.vsu.cs.timetable.model.dto.TimetableResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
+import ru.vsu.cs.timetable.model.dto.timetable.TimetableResponse;
 
 @AccessDeniedResponse
 @IncorrectUsernameResponse
-@Tag(name = "Timetable API", description = "API для работы с расписанием")
 @SecurityRequirement(name = "bearer-key")
+@Tag(name = "Timetable API", description = "API для работы с расписанием")
 public interface TimetableApi {
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешная отправка расписания",
+                    description = "Успешный возврат расписания",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -45,7 +45,7 @@ public interface TimetableApi {
             )
     })
     @Operation(
-            summary = "Получение расписания конкретным пользователем"
+            summary = "Возвращает расписание конкретного пользователя"
     )
     ResponseEntity<TimetableResponse> getTimetable(
             @Parameter(hidden = true)
@@ -55,7 +55,7 @@ public interface TimetableApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешная передача файла для скачивания",
+                    description = "Успешный возврат файла для скачивания",
                     content = {
                             @Content(
                                     mediaType = "application/octet-stream",
@@ -75,9 +75,9 @@ public interface TimetableApi {
             )
     })
     @Operation(
-            summary = "Скачивание расписания"
+            summary = "Возвращает файл с расписанием в формате .xslx"
     )
-    ResponseEntity<Void> downloadTimetable(
+    ResponseEntity<?> downloadTimetable(
             @Parameter(hidden = true)
             HttpServletResponse httpServletResponse,
             @Parameter(hidden = true)
@@ -91,8 +91,10 @@ public interface TimetableApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Расписание не может быть составлено, \t\n" +
-                            "Расписание уже было составлено",
+                    description = """
+                            Расписание не может быть составлено, \t
+                            Расписание уже было составлено
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -102,9 +104,23 @@ public interface TimetableApi {
             )
     })
     @Operation(
-            summary = "Составление расписания"
+            summary = "Начинает составлять расписание"
     )
     ResponseEntity<Void> makeTimetable(
+            @Parameter(hidden = true)
+            Authentication authentication
+    );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Расписание было успешно сброшено"
+            )
+    })
+    @Operation(
+            summary = "Сбрасывает расписание"
+    )
+    ResponseEntity<Void> resetTimetable(
             @Parameter(hidden = true)
             Authentication authentication
     );

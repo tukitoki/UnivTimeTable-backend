@@ -2,6 +2,7 @@ package ru.vsu.cs.timetable.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,23 +11,23 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
+import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.model.dto.faculty.CreateFacultyRequest;
 import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
 import ru.vsu.cs.timetable.model.dto.faculty.FacultyPageDto;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
-import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 import java.util.List;
 
 @AccessDeniedResponse
-@Tag(name = "Faculty API", description = "API для работы с факультетами")
 @SecurityRequirement(name = "bearer-key")
+@Tag(name = "Faculty API", description = "API для работы с факультетами")
 public interface FacultyApi {
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение факультетов",
+                    description = "Успешный возврат факультетов",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -36,45 +37,47 @@ public interface FacultyApi {
             )
     })
     @Operation(
-            summary = "Получение списка факультетов с фильтрацией и поиском"
+            summary = "Возвращает список факультетов с фильтрацией и поиском"
     )
     ResponseEntity<FacultyPageDto> getFacultiesByUniversity(
-            @Parameter(description = "Номер страницы")
+            @Parameter(description = "Номер страницы", example = "1")
             int currentPage,
-            @Parameter(description = "Количество элементов на странице")
+            @Parameter(description = "Количество элементов на странице", example = "10")
             int pageSize,
-            @Parameter(description = "Название факультета для поиска")
+            @Parameter(description = "Название факультета для поиска", example = "Факультет компьютерных наук")
             String name,
             @Parameter(description = "Сортировка по алфавиту")
             SortDirection order,
-            @Parameter(description = "Id университета, факультеты которого нужны")
+            @Parameter(description = "Id университета, факультеты которого нужны", example = "1")
             Long universityId
     );
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение факультетов",
+                    description = "Успешный возврат факультетов",
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = FacultyPageDto.class)
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = FacultyDto.class)
+                                    )
                             )
                     }
             )
     })
     @Operation(
-            summary = "Получение списка факультетов с фильтрацией и поиском"
+            summary = "Возвращает список всех факультетов"
     )
     ResponseEntity<List<FacultyDto>> getFacultiesByUniversity(
-            @Parameter(description = "Id университета, факультеты которого нужны")
+            @Parameter(description = "Id университета, факультеты которого нужны", example = "1")
             Long universityId
     );
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получние факультета",
+                    description = "Успешный возврат факультета",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -94,10 +97,10 @@ public interface FacultyApi {
             )
     })
     @Operation(
-            summary = "Получение факультета по id"
+            summary = "Возвращает факультет по id"
     )
     ResponseEntity<FacultyDto> getFacultyById(
-            @Parameter(description = "Id факультета")
+            @Parameter(description = "Id факультета", example = "1")
             Long id
     );
 
@@ -108,7 +111,10 @@ public interface FacultyApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такой факультет в этом университете уже был создан",
+                    description = """
+                            Такой факультет в этом университете уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -128,12 +134,12 @@ public interface FacultyApi {
             )
     })
     @Operation(
-            summary = "Создание факультета конкретного университета"
+            summary = "Создает факультет конкретного университета"
     )
     ResponseEntity<Void> createFaculty(
             @Parameter(description = "Параметры для создания факультета")
             CreateFacultyRequest createFacultyRequest,
-            @Parameter(description = "Id университета, для которого создаются факультеты")
+            @Parameter(description = "Id университета, для которого создается факультет", example = "1")
             Long id
     );
 
@@ -154,10 +160,10 @@ public interface FacultyApi {
             )
     })
     @Operation(
-            summary = "Удаление факультета конкретного университета"
+            summary = "Удаляет факультет по id"
     )
     ResponseEntity<Void> deleteFaculty(
-            @Parameter(description = "Id факультета, который нужно удалить")
+            @Parameter(description = "Id факультета, который нужно удалить", example = "1")
             Long id
     );
 
@@ -168,7 +174,10 @@ public interface FacultyApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такой факультет в этом университете уже был создан",
+                    description = """
+                            Факультет с таким именем уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -186,12 +195,12 @@ public interface FacultyApi {
             )}
     )
     @Operation(
-            summary = "Обновление факультета конкретного университета"
+            summary = "Обновляет факультета конкретного университета"
     )
     ResponseEntity<Void> updateFaculty(
             @Parameter(description = "Измененная версия факульета")
             FacultyDto facultyDto,
-            @Parameter(description = "Id факультета, который нужно обновить")
+            @Parameter(description = "Id факультета, который нужно обновить", example = "1")
             Long id
     );
 }

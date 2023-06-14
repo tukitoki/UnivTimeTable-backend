@@ -8,8 +8,9 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import ru.vsu.cs.timetable.model.entity.Class;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.model.entity.enums.WeekType;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.WeekType;
 import ru.vsu.cs.timetable.logic.service.ExcelService;
 
 import java.time.LocalTime;
@@ -31,7 +32,7 @@ public class ExcelServiceImpl implements ExcelService {
     private final static short ROW_FONT_SIZE = 14;
 
     @Override
-    public Workbook getExcelTimetable(Map<DayOfWeekEnum, List<Class>> timetable) {
+    public Workbook getExcelTimetable(Map<DayOfWeekEnum, List<Class>> timetable, UserRole userRole) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Timetable");
         sheet.setColumnWidth(0, FIRST_COLUMN_WIDTH);
@@ -65,12 +66,12 @@ public class ExcelServiceImpl implements ExcelService {
                 );
                 timeCell.setCellStyle(rowStyle);
 
-                cellCreate(row, timetable, WeekType.NUMERATOR, dayOfWeek, startTime, rowStyle);
+                cellCreate(row, timetable, WeekType.NUMERATOR, dayOfWeek, startTime, rowStyle, userRole);
 
                 rowIndex++;
                 row = sheet.createRow(rowIndex);
 
-                cellCreate(row, timetable, WeekType.DENOMINATOR, dayOfWeek, startTime, rowStyle);
+                cellCreate(row, timetable, WeekType.DENOMINATOR, dayOfWeek, startTime, rowStyle, userRole);
 
                 sheet.addMergedRegion(new CellRangeAddress(rowIndex - 1, rowIndex, 0, 0));
             }
@@ -100,6 +101,7 @@ public class ExcelServiceImpl implements ExcelService {
     private CellStyle getRowStyle(XSSFWorkbook workbook) {
         CellStyle headerStyle = workbook.createCellStyle();
         headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        headerStyle.setWrapText(true);
 
         XSSFFont font = workbook.createFont();
         font.setFontName("Arial");
@@ -110,13 +112,13 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     private void cellCreate(Row row, Map<DayOfWeekEnum, List<Class>> timetable, WeekType weekType,
-                            DayOfWeekEnum dayOfWeek, LocalTime startTime, CellStyle rowStyle) {
+                            DayOfWeekEnum dayOfWeek, LocalTime startTime, CellStyle rowStyle, UserRole userRole) {
         Cell subjCell = row.createCell(1);
         var optClass = getByWeekTypeAndDayAndStartTime(timetable, weekType, dayOfWeek, startTime);
         if (optClass.isEmpty()) {
             subjCell.setCellValue("");
         } else {
-            subjCell.setCellValue(optClass.get().toExcelFormat());
+            subjCell.setCellValue(optClass.get().toExcelFormat(userRole));
         }
         subjCell.setCellStyle(rowStyle);
     }

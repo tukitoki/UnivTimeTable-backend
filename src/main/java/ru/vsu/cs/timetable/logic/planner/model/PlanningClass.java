@@ -11,7 +11,7 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import ru.vsu.cs.timetable.model.entity.Equipment;
 import ru.vsu.cs.timetable.model.entity.Group;
 import ru.vsu.cs.timetable.model.entity.User;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
 
 import java.util.List;
 import java.util.Set;

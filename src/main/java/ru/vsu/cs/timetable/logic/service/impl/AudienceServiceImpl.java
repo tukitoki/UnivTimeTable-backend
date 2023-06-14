@@ -4,19 +4,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.cs.timetable.exception.AudienceException;
+import ru.vsu.cs.timetable.exception.EquipmentException;
+import ru.vsu.cs.timetable.logic.service.AudienceService;
+import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.model.dto.week_time.DayTimes;
 import ru.vsu.cs.timetable.model.entity.Audience;
 import ru.vsu.cs.timetable.model.entity.Class;
 import ru.vsu.cs.timetable.model.entity.Equipment;
 import ru.vsu.cs.timetable.model.entity.Faculty;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.model.entity.enums.WeekType;
-import ru.vsu.cs.timetable.exception.AudienceException;
-import ru.vsu.cs.timetable.exception.EquipmentException;
-import ru.vsu.cs.timetable.logic.service.AudienceService;
-import ru.vsu.cs.timetable.logic.service.FacultyService;
-import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.WeekType;
 import ru.vsu.cs.timetable.model.mapper.AudienceMapper;
 import ru.vsu.cs.timetable.repository.AudienceRepository;
 import ru.vsu.cs.timetable.repository.EquipmentRepository;
@@ -66,6 +67,16 @@ public class AudienceServiceImpl implements AudienceService {
     }
 
     @Override
+    public List<AudienceResponse> getAudiencesByFaculty(Long facultyId) {
+        var faculty = facultyService.findFacultyById(facultyId);
+        var facultyAudiences = audienceRepository.findAllByFaculty(faculty);
+
+        return facultyAudiences.stream()
+                .map(audienceMapper::toResponse)
+                .toList();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Audience findAudienceByNumberAndFaculty(Integer audienceNumber, Faculty faculty) {
         return audienceRepository.findByAudienceNumberAndFaculty(audienceNumber, faculty)
@@ -83,13 +94,17 @@ public class AudienceServiceImpl implements AudienceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Map<Audience, List<DayTimes>> getFreeAudienceByFaculty(Faculty faculty) {
+    public Map<Audience, List<DayTimes>> getFreeAudiencesByFaculty(Faculty faculty) {
         var facultyAudiences = audienceRepository.findAllByFaculty(faculty);
         Map<Audience, List<DayTimes>> audiencesFreeTime = new HashMap<>();
 
         facultyAudiences.forEach(audience -> {
             List<DayTimes> dayTimes = new ArrayList<>();
             for (var day : DayOfWeekEnum.values()) {
+                if (day == DayOfWeekEnum.SUNDAY) {
+                    continue;
+                }
+
                 Map<WeekType, List<LocalTime>> weekTimes = new HashMap<>();
                 for (var weekType : WeekType.values()) {
                     List<LocalTime> audienceFreeTime = TimeUtils.getPossibleClassTimes();

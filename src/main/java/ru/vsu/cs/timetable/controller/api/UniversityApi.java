@@ -10,20 +10,20 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
+import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.model.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.model.dto.university.UniversityPageDto;
-import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 
 @AccessDeniedResponse
-@Tag(name = "University API", description = "API для работы с университетами")
 @SecurityRequirement(name = "bearer-key")
+@Tag(name = "University API", description = "API для работы с университетами")
 public interface UniversityApi {
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение университетов",
+                    description = "Успешный возврат университетов",
                     content = {
                             @Content(
                                     schema = @Schema(implementation = UniversityPageDto.class)
@@ -32,23 +32,23 @@ public interface UniversityApi {
             )
     })
     @Operation(
-            summary = "Получение списка университетов с фильтрацией и поиском"
+            summary = "Возвращает список университетов с фильтрацией и поиском"
     )
     ResponseEntity<UniversityPageDto> getAllUniversities(
-            @Parameter(description = "Номер страницы")
+            @Parameter(description = "Номер страницы", example = "1")
             int currentPage,
-            @Parameter(description = "Количество элементов на странице")
+            @Parameter(description = "Количество элементов на странице", example = "10")
             int pageSize,
-            @Parameter(description = "Имя университета для поиска")
+            @Parameter(description = "Имя университета для поиска", example = "Воронежский государственный университет")
             String universityName,
-            @Parameter(description = "Тип сортировки по алфавиту")
+            @Parameter(description = "Сортировка по алфавиту")
             SortDirection order
     );
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное получение университета",
+                    description = "Успешный возврат университета",
                     content = {
                             @Content(
                                     schema = @Schema(implementation = UniversityDto.class)
@@ -67,10 +67,10 @@ public interface UniversityApi {
             )
     })
     @Operation(
-            summary = "Получение университета по id"
+            summary = "Возвращает университет по id"
     )
     ResponseEntity<UniversityDto> getUniversityById(
-            @Parameter(description = "Id университета")
+            @Parameter(description = "Id университета", example = "1")
             Long id
     );
 
@@ -81,7 +81,10 @@ public interface UniversityApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такой университет уже был создан",
+                    description = """
+                            Такой университет уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -91,7 +94,7 @@ public interface UniversityApi {
             )
     })
     @Operation(
-            summary = "Создание университета"
+            summary = "Создает университет"
     )
     ResponseEntity<Void> createUniversity(
             @Parameter(description = "Параметры для создания университета")
@@ -105,7 +108,10 @@ public interface UniversityApi {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Такой университет уже был создан",
+                    description = """
+                            Такой университет уже существует, \t
+                            Не пройдена валидация
+                            """,
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -125,29 +131,19 @@ public interface UniversityApi {
             )
     })
     @Operation(
-            summary = "Редактирование университета"
+            summary = "Обновляет университет"
     )
     ResponseEntity<Void> updateUniversity(
             @Parameter(description = "Измененная версия университета")
             UniversityDto universityDto,
-            @Parameter(description = "Id университета для редактирования")
+            @Parameter(description = "Id университета для редактирования", example = "1")
             Long id
     );
 
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Успешное обновление университета"
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Такой университет уже был создан",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorMessage.class)
-                            )
-                    }
+                    description = "Успешное удаление университета"
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -161,10 +157,10 @@ public interface UniversityApi {
             )
     })
     @Operation(
-            summary = "Удаление университета"
+            summary = "Удаляет университет"
     )
     ResponseEntity<Void> deleteUniversity(
-            @Parameter(description = "Id университета для удаления")
+            @Parameter(description = "Id университета для удаления", example = "1")
             Long id
     );
 }

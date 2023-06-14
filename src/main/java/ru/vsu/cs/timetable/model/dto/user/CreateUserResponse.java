@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ru.vsu.cs.timetable.model.dto.university.UniversityResponse;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 
 import java.util.List;
 
@@ -15,6 +15,8 @@ import java.util.List;
 @Schema(description = "Информация для создания пользователя")
 public class CreateUserResponse {
 
+    @Schema(description = "Список ролей", example = "[\"Преподаватель\", \"Староста\", \"Администратор\"]")
     private List<UserRole> roles;
+    @Schema(description = "Информация об университетах")
     private List<UniversityResponse> universityResponses;
 }

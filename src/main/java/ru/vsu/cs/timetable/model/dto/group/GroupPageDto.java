@@ -14,6 +14,8 @@ import java.util.List;
 @Schema(description = "Страница групп с списком курсов")
 public class GroupPageDto {
 
+    @Schema(description = "Страница с группами факультета")
     private PageModel<GroupDto> groupsPage;
+    @Schema(description = "Курсы факультета", example = "[\"1\", \"2\", \"3\"]")
     private List<Integer> courses;
 }

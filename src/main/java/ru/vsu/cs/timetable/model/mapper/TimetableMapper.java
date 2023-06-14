@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.vsu.cs.timetable.model.entity.Audience;
 import ru.vsu.cs.timetable.model.entity.Timetable;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
 import ru.vsu.cs.timetable.logic.planner.model.PlanningClass;
 
 import java.util.LinkedList;

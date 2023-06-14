@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.model.dto.user.JwtDto;
 import ru.vsu.cs.timetable.model.dto.user.UserLoginDto;
 import ru.vsu.cs.timetable.model.entity.User;
@@ -14,6 +15,7 @@ import ru.vsu.cs.timetable.logic.service.UserService;
 
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 @Service
 public class AuthServiceImpl implements AuthService {
 

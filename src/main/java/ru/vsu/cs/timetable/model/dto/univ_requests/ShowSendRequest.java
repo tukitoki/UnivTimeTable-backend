@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ru.vsu.cs.timetable.model.dto.group.GroupResponse;
-import ru.vsu.cs.timetable.model.entity.enums.TypeClass;
+import ru.vsu.cs.timetable.model.enums.TypeClass;
 
 import java.util.List;
 
@@ -15,7 +15,10 @@ import java.util.List;
 @Schema(description = "Информация, чтобы преподаватель смог подать заявку")
 public class ShowSendRequest {
 
+    @Schema(description = "Типы пар", example = "[\"Лекция\",\"Семинар\"]")
     private List<TypeClass> typesOfClass;
+    @Schema(description = "Возможный инвентарь", example = "[\"Компьютеры\",\"Проектор\"]")
     private List<String> equipments;
+    @Schema(description = "Группы по курсам")
     private List<GroupResponse> groupsOfCourse;
 }

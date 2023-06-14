@@ -1,8 +1,8 @@
 package ru.vsu.cs.timetable.utils;
 
 import lombok.experimental.UtilityClass;
-import ru.vsu.cs.timetable.model.entity.enums.DayOfWeekEnum;
-import ru.vsu.cs.timetable.model.entity.enums.WeekType;
+import ru.vsu.cs.timetable.model.enums.DayOfWeekEnum;
+import ru.vsu.cs.timetable.model.enums.WeekType;
 import ru.vsu.cs.timetable.logic.planner.model.Timeslot;
 
 import java.time.LocalDate;
@@ -49,6 +49,9 @@ public final class TimeUtils {
 
         List<Timeslot> timeslots = new LinkedList<>();
         for (var day : DayOfWeekEnum.values()) {
+            if (day == DayOfWeekEnum.SUNDAY) {
+                continue;
+            }
             possibleTimes.forEach(time -> {
                 for (var weekType : WeekType.values()) {
                     timeslots.add(Timeslot.builder()

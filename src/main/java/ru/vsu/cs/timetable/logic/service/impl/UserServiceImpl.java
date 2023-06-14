@@ -26,7 +26,7 @@ import ru.vsu.cs.timetable.model.dto.user.UserPageDto;
 import ru.vsu.cs.timetable.model.dto.user.UserResponse;
 import ru.vsu.cs.timetable.model.entity.University;
 import ru.vsu.cs.timetable.model.entity.User;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.mapper.UniversityMapper;
 import ru.vsu.cs.timetable.model.mapper.UserMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
             groupRepository.save(group);
         }
 
-        log.info("user: {}, was successful saved", user);
+        log.info("user: {}, was successfully saved", user);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
 
         oldUser = userRepository.save(oldUser);
 
-        log.info("user: {}, was successful updated", oldUser);
+        log.info("user: {}, was successfully updated", oldUser);
     }
 
     @Override
@@ -217,7 +217,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(user);
 
-        log.info("user: {}, was successful deleted", user);
+        log.info("user: {}, was successfully deleted", user);
     }
 
     @Override
@@ -342,9 +342,6 @@ public class UserServiceImpl implements UserService {
             }
             if (facultyId == null) {
                 throw UserException.CODE.HEADMAN_SHOULD_HAVE_FACULTY.get();
-            }
-            if (groupId == null) {
-                throw UserException.CODE.HEADMAN_SHOULD_HAVE_GROUP.get();
             }
         }
     }

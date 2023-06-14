@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -18,7 +19,7 @@ import ru.vsu.cs.timetable.model.entity.Faculty;
 import ru.vsu.cs.timetable.model.entity.Group;
 import ru.vsu.cs.timetable.model.entity.University;
 import ru.vsu.cs.timetable.model.entity.User;
-import ru.vsu.cs.timetable.model.entity.enums.UserRole;
+import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.mapper.UserMapper;
 import ru.vsu.cs.timetable.repository.GroupRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
@@ -26,6 +27,7 @@ import ru.vsu.cs.timetable.repository.UserRepository;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,18 +50,26 @@ class UserServiceImplTest {
     private FacultyService facultyService;
     @Mock
     private PasswordEncoder passwordEncoder;
-    private UserRole userRole = UserRole.HEADMAN;
-    private final UserDto userDto = new UserDto(121311342L, userRole, "Иванов Иван Иванович", "ivan", "ivan@mail.ru",
-            "Воронеж", "password", null, null, null);
-    private Group group = new Group();
-    private User user = new User();
-    private University universityVSU = new University();
-    private Faculty facultyFKN = new Faculty();
-    private Faculty facultyPMM = new Faculty();
+    private UserRole userRole;
+    private UserDto userDto;
+    private Group group;
+    private User user;
+    private University universityVSU;
+    private Faculty facultyFKN;
+    private Faculty facultyPMM;
 
 
     @BeforeEach
     void setUp() {
+        universityVSU = new University();
+        facultyFKN = new Faculty();
+        facultyPMM = new Faculty();
+        user = new User();
+        group = new Group();
+        userRole = UserRole.HEADMAN;
+        userDto = new UserDto(121311342L, userRole, "Иванов Иван Иванович", "ivan", "ivan@mail.ru",
+                "Воронеж", "password", null, null, null);
+
         group.setId(1L);
         group.setGroupNumber(1);
         group.setStudentsAmount(1);
@@ -87,6 +97,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should successfully find user DTO by id")
     void getUserDtoById() {
         when(userRepository.findById(121311342L))
                 .thenReturn(Optional.of(user));
@@ -96,11 +107,12 @@ class UserServiceImplTest {
         UserDto userDto1 = userServiceImpl.getUserDtoById(121311342L);
 
         assertThat(userDto1.getId()).isNotNull();
-        assert(userDto1.getId().equals(121311342L));
-        assert(userDto1.equals(userDto));
+        assertEquals(userDto1.getId(), 121311342L);
+        assertEquals(userDto1, userDto);
     }
 
     @Test
+    @DisplayName("Should successfully create user")
     void createUser() {
         UserDto userToCreateDto = new UserDto(4L, userRole, "Семёнов Артём Валерьевич", "Artem", "artem@mail.ru", "Воронеж",
                 "password", 1L, 1L, 1L);
@@ -136,13 +148,14 @@ class UserServiceImplTest {
         userServiceImpl.createUser(userToCreateDto);
         User createdUser = userServiceImpl.getUserById(4L);
 
-        assert(createdUser.getFullName().equals("Семёнов Артём Валерьевич"));
-        assert(createdUser.getEmail().equals("artem@mail.ru"));
-        assert(createdUser.getUsername().equals("Artem"));
-        assert(createdUser.getFaculty().getName().equals("ФКН"));
+        assertEquals(createdUser.getFullName(), "Семёнов Артём Валерьевич");
+        assertEquals(createdUser.getEmail(), "artem@mail.ru");
+        assertEquals(createdUser.getUsername(), "Artem");
+        assertEquals(createdUser.getFaculty().getName(), "ФКН");
     }
 
     @Test
+    @DisplayName("Should successfully update user")
     void updateUser() {
         User userToUpdate = new User();
         userToUpdate.setCity("Воронеж");
@@ -155,10 +168,10 @@ class UserServiceImplTest {
         userToUpdate.setFaculty(facultyPMM);
         userToUpdate.setGroup(group);
 
-        assert(userToUpdate.getFullName().equals("Петров Пётр Петрович"));
-        assert(userToUpdate.getEmail().equals("petraf@mail.ru"));
-        assert(userToUpdate.getUsername().equals("Petro"));
-        assert(userToUpdate.getFaculty().getName().equals("ПММ"));
+        assertEquals(userToUpdate.getFullName(), "Петров Пётр Петрович");
+        assertEquals(userToUpdate.getEmail(), "petraf@mail.ru");
+        assertEquals(userToUpdate.getUsername(), "Petro");
+        assertEquals(userToUpdate.getFaculty().getName(), "ПММ");
 
         UserDto newUserDto = new UserDto(3L, userRole, "Семёнов Артём Валерьевич", "semen", "semen@mail.ru", "Воронеж",
                 "password", 1L, 1L, 1L);
@@ -194,13 +207,14 @@ class UserServiceImplTest {
 
         userServiceImpl.updateUser(newUserDto, 3L);
 
-        assert(userToUpdate.getFullName().equals("Семёнов Артём Валерьевич"));
-        assert(userToUpdate.getEmail().equals("semen@mail.ru"));
-        assert(userToUpdate.getUsername().equals("semen"));
-        assert(userToUpdate.getFaculty().getName().equals("ФКН"));
+        assertEquals(userToUpdate.getFullName(), "Семёнов Артём Валерьевич");
+        assertEquals(userToUpdate.getEmail(), "semen@mail.ru");
+        assertEquals(userToUpdate.getUsername(), "semen");
+        assertEquals(userToUpdate.getFaculty().getName(), "ФКН");
     }
 
     @Test
+    @DisplayName("Should successfully delete user")
     void deleteUser() {
         User userToDelete = new User();
         userToDelete.setCity("Воронеж");
@@ -213,48 +227,52 @@ class UserServiceImplTest {
         userToDelete.setGroup(group);
         group.setStudentsAmount(2);
 
-        assert(group.getStudentsAmount().equals(2));
+        assertEquals(group.getStudentsAmount(), 2);
 
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(userToDelete));
         userServiceImpl.deleteUser(1L);
 
-        assert(group.getStudentsAmount().equals(1));
+        assertEquals(group.getStudentsAmount(), 1);
     }
 
     @Test
+    @DisplayName("Should successfully find user by id")
+
     void getUserById() {
         when(userRepository.findById(121311342L))
                 .thenReturn(Optional.of(user));
 
         User userToCompare = userServiceImpl.getUserById(121311342L);
 
-        assertThat(user.getFullName()).isNotNull();
-        assert(userToCompare.getFullName().equals("Иванов Иван Иванович"));
-        assert(userToCompare.equals(user));
+        assertThat(userToCompare.getFullName()).isNotNull();
+        assertEquals(userToCompare.getFullName(), "Иванов Иван Иванович");
+        assertEquals(userToCompare, (user));
     }
 
     @Test
+    @DisplayName("Should successfully find user by username")
     void getUserByUsername() {
         when(userRepository.findByUsername("ivan"))
                 .thenReturn(Optional.of(user));
 
         User userToCompare = userServiceImpl.getUserByUsername("ivan");
 
-        assertThat(user.getUsername()).isNotNull();
-        assert(userToCompare.getUsername().equals("ivan"));
-        assert(userToCompare.equals(user));
+        assertThat(userToCompare.getUsername()).isNotNull();
+        assertEquals(userToCompare.getUsername(), "ivan");
+        assertEquals(userToCompare, user);
     }
 
     @Test
+    @DisplayName("Should successfully find user by email")
     void getUserByEmail() {
         when(userRepository.findByEmail("ivan@mail.ru"))
                 .thenReturn(Optional.of(user));
 
         User userToCompare = userServiceImpl.getUserByEmail("ivan@mail.ru");
 
-        assertThat(user.getEmail()).isNotNull();
-        assert(userToCompare.getEmail().equals("ivan@mail.ru"));
-        assert(userToCompare.equals(user));
+        assertThat(userToCompare.getEmail()).isNotNull();
+        assertEquals(userToCompare.getEmail(), "ivan@mail.ru");
+        assertEquals(userToCompare, user);
     }
 }

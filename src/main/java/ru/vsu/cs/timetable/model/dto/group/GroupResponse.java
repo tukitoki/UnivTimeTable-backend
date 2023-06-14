@@ -13,7 +13,10 @@ import lombok.experimental.SuperBuilder;
 @Schema(description = "Ифнормация о группе (только группа и курс)")
 public class GroupResponse {
 
+    @Schema(description = "Id группы", example = "1")
     private Long id;
-    private Integer groupNumber;
+    @Schema(description = "Курс группы", example = "1")
     private Integer courseNumber;
+    @Schema(description = "Номер группы", example = "1")
+    private Integer groupNumber;
 }
