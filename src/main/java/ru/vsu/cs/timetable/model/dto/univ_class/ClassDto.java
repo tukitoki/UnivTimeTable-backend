@@ -41,22 +41,18 @@ public class ClassDto {
     @Schema(description = "Название предмета", example = "Электродинамика")
     private String subjectName;
     @NotNull
-    @NotBlank
     @Schema(description = "Изначальное время", example = "13:25")
     private LocalTime startTime;
     @Schema(description = "Конечное время", example = "15:00")
     private LocalTime endTime;
     @NotNull
-    @NotBlank
     @Max(value = 2000)
     @Schema(description = "Номер аудитории", example = "243")
     private Integer audience;
     @NotNull
-    @NotBlank
     @Schema(description = "День недели", example = "Понедельник")
     private DayOfWeekEnum dayOfWeek;
     @NotNull
-    @NotBlank
     @Schema(description = "Тип пары", example = "Лекция")
     private TypeClass typeOfClass;
     @Schema(description = "Тип недели", example = "Числитель")

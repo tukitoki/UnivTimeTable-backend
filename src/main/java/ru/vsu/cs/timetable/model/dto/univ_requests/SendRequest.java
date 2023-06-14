@@ -30,12 +30,10 @@ public class SendRequest {
     @Schema(description = "Группа для проведения пары")
     private GroupResponse groupResponse;
     @NotNull
-    @NotBlank
     @Max(value = 9)
     @Schema(description = "Количество часов в неделю", example = "1.5")
     private BigDecimal subjectHourPerWeek;
     @NotNull
-    @NotBlank
     @Schema(description = "Тип пары", example = "Лекция")
     private TypeClass typeClass;
     @Schema(description = "Инвентарь, нужный для проведения пары", example = "[\"Компьютеры\", \"Проектор\"]")
