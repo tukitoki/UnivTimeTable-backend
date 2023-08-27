@@ -29,7 +29,9 @@ import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.mapper.UniversityMapper;
 import ru.vsu.cs.timetable.model.mapper.UserMapper;
+import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.GroupRepository;
+import ru.vsu.cs.timetable.repository.RequestRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -49,6 +51,8 @@ public class UserServiceImpl implements UserService {
     private final UniversityMapper universityMapper;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final RequestRepository requestRepository;
+    private final ClassRepository classRepository;
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
 
@@ -215,6 +219,11 @@ public class UserServiceImpl implements UserService {
             groupRepository.save(user.getGroup());
         }
 
+        if (user.getRole() == UserRole.LECTURER) {
+            deleteRequests(user);
+            deleteClasses(user);
+        }
+
         userRepository.delete(user);
 
         log.info("user: {}, was successfully deleted", user);
@@ -313,6 +322,14 @@ public class UserServiceImpl implements UserService {
     private List<UserRole> getAllRoles() {
         return Arrays.stream(UserRole.values())
                 .toList();
+    }
+
+    public void deleteRequests(User lecturer) {
+        requestRepository.deleteAll(requestRepository.findAllByLecturer(lecturer));
+    }
+
+    public void deleteClasses(User lecturer) {
+        classRepository.deleteAll(classRepository.findAllByLecturer(lecturer));
     }
 
     private void validCreatingUser(UserRole role, Long univId, Long facultyId, Long groupId) {
