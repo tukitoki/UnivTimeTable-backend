@@ -27,7 +27,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: context
+      - name: okteto context
         uses: okteto/context@latest
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
