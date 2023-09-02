@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
@@ -192,6 +193,8 @@ public interface UserApi {
     )
     ResponseEntity<Void> deleteUser(
             @Parameter(description = "Id пользователя для удаления", example = "1")
-            Long id
+            Long id,
+            @Parameter(hidden = true)
+            Authentication authentication
     );
 }

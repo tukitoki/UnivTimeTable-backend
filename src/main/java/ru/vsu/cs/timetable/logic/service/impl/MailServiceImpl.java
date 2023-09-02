@@ -12,11 +12,14 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.vsu.cs.timetable.model.entity.Class;
+import ru.vsu.cs.timetable.model.entity.Equipment;
 import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.logic.service.MailService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -49,6 +52,39 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
+    public void sendAudienceWasDeleted(String to) {
+        try {
+            String messageText = "Аудитория была удалена. " +
+                    "Выберите новую аудиторию для проведения пары.";
+            sendMessage(to, "Аудитория была удалена", messageText);
+        } catch (MessagingException e) {
+            log.error("Error occurred", e);
+        }
+    }
+
+    @Override
+    public void sendAudienceWasUpdated(String to, Set<String> changedEquipments, Integer changedNumber, Long changedCapacity) {
+        try {
+            StringBuilder messageText = new StringBuilder("Аудитория была обновлена.");
+            if (changedEquipments != null) {
+                messageText.append("Следующее оборудование было убрано: ")
+                        .append(String.join(", ", changedEquipments)).append("\n");
+            }
+            if (changedNumber != null) {
+                messageText.append("Номер аудитории был изменен: ")
+                        .append(changedNumber).append("\n");
+            }
+            if (changedCapacity != null) {
+                messageText.append("Размер аудитории был изменен: ")
+                        .append(changedCapacity);
+            }
+            sendMessage(to, "Аудитория была обновлена", messageText.toString());
+        } catch (MessagingException e) {
+            log.error("Error occurred", e);
+        }
+    }
+
+    @Override
     public void sendTimetableCantMade(String to, String summaryViolations) {
         try {
             String messageText = "Расписание не смогло составиться из-за внутренних проблем." +
@@ -56,7 +92,7 @@ public class MailServiceImpl implements MailService {
                     "Передайте информацию администратору";
             sendMessage(to, "Расписание не смогло составиться", messageText);
         } catch (MessagingException e) {
-            log.error("Error occurred");
+            log.error("Error occurred", e);
         }
     }
 

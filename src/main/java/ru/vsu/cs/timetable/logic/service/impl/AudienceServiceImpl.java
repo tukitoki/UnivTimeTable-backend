@@ -2,13 +2,16 @@ package ru.vsu.cs.timetable.logic.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.exception.AudienceException;
 import ru.vsu.cs.timetable.exception.EquipmentException;
 import ru.vsu.cs.timetable.logic.service.AudienceService;
 import ru.vsu.cs.timetable.logic.service.FacultyService;
+import ru.vsu.cs.timetable.logic.service.MailService;
 import ru.vsu.cs.timetable.logic.service.UniversityService;
+import ru.vsu.cs.timetable.model.dto.audience.AudienceDto;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.model.dto.week_time.DayTimes;
@@ -25,6 +28,7 @@ import ru.vsu.cs.timetable.utils.TimeUtils;
 
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -34,6 +38,7 @@ public class AudienceServiceImpl implements AudienceService {
 
     private final UniversityService universityService;
     private final FacultyService facultyService;
+    private final MailService mailService;
     private final AudienceMapper audienceMapper;
     private final AudienceRepository audienceRepository;
     private final EquipmentRepository equipmentRepository;
@@ -50,20 +55,97 @@ public class AudienceServiceImpl implements AudienceService {
         }
         Set<Equipment> equipment = new LinkedHashSet<>();
 
-        createAudienceRequest.getEquipments().forEach(equipmentName -> {
-            var optionalEquipment = equipmentRepository.findByDisplayNameIgnoreCase(equipmentName);
+        if (createAudienceRequest.getEquipments() != null) {
+            createAudienceRequest.getEquipments().forEach(equipmentName -> {
+                var optionalEquipment = equipmentRepository.findByDisplayNameIgnoreCase(equipmentName);
 
-            if (optionalEquipment.isEmpty()) {
-                throw EquipmentException.CODE.EQUIPMENT_NOT_EXIST.get();
-            }
-            equipment.add(optionalEquipment.get());
-        });
+                if (optionalEquipment.isEmpty()) {
+                    throw EquipmentException.CODE.EQUIPMENT_NOT_EXIST.get();
+                }
+                equipment.add(optionalEquipment.get());
+            });
+        }
 
         Audience audience = audienceMapper.toEntity(createAudienceRequest, univ, faculty, equipment);
 
         audience = audienceRepository.save(audience);
 
         log.info("audience was saved {}", audience);
+    }
+
+    @Override
+    public AudienceDto getAudienceById(Long id) {
+        Audience audience = audienceRepository.findById(id)
+                .orElseThrow(AudienceException.CODE.ID_NOT_FOUND::get);
+
+        return audienceMapper.toDto(audience);
+    }
+
+    @Override
+    public void deleteAudience(Long id) {
+        Audience audience = audienceRepository.findById(id)
+                .orElseThrow(AudienceException.CODE.ID_NOT_FOUND::get);
+
+        var classes = audience.getClasses();
+        classes.forEach(it -> {
+            it.setAudience(null);
+            mailService.sendAudienceWasDeleted(it.getLecturer().getEmail());
+        });
+
+        audienceRepository.deleteById(id);
+
+        log.info("audience {} was successfully deleted", audience);
+    }
+
+    @Override
+    public void updateAudience(AudienceDto audienceDto, Long id) {
+        Audience oldAudience = audienceRepository.findById(id)
+                .orElseThrow(AudienceException.CODE.ID_NOT_FOUND::get);
+
+        var equipments = new HashSet<Equipment>();
+        if (audienceDto.getEquipments() != null) {
+            audienceDto.getEquipments().forEach(equipName -> {
+                var equipment = equipmentRepository.findByDisplayNameIgnoreCase(equipName)
+                        .orElseThrow(EquipmentException.CODE.EQUIPMENT_NOT_EXIST::get);
+                equipments.add(equipment);
+            });
+        }
+
+        Audience newAudience = audienceMapper.toEntity(audienceDto, equipments);
+
+        var optionalAudience = audienceRepository.findByAudienceNumberAndFaculty(audienceDto.getAudienceNumber(), oldAudience.getFaculty());
+        if (optionalAudience.isPresent() && !oldAudience.getAudienceNumber().equals(audienceDto.getAudienceNumber())) {
+            throw AudienceException.CODE.AUDIENCE_ALREADY_EXIST.get();
+        }
+
+        var changedEquipments = oldAudience.getEquipments().equals(equipments)
+                ? null
+                : equipments.stream()
+                .map(Equipment::getDisplayName)
+                .collect(Collectors.toSet());
+        var changedNumber = oldAudience.getAudienceNumber().equals(newAudience.getAudienceNumber())
+                ? null
+                : newAudience.getAudienceNumber();
+        var changedCapacity = oldAudience.getCapacity().equals(newAudience.getCapacity())
+                ? null
+                : newAudience.getCapacity();
+
+        BeanUtils.copyProperties(newAudience, oldAudience, "id", "faculty", "university", "classes");
+
+        oldAudience = audienceRepository.save(oldAudience);
+
+        if (!oldAudience.getClasses().isEmpty()) {
+            oldAudience.getClasses().forEach(it -> {
+                mailService.sendAudienceWasUpdated(
+                        it.getLecturer().getEmail(),
+                        changedEquipments,
+                        changedNumber,
+                        changedCapacity
+                );
+            });
+        }
+
+        log.info("audience {} was successfully updated", oldAudience);
     }
 
     @Override

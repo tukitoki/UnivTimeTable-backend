@@ -56,7 +56,7 @@ public class Class {
     private User lecturer;
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "audience_id", nullable = false)
+    @JoinColumn(name = "audience_id", nullable = true)
     private Audience audience;
     @ManyToOne
     @JoinColumn(name = "timetable_id", nullable = false)

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
+import ru.vsu.cs.timetable.model.dto.audience.AudienceDto;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 
@@ -66,6 +67,97 @@ public interface AudienceApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
+                    description = "Успешный возврат аудитории",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AudienceDto.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Аудитория по переданному id не был найден",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Получение аудитории по id"
+    )
+    ResponseEntity<AudienceDto> getAudienceById(
+            @Parameter(description = "Id аудитории", example = "1")
+            Long id
+    );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное удаление аудитории"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Аудитория по переданному id не была найдена",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Удаляет аудитория по id"
+    )
+    ResponseEntity<Void> deleteAudience(
+            @Parameter(description = "Id аудитоии, которую нужно удалить", example = "1")
+            Long id
+    );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное обновление аудитории"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = """
+                            Аудитория с таким номером в этом вузе на этом факультете уже существует, \t
+                            Не пройдена валидация
+                            """,
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )}
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Аудитория по переданному id не была найдена",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )}
+            )}
+    )
+    @Operation(
+            summary = "Обновляет аудиотрию конкретного факультета"
+    )
+    ResponseEntity<Void> updateAudience(
+            @Parameter(description = "Измененная версия аудитории")
+            AudienceDto audienceDto,
+            @Parameter(description = "Id аудитории, которую нужно обновить", example = "1")
+            Long id
+    );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
                     description = "Успешный возврат аудиторий"
             ),
             @ApiResponse(
@@ -102,4 +194,6 @@ public interface AudienceApi {
             summary = "Возвращает возможный инвентарь аудитории"
     )
     ResponseEntity<List<String>> getAvailableEquipments();
+
+
 }
