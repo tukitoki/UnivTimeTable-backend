@@ -62,6 +62,7 @@ public class AudienceMapper {
 
     public AudienceResponse toResponse(Audience audience) {
         return AudienceResponse.builder()
+                .id(audience.getId())
                 .audienceNumber(audience.getAudienceNumber())
                 .capacity(audience.getCapacity())
                 .equipments(audience.getEquipments().stream()

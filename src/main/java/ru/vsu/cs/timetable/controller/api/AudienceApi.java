@@ -111,7 +111,7 @@ public interface AudienceApi {
             )
     })
     @Operation(
-            summary = "Удаляет аудитория по id"
+            summary = "Удаляет аудиторию по id"
     )
     ResponseEntity<Void> deleteAudience(
             @Parameter(description = "Id аудитоии, которую нужно удалить", example = "1")

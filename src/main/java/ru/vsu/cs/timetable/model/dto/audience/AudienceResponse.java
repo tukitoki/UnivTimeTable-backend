@@ -13,6 +13,8 @@ import java.util.Set;
 @Schema(description = "Аудитория с характеристиками")
 public class AudienceResponse {
 
+    @Schema(description = "Id аудитории", example = "1")
+    private Long id;
     @Schema(description = "Номер аудитории", example = "243")
     private Integer audienceNumber;
     @Schema(description = "Вместимость аудитории", example = "40")
