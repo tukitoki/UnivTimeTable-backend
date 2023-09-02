@@ -12,14 +12,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.vsu.cs.timetable.model.entity.Class;
-import ru.vsu.cs.timetable.model.entity.Equipment;
 import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.logic.service.MailService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j

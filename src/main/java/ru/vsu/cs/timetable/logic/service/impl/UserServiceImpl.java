@@ -212,8 +212,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(Long id, String username) {
         User user = getUserById(id);
+
+        if (user.getUsername().equals(username)) {
+            throw UserException.CODE.CANT_DELETE_YOURSELF.get();
+        }
+
         if (user.getGroup() != null) {
             user.getGroup().setStudentsAmount(user.getGroup().getStudentsAmount() - 1);
             groupRepository.save(user.getGroup());

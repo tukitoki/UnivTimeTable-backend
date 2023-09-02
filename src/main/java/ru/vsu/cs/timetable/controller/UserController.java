@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UserApi;
 import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
@@ -91,8 +92,11 @@ public class UserController implements UserApi {
     @Override
     @PreAuthorize("hasAuthority('CREATE_USER_AUTHORITY')")
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id,
+                                           Authentication authentication) {
+        String username = authentication.getName();
+
+        userService.deleteUser(id, username);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

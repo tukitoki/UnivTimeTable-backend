@@ -5,6 +5,7 @@ public class UserException extends RuntimeException {
         USERNAME_NOT_FOUND("User with given username not found"),
         EMAIL_NOT_FOUND("User with given email not found"),
         ID_NOT_FOUND("User with given id not found"),
+        CANT_DELETE_YOURSELF("Admin cant delete yourself"),
         USERNAME_ALREADY_PRESENT("User with given username already present"),
         EMAIL_ALREADY_PRESENT("User with given email already present"),
         ADMIN_CANT_HAVE_UNIV("Admin can't have university"),

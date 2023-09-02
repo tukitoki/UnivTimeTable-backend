@@ -29,7 +29,7 @@ public interface UserService {
     void updateUser(@NotNull @Valid UserDto userDto,
                     @NotNull Long id);
 
-    void deleteUser(@NotNull Long id);
+    void deleteUser(@NotNull Long id, @NotNull String username);
 
     User getUserById(@NotNull Long id);
 
