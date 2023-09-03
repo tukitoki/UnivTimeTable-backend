@@ -1,7 +1,7 @@
 package ru.vsu.cs.timetable.repository;
 
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.vsu.cs.timetable.model.entity.Audience;
 import ru.vsu.cs.timetable.model.entity.Faculty;
 import ru.vsu.cs.timetable.model.entity.University;
@@ -9,7 +9,7 @@ import ru.vsu.cs.timetable.model.entity.University;
 import java.util.List;
 import java.util.Optional;
 
-public interface AudienceRepository extends CrudRepository<Audience, Long> {
+public interface AudienceRepository extends JpaRepository<Audience, Long> {
 
     Optional<Audience> findByAudienceNumberAndUniversityAndFaculty(@NotNull Integer audienceNumber,
                                                                    @NotNull University university,

@@ -3,6 +3,8 @@ package ru.vsu.cs.timetable.logic.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.exception.AudienceException;
@@ -12,8 +14,10 @@ import ru.vsu.cs.timetable.logic.service.FacultyService;
 import ru.vsu.cs.timetable.logic.service.MailService;
 import ru.vsu.cs.timetable.logic.service.UniversityService;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceDto;
+import ru.vsu.cs.timetable.model.dto.audience.AudiencePageDto;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
+import ru.vsu.cs.timetable.model.dto.page.PageModel;
 import ru.vsu.cs.timetable.model.dto.week_time.DayTimes;
 import ru.vsu.cs.timetable.model.entity.Audience;
 import ru.vsu.cs.timetable.model.entity.Class;
@@ -42,6 +46,25 @@ public class AudienceServiceImpl implements AudienceService {
     private final AudienceMapper audienceMapper;
     private final AudienceRepository audienceRepository;
     private final EquipmentRepository equipmentRepository;
+
+    @Override
+    public AudiencePageDto getAudiencesByFaculty(int currentPage, int pageSize, Long facultyId) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+
+        var page = audienceRepository.findAll(pageable);
+
+        List<AudienceResponse> audienceResponses = page.getContent()
+                .stream()
+                .map(audienceMapper::toResponse)
+                .toList();
+
+        var pageModel = PageModel.of(audienceResponses, currentPage, page.getTotalElements(),
+                pageSize, page.getTotalPages());
+
+        return AudiencePageDto.builder()
+                .audiencesPage(pageModel)
+                .build();
+    }
 
     @Override
     public void createAudience(CreateAudienceRequest createAudienceRequest,

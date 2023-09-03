@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.AudienceApi;
 import ru.vsu.cs.timetable.logic.service.AudienceService;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceDto;
+import ru.vsu.cs.timetable.model.dto.audience.AudiencePageDto;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 
@@ -19,6 +20,17 @@ import java.util.List;
 public class AudienceController implements AudienceApi {
 
     private final AudienceService audienceService;
+
+    @Override
+    @GetMapping("/faculty/{facultyId}/audiences")
+    public ResponseEntity<AudiencePageDto> getAudiencesByFaculty(@RequestParam int currentPage,
+                                                                 @RequestParam int pageSize,
+                                                                 @PathVariable Long facultyId) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(audienceService.getAudiencesByFaculty(currentPage, pageSize, facultyId));
+    }
 
     @Override
     @PostMapping("/university/{univId}/faculty/{facultyId}/audience/create")
@@ -62,7 +74,7 @@ public class AudienceController implements AudienceApi {
     }
 
     @Override
-    @GetMapping("/faculty/{facultyId}/audiences")
+    @GetMapping("/faculty/{facultyId}/audiences/all")
     public ResponseEntity<List<AudienceResponse>> getAllAudiencesByFaculty(@PathVariable Long facultyId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
