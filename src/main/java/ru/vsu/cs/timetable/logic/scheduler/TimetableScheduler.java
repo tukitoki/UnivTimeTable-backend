@@ -31,7 +31,7 @@ public class TimetableScheduler {
             if (user.getRole() == ADMIN) {
                 continue;
             }
-            if (user.getRole() == LECTURER && classRepository.findAllByLecturer(user).isEmpty()) {
+            if ((user.getRole() == LECTURER || user.getRole() == LECTURER_SCHEDULER) && classRepository.findAllByLecturer(user).isEmpty()) {
                 continue;
             }
             if (user.getRole() == HEADMAN) {

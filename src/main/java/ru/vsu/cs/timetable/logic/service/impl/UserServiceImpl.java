@@ -224,7 +224,7 @@ public class UserServiceImpl implements UserService {
             groupRepository.save(user.getGroup());
         }
 
-        if (user.getRole() == UserRole.LECTURER) {
+        if (user.getRole() == UserRole.LECTURER || user.getRole() == UserRole.LECTURER_SCHEDULER) {
             deleteRequests(user);
             deleteClasses(user);
         }
@@ -348,7 +348,7 @@ public class UserServiceImpl implements UserService {
             if (groupId != null) {
                 throw UserException.CODE.ADMIN_CANT_HAVE_GROUP.get();
             }
-        } else if (role == UserRole.LECTURER) {
+        } else if (role == UserRole.LECTURER || role == UserRole.LECTURER_SCHEDULER) {
             if (univId == null) {
                 throw UserException.CODE.LECTURER_SHOULD_HAVE_UNIVERSITY.get();
             }

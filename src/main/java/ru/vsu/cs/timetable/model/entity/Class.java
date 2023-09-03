@@ -88,7 +88,7 @@ public class Class {
                 ", " + lecturer.getFullName() +
                 ", " + typeClass +
                 ", Аудитория: " + audience.getAudienceNumber());
-        if (userRole == UserRole.LECTURER) {
+        if (userRole == UserRole.LECTURER || userRole == UserRole.LECTURER_SCHEDULER) {
             String groups = ", " + getGroups().stream()
                     .collect(
                             Collectors.groupingBy(
