@@ -23,8 +23,8 @@ public class AudienceController implements AudienceApi {
 
     @Override
     @GetMapping("/faculty/{facultyId}/audiences")
-    public ResponseEntity<AudiencePageDto> getAudiencesByFaculty(@RequestParam int currentPage,
-                                                                 @RequestParam int pageSize,
+    public ResponseEntity<AudiencePageDto> getAudiencesByFaculty(@RequestParam(defaultValue = "1") int currentPage,
+                                                                 @RequestParam(defaultValue = "10") int pageSize,
                                                                  @PathVariable Long facultyId) {
 
         return ResponseEntity
