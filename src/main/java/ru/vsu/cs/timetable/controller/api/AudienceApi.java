@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceDto;
+import ru.vsu.cs.timetable.model.dto.audience.AudiencePageDto;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 
@@ -22,6 +23,30 @@ import java.util.List;
 @SecurityRequirement(name = "bearer-key")
 @Tag(name = "Audience API", description = "API для работы с аудиториями")
 public interface AudienceApi {
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешный возврат аудиторий",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AudiencePageDto.class)
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Возвращает список аудиторий"
+    )
+    ResponseEntity<AudiencePageDto> getAudiencesByFaculty(
+            @Parameter(description = "Номер страницы", example = "1")
+            int currentPage,
+            @Parameter(description = "Количество элементов на странице", example = "10")
+            int pageSize,
+            @Parameter(description = "Id факультета, аудитории которого нужны", example = "1")
+            Long facultyId
+    );
 
     @ApiResponses(value = {
             @ApiResponse(
@@ -194,6 +219,4 @@ public interface AudienceApi {
             summary = "Возвращает возможный инвентарь аудитории"
     )
     ResponseEntity<List<String>> getAvailableEquipments();
-
-
 }
