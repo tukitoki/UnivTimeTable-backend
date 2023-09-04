@@ -23,6 +23,18 @@ public class FacultyController implements FacultyApi {
     private final FacultyService facultyService;
 
     @Override
+    @GetMapping("/v2/{univId}/faculties")
+    public ResponseEntity<List<FacultyDto>> getFacultiesByUniversity(
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "ASC") SortDirection order,
+            @PathVariable Long univId
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(facultyService.getFacultiesByUniversityV2(name, order, univId));
+    }
+
+    @Override
     @GetMapping("/{univId}/faculties")
     public ResponseEntity<FacultyPageDto> getFacultiesByUniversity(
             @RequestParam(defaultValue = "1") int currentPage,

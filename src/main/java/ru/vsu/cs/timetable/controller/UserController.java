@@ -7,10 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.UserApi;
-import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
-import ru.vsu.cs.timetable.model.dto.user.UserDto;
-import ru.vsu.cs.timetable.model.dto.user.UserPageDto;
-import ru.vsu.cs.timetable.model.dto.user.UserResponse;
+import ru.vsu.cs.timetable.model.dto.user.*;
 import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.logic.service.UserService;
 
@@ -22,6 +19,20 @@ import java.util.List;
 public class UserController implements UserApi {
 
     private final UserService userService;
+
+    @Override
+    @PreAuthorize("hasAuthority('CREATE_USER_AUTHORITY')")
+    @GetMapping("/v2/users")
+    public ResponseEntity<UserViewDto> getAllUsers(
+            @RequestParam(required = false) String university,
+            @RequestParam(required = false) UserRole role,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String name
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getAllUsersV2(university, role, city, name));
+    }
 
     @Override
     @PreAuthorize("hasAuthority('CREATE_USER_AUTHORITY')")

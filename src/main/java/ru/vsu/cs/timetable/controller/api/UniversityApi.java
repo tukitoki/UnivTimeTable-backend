@@ -2,6 +2,7 @@ package ru.vsu.cs.timetable.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,14 +12,41 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
+import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.model.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.model.dto.university.UniversityPageDto;
+
+import java.util.List;
 
 @AccessDeniedResponse
 @SecurityRequirement(name = "bearer-key")
 @Tag(name = "University API", description = "API для работы с университетами")
 public interface UniversityApi {
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешный возврат университетов",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = FacultyDto.class)
+                                    )
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Возвращает список университетов с фильтрацией и поиском"
+    )
+    ResponseEntity<List<UniversityDto>> getAllUniversities(
+            @Parameter(description = "Имя университета для поиска", example = "Воронежский государственный университет")
+            String universityName,
+            @Parameter(description = "Сортировка по алфавиту")
+            SortDirection order
+    );
 
     @ApiResponses(value = {
             @ApiResponse(

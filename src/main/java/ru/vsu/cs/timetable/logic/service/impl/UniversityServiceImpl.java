@@ -41,9 +41,19 @@ public class UniversityServiceImpl implements UniversityService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<UniversityDto> getAllUniversitiesV2(String universityName, SortDirection order) {
+        Page<University> page = filerPage(1, 10, universityName, order, false);
+        return page.getContent()
+                .stream()
+                .map(universityMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public UniversityPageDto getAllUniversities(int currentPage, int pageSize,
                                                 String universityName, SortDirection order) {
-        Page<University> page = filerPage(currentPage, pageSize, universityName, order);
+        Page<University> page = filerPage(currentPage, pageSize, universityName, order, true);
 
         List<UniversityDto> universityDtos = page.getContent()
                 .stream()
@@ -135,8 +145,8 @@ public class UniversityServiceImpl implements UniversityService {
         log.info("university: {}, was successful deleted", university);
     }
 
-    private Page<University> filerPage(int currentPage, int pageSize,
-                                       String universityName, SortDirection order) {
+    private Page<University> filerPage(int currentPage, int pageSize, String universityName,
+                                       SortDirection order, boolean isPageable) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -160,14 +170,22 @@ public class UniversityServiceImpl implements UniversityService {
         query.orderBy(orderList);
 
         TypedQuery<University> typedQuery = entityManager.createQuery(query);
-        typedQuery.setFirstResult((int) pageable.getOffset());
-        typedQuery.setMaxResults(pageable.getPageSize());
+        if (isPageable) {
+            typedQuery.setFirstResult((int) pageable.getOffset());
+            typedQuery.setMaxResults(pageable.getPageSize());
+        }
 
         List<University> universities = typedQuery.getResultList();
 
         long count = countFilteredUniversities(universityName);
 
-        return new PageImpl<>(universities, pageable, count);
+        return new PageImpl<>(
+                universities,
+                isPageable
+                        ? pageable
+                        : PageRequest.of(currentPage - 1, (int) count),
+                count
+        );
     }
 
 

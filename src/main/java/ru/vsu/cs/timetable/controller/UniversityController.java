@@ -11,6 +11,8 @@ import ru.vsu.cs.timetable.model.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.model.dto.university.UniversityPageDto;
 import ru.vsu.cs.timetable.logic.service.UniversityService;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_UNIVERSITY_AUTHORITY')")
 @RequestMapping("/universities")
@@ -20,7 +22,18 @@ public class UniversityController implements UniversityApi {
     private final UniversityService universityService;
 
     @Override
-    @GetMapping()
+    @GetMapping("/v2")
+    public ResponseEntity<List<UniversityDto>> getAllUniversities(
+            @RequestParam(required = false) String universityName,
+            @RequestParam(defaultValue = "ASC") SortDirection order
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(universityService.getAllUniversitiesV2(universityName, order));
+    }
+
+    @Override
+    @GetMapping
     public ResponseEntity<UniversityPageDto> getAllUniversities(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,

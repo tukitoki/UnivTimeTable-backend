@@ -20,10 +20,7 @@ import ru.vsu.cs.timetable.logic.service.UniversityService;
 import ru.vsu.cs.timetable.logic.service.UserService;
 import ru.vsu.cs.timetable.model.dto.page.PageModel;
 import ru.vsu.cs.timetable.model.dto.university.UniversityResponse;
-import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
-import ru.vsu.cs.timetable.model.dto.user.UserDto;
-import ru.vsu.cs.timetable.model.dto.user.UserPageDto;
-import ru.vsu.cs.timetable.model.dto.user.UserResponse;
+import ru.vsu.cs.timetable.model.dto.user.*;
 import ru.vsu.cs.timetable.model.entity.University;
 import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.model.enums.UserRole;
@@ -57,10 +54,34 @@ public class UserServiceImpl implements UserService {
     private final EntityManager entityManager;
 
     @Override
+    public UserViewDto getAllUsersV2(String university, UserRole role, String city, String name) {
+        Page<User> page = filerPage(1, 10, university, role, city, name, false);
+
+        List<UserResponse> userResponses = page.getContent()
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+
+        List<UserRole> userRoles = getAllRoles();
+        List<String> univNames = universityService.findAllUniversities()
+                .stream()
+                .map(University::getName)
+                .toList();
+        List<String> userCities = userRepository.findAllUserCities();
+
+        return UserViewDto.builder()
+                .users(userResponses)
+                .roles(userRoles)
+                .universities(univNames)
+                .cities(userCities)
+                .build();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public UserPageDto getAllUsers(int currentPage, int pageSize, String university,
                                    UserRole role, String city, String name) {
-        Page<User> page = filerPage(currentPage, pageSize, university, role, city, name);
+        Page<User> page = filerPage(currentPage, pageSize, university, role, city, name, true);
 
         List<UserResponse> userResponses = page.getContent()
                 .stream()
@@ -255,7 +276,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Page<User> filerPage(int currentPage, int pageSize, String university,
-                                 UserRole role, String city, String name) {
+                                 UserRole role, String city, String name, boolean isPageable) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -285,13 +306,21 @@ public class UserServiceImpl implements UserService {
         query.orderBy(orderList);
 
         TypedQuery<User> typedQuery = entityManager.createQuery(query);
-        typedQuery.setFirstResult((int) pageable.getOffset());
-        typedQuery.setMaxResults(pageable.getPageSize());
+        if (isPageable) {
+            typedQuery.setFirstResult((int) pageable.getOffset());
+            typedQuery.setMaxResults(pageable.getPageSize());
+        }
 
         List<User> users = typedQuery.getResultList();
         long count = countFilteredUsers(university, role, city, name);
 
-        return new PageImpl<>(users, pageable, count);
+        return new PageImpl<>(
+                users,
+                isPageable
+                        ? pageable
+                        : PageRequest.of(currentPage - 1, (int) count),
+                count
+        );
     }
 
 

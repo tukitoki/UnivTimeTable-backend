@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.timetable.controller.api.GroupApi;
 import ru.vsu.cs.timetable.model.dto.group.GroupDto;
 import ru.vsu.cs.timetable.model.dto.group.GroupPageDto;
+import ru.vsu.cs.timetable.model.dto.group.GroupViewDto;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.logic.service.GroupService;
 
@@ -18,6 +19,19 @@ import ru.vsu.cs.timetable.logic.service.GroupService;
 public class GroupController implements GroupApi {
 
     private final GroupService groupService;
+
+    @Override
+    @GetMapping("/v2/{facultyId}/groups")
+    public ResponseEntity<GroupViewDto> getFacultyGroups(
+            @RequestParam(required = false) Integer course,
+            @RequestParam(required = false) Integer groupNumber,
+            @RequestParam(defaultValue = "ASC") SortDirection order,
+            @PathVariable Long facultyId
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(groupService.getFacultyGroupsV2(course, groupNumber, order, facultyId));
+    }
 
     @Override
     @GetMapping("/{facultyId}/groups")

@@ -31,6 +31,32 @@ public interface FacultyApi {
                     content = {
                             @Content(
                                     mediaType = "application/json",
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = FacultyDto.class)
+                                    )
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Возвращает список факультетов с фильтрацией и поиском"
+    )
+    ResponseEntity<List<FacultyDto>> getFacultiesByUniversity(
+            @Parameter(description = "Название факультета для поиска", example = "Факультет компьютерных наук")
+            String name,
+            @Parameter(description = "Сортировка по алфавиту")
+            SortDirection order,
+            @Parameter(description = "Id университета, факультеты которого нужны", example = "1")
+            Long universityId
+    );
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешный возврат факультетов",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
                                     schema = @Schema(implementation = FacultyPageDto.class)
                             )
                     }
