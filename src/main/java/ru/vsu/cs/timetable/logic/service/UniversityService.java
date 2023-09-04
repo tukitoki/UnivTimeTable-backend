@@ -13,6 +13,8 @@ import java.util.List;
 @Validated
 public interface UniversityService {
 
+    List<UniversityDto> getAllUniversitiesV2(String universityName, SortDirection order);
+
     UniversityPageDto getAllUniversities(int currentPage, int pageSize,
                                          String universityName, SortDirection order);
 

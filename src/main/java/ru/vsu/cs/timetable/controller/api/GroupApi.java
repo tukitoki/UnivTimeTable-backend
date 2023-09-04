@@ -13,12 +13,39 @@ import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
 import ru.vsu.cs.timetable.model.dto.group.GroupDto;
 import ru.vsu.cs.timetable.model.dto.group.GroupPageDto;
+import ru.vsu.cs.timetable.model.dto.group.GroupViewDto;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 
 @AccessDeniedResponse
 @SecurityRequirement(name = "bearer-key")
 @Tag(name = "Group API", description = "API для работы с группами факульетов")
 public interface GroupApi {
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешный возврат групп",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = GroupViewDto.class)
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Возвращает список групп с фильтрацией и поиском"
+    )
+    ResponseEntity<GroupViewDto> getFacultyGroups(
+            @Parameter(description = "Курс для фильтрации", example = "1")
+            Integer course,
+            @Parameter(description = "Номер группы для фильтрации", example = "1")
+            Integer groupNumber,
+            @Parameter(description = "Сортировка по курсу")
+            SortDirection order,
+            @Parameter(description = "Id факультета, группы которого нужны", example = "1")
+            Long facultyId
+    );
 
     @ApiResponses(value = {
             @ApiResponse(

@@ -14,6 +14,9 @@ import java.util.List;
 @Validated
 public interface FacultyService {
 
+    List<FacultyDto> getFacultiesByUniversityV2(String name, SortDirection order,
+                                                @NotNull Long univId);
+
     FacultyPageDto getFacultiesByUniversity(int currentPage, int pageSize, String name,
                                             SortDirection order, @NotNull Long univId);
 
