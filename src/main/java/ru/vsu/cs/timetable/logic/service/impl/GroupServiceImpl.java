@@ -247,7 +247,13 @@ public class GroupServiceImpl implements GroupService {
                 groups,
                 isPageable
                         ? pageable
-                        : PageRequest.of(currentPage - 1, (int) count),
+                        : PageRequest.of
+                        (
+                                currentPage - 1,
+                                count > 1
+                                        ? (int) count
+                                        : 1
+                        ),
                 count
         );
     }

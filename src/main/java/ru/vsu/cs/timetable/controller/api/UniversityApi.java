@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
-import ru.vsu.cs.timetable.model.dto.faculty.FacultyDto;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.model.dto.university.UniversityDto;
 import ru.vsu.cs.timetable.model.dto.university.UniversityPageDto;
@@ -32,7 +31,7 @@ public interface UniversityApi {
                             @Content(
                                     mediaType = "application/json",
                                     array = @ArraySchema(
-                                            schema = @Schema(implementation = FacultyDto.class)
+                                            schema = @Schema(implementation = UniversityDto.class)
                                     )
                             )
                     }
