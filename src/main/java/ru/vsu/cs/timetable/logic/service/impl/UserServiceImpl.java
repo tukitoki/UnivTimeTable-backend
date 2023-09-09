@@ -318,7 +318,13 @@ public class UserServiceImpl implements UserService {
                 users,
                 isPageable
                         ? pageable
-                        : PageRequest.of(currentPage - 1, (int) count),
+                        : PageRequest.of
+                        (
+                                currentPage - 1,
+                                count > 1
+                                        ? (int) count
+                                        : 1
+                        ),
                 count
         );
     }
