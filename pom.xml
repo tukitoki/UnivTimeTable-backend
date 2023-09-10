@@ -5,7 +5,7 @@
 
     <groupId>ru.vsu.cs.timetable</groupId>
     <artifactId>UnivTimeTable-backend</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
     <name>UnivTimeTable-backend</name>
     <description>UnivTimeTable-backend</description>
 
