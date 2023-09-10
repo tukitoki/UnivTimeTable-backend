@@ -231,7 +231,7 @@ class UserServiceImplTest {
 
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(userToDelete));
-        userServiceImpl.deleteUser(1L);
+        userServiceImpl.deleteUser(1L, "");
 
         assertEquals(group.getStudentsAmount(), 1);
     }

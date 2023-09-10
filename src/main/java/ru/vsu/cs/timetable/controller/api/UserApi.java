@@ -10,12 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import ru.vsu.cs.timetable.config.swagger.annotation.AccessDeniedResponse;
 import ru.vsu.cs.timetable.exception.message.ErrorMessage;
-import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
-import ru.vsu.cs.timetable.model.dto.user.UserDto;
-import ru.vsu.cs.timetable.model.dto.user.UserPageDto;
-import ru.vsu.cs.timetable.model.dto.user.UserResponse;
+import ru.vsu.cs.timetable.model.dto.user.*;
 import ru.vsu.cs.timetable.model.enums.UserRole;
 
 import java.util.List;
@@ -24,6 +22,31 @@ import java.util.List;
 @SecurityRequirement(name = "bearer-key")
 @Tag(name = "User API", description = "API для работы с пользователем")
 public interface UserApi {
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешный возврат пользователей",
+                    content = {
+                            @Content(
+                                    schema = @Schema(implementation = UserViewDto.class)
+                            )
+                    }
+            )
+    })
+    @Operation(
+            summary = "Возвращает список пользователей с фильтрацией и поиском"
+    )
+    ResponseEntity<UserViewDto> getAllUsers(
+            @Parameter(description = "Вуз для фильтрации", example = "Воронежский государственный университет")
+            String universities,
+            @Parameter(description = "Роль для фильтрации", example = "Преподаватель")
+            UserRole role,
+            @Parameter(description = "Город для фильтрации", example = "Воронеж")
+            String city,
+            @Parameter(description = "ФИО для поиска", example = "Андреев Андрей Андреевич")
+            String name
+    );
 
     @ApiResponses(value = {
             @ApiResponse(
@@ -192,6 +215,8 @@ public interface UserApi {
     )
     ResponseEntity<Void> deleteUser(
             @Parameter(description = "Id пользователя для удаления", example = "1")
-            Long id
+            Long id,
+            @Parameter(hidden = true)
+            Authentication authentication
     );
 }

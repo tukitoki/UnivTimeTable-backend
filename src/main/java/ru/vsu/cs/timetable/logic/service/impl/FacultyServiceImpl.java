@@ -43,9 +43,20 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<FacultyDto> getFacultiesByUniversityV2(String name, SortDirection order, Long univId) {
+        Page<Faculty> page = filerPage(1, 10, name, order, univId, false);
+
+        return page.getContent()
+                .stream()
+                .map(facultyMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public FacultyPageDto getFacultiesByUniversity(int currentPage, int pageSize, String name,
                                                    SortDirection order, Long univId) {
-        Page<Faculty> page = filerPage(currentPage, pageSize, name, order, univId);
+        Page<Faculty> page = filerPage(currentPage, pageSize, name, order, univId, true);
 
         List<FacultyDto> facultyDtos = page.getContent()
                 .stream()
@@ -128,7 +139,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     private Page<Faculty> filerPage(int currentPage, int pageSize, String name,
-                                    SortDirection order, Long univId) {
+                                    SortDirection order, Long univId, boolean isPageable) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -156,14 +167,28 @@ public class FacultyServiceImpl implements FacultyService {
         query.orderBy(orderList);
 
         TypedQuery<Faculty> typedQuery = entityManager.createQuery(query);
-        typedQuery.setFirstResult((int) pageable.getOffset());
-        typedQuery.setMaxResults(pageable.getPageSize());
+        if (isPageable) {
+            typedQuery.setFirstResult((int) pageable.getOffset());
+            typedQuery.setMaxResults(pageable.getPageSize());
+        }
 
         List<Faculty> faculties = typedQuery.getResultList();
 
         long count = countFilteredFaculties(name, univId);
 
-        return new PageImpl<>(faculties, pageable, count);
+        return new PageImpl<>(
+                faculties,
+                isPageable
+                        ? pageable
+                        : PageRequest.of
+                        (
+                                currentPage - 1,
+                                count > 1
+                                        ? (int) count
+                                        : 1
+                        ),
+                count
+        );
     }
 
 

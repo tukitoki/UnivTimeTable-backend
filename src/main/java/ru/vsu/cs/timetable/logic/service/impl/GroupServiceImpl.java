@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.cs.timetable.model.dto.group.GroupDto;
 import ru.vsu.cs.timetable.model.dto.group.GroupPageDto;
+import ru.vsu.cs.timetable.model.dto.group.GroupViewDto;
 import ru.vsu.cs.timetable.model.dto.page.PageModel;
 import ru.vsu.cs.timetable.model.dto.page.SortDirection;
 import ru.vsu.cs.timetable.model.entity.Faculty;
@@ -50,9 +51,27 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(readOnly = true)
+    public GroupViewDto getFacultyGroupsV2(Integer course, Integer groupNumber,
+                                           SortDirection order, Long facultyId) {
+        Page<Group> page = filerPage(1, 10, course, groupNumber, order, facultyId, false);
+
+        List<GroupDto> groupDtos = page.getContent()
+                .stream()
+                .map(groupMapper::toDto)
+                .toList();
+        List<Integer> courses = groupRepository.findAllCoursesByFaculty(facultyId);
+
+        return GroupViewDto.builder()
+                .groups(groupDtos)
+                .courses(courses)
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public GroupPageDto getFacultyGroups(int currentPage, int pageSize, Integer course,
                                          Integer groupNumber, SortDirection order, Long facultyId) {
-        Page<Group> page = filerPage(currentPage, pageSize, course, groupNumber, order, facultyId);
+        Page<Group> page = filerPage(currentPage, pageSize, course, groupNumber, order, facultyId, true);
 
         List<GroupDto> groupDtos = page.getContent()
                 .stream()
@@ -183,7 +202,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     private Page<Group> filerPage(int currentPage, int pageSize, Integer course,
-                                  Integer groupNumber, SortDirection order, Long facultyId) {
+                                  Integer groupNumber, SortDirection order, Long facultyId, boolean isPageable) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -213,16 +232,30 @@ public class GroupServiceImpl implements GroupService {
 
         List<Order> orderList = List.of(courseOrder, cb.asc(root.get("id")));
         query.orderBy(orderList);
-
         TypedQuery<Group> typedQuery = entityManager.createQuery(query);
-        typedQuery.setFirstResult((int) pageable.getOffset());
-        typedQuery.setMaxResults(pageable.getPageSize());
 
-        List<Group> universities = typedQuery.getResultList();
+        if (isPageable) {
+            typedQuery.setFirstResult((int) pageable.getOffset());
+            typedQuery.setMaxResults(pageable.getPageSize());
+        }
+
+        List<Group> groups = typedQuery.getResultList();
 
         long count = countFilteredGroups(course, groupNumber, facultyId);
 
-        return new PageImpl<>(universities, pageable, count);
+        return new PageImpl<>(
+                groups,
+                isPageable
+                        ? pageable
+                        : PageRequest.of
+                        (
+                                currentPage - 1,
+                                count > 1
+                                        ? (int) count
+                                        : 1
+                        ),
+                count
+        );
     }
 
     private long countFilteredGroups(Integer course, Integer groupNumber, Long facultyId) {

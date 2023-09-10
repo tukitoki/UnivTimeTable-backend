@@ -3,6 +3,8 @@ package ru.vsu.cs.timetable.logic.service;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
+import ru.vsu.cs.timetable.model.dto.audience.AudienceDto;
+import ru.vsu.cs.timetable.model.dto.audience.AudiencePageDto;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.model.dto.week_time.DayTimes;
@@ -15,8 +17,17 @@ import java.util.Map;
 @Validated
 public interface AudienceService {
 
+    AudiencePageDto getAudiencesByFaculty(@NotNull int currentPage, @NotNull int pageSize,
+                                          @NotNull Long facultyId);
+
     void createAudience(@NotNull @Valid CreateAudienceRequest createAudienceRequest,
                         @NotNull Long univId, @NotNull Long facultyId);
+
+    AudienceDto getAudienceById(@NotNull Long id);
+
+    void deleteAudience(@NotNull Long id);
+
+    void updateAudience(@NotNull @Valid AudienceDto audienceDto, @NotNull Long id);
 
     List<AudienceResponse> getAudiencesByFaculty(@NotNull Long facultyId);
 

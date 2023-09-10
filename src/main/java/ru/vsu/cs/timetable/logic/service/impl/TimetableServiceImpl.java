@@ -234,7 +234,7 @@ public class TimetableServiceImpl implements TimetableService {
             if (user.getRole() == HEADMAN) {
                 classes = classRepository.findAllByWeekTypeAndGroupsContainsAndDayOfWeekOrderByStartTimeAsc(currWeek,
                         user.getGroup(), dayOfWeek);
-            } else if (user.getRole() == LECTURER) {
+            } else if (user.getRole() == LECTURER || user.getRole() == LECTURER_SCHEDULER) {
                 classes = classRepository.findAllByWeekTypeAndLecturerAndDayOfWeekOrderByStartTimeAsc(currWeek,
                         user, dayOfWeek);
             } else {
@@ -259,7 +259,7 @@ public class TimetableServiceImpl implements TimetableService {
 
             if (user.getRole() == HEADMAN) {
                 classes = classRepository.findAllByGroupsContainsAndDayOfWeek(user.getGroup(), dayOfWeek);
-            } else if (user.getRole() == LECTURER) {
+            } else if (user.getRole() == LECTURER || user.getRole() == LECTURER_SCHEDULER) {
                 classes = classRepository.findAllByLecturerAndDayOfWeek(user, dayOfWeek);
             } else {
                 throw TimetableException.CODE.ADMIN_CANT_ACCESS.get();

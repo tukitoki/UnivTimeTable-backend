@@ -56,7 +56,7 @@ public class Class {
     private User lecturer;
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "audience_id", nullable = false)
+    @JoinColumn(name = "audience_id", nullable = true)
     private Audience audience;
     @ManyToOne
     @JoinColumn(name = "timetable_id", nullable = false)
@@ -88,7 +88,7 @@ public class Class {
                 ", " + lecturer.getFullName() +
                 ", " + typeClass +
                 ", Аудитория: " + audience.getAudienceNumber());
-        if (userRole == UserRole.LECTURER) {
+        if (userRole == UserRole.LECTURER || userRole == UserRole.LECTURER_SCHEDULER) {
             String groups = ", " + getGroups().stream()
                     .collect(
                             Collectors.groupingBy(

@@ -20,16 +20,15 @@ import ru.vsu.cs.timetable.logic.service.UniversityService;
 import ru.vsu.cs.timetable.logic.service.UserService;
 import ru.vsu.cs.timetable.model.dto.page.PageModel;
 import ru.vsu.cs.timetable.model.dto.university.UniversityResponse;
-import ru.vsu.cs.timetable.model.dto.user.CreateUserResponse;
-import ru.vsu.cs.timetable.model.dto.user.UserDto;
-import ru.vsu.cs.timetable.model.dto.user.UserPageDto;
-import ru.vsu.cs.timetable.model.dto.user.UserResponse;
+import ru.vsu.cs.timetable.model.dto.user.*;
 import ru.vsu.cs.timetable.model.entity.University;
 import ru.vsu.cs.timetable.model.entity.User;
 import ru.vsu.cs.timetable.model.enums.UserRole;
 import ru.vsu.cs.timetable.model.mapper.UniversityMapper;
 import ru.vsu.cs.timetable.model.mapper.UserMapper;
+import ru.vsu.cs.timetable.repository.ClassRepository;
 import ru.vsu.cs.timetable.repository.GroupRepository;
+import ru.vsu.cs.timetable.repository.RequestRepository;
 import ru.vsu.cs.timetable.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -49,14 +48,40 @@ public class UserServiceImpl implements UserService {
     private final UniversityMapper universityMapper;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final RequestRepository requestRepository;
+    private final ClassRepository classRepository;
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
+
+    @Override
+    public UserViewDto getAllUsersV2(String university, UserRole role, String city, String name) {
+        Page<User> page = filerPage(1, 10, university, role, city, name, false);
+
+        List<UserResponse> userResponses = page.getContent()
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+
+        List<UserRole> userRoles = getAllRoles();
+        List<String> univNames = universityService.findAllUniversities()
+                .stream()
+                .map(University::getName)
+                .toList();
+        List<String> userCities = userRepository.findAllUserCities();
+
+        return UserViewDto.builder()
+                .users(userResponses)
+                .roles(userRoles)
+                .universities(univNames)
+                .cities(userCities)
+                .build();
+    }
 
     @Override
     @Transactional(readOnly = true)
     public UserPageDto getAllUsers(int currentPage, int pageSize, String university,
                                    UserRole role, String city, String name) {
-        Page<User> page = filerPage(currentPage, pageSize, university, role, city, name);
+        Page<User> page = filerPage(currentPage, pageSize, university, role, city, name, true);
 
         List<UserResponse> userResponses = page.getContent()
                 .stream()
@@ -208,11 +233,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(Long id, String username) {
         User user = getUserById(id);
+
+        if (user.getUsername().equals(username)) {
+            throw UserException.CODE.CANT_DELETE_YOURSELF.get();
+        }
+
         if (user.getGroup() != null) {
             user.getGroup().setStudentsAmount(user.getGroup().getStudentsAmount() - 1);
             groupRepository.save(user.getGroup());
+        }
+
+        if (user.getRole() == UserRole.LECTURER || user.getRole() == UserRole.LECTURER_SCHEDULER) {
+            deleteRequests(user);
+            deleteClasses(user);
         }
 
         userRepository.delete(user);
@@ -241,7 +276,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Page<User> filerPage(int currentPage, int pageSize, String university,
-                                 UserRole role, String city, String name) {
+                                 UserRole role, String city, String name, boolean isPageable) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -271,13 +306,27 @@ public class UserServiceImpl implements UserService {
         query.orderBy(orderList);
 
         TypedQuery<User> typedQuery = entityManager.createQuery(query);
-        typedQuery.setFirstResult((int) pageable.getOffset());
-        typedQuery.setMaxResults(pageable.getPageSize());
+        if (isPageable) {
+            typedQuery.setFirstResult((int) pageable.getOffset());
+            typedQuery.setMaxResults(pageable.getPageSize());
+        }
 
         List<User> users = typedQuery.getResultList();
         long count = countFilteredUsers(university, role, city, name);
 
-        return new PageImpl<>(users, pageable, count);
+        return new PageImpl<>(
+                users,
+                isPageable
+                        ? pageable
+                        : PageRequest.of
+                        (
+                                currentPage - 1,
+                                count > 1
+                                        ? (int) count
+                                        : 1
+                        ),
+                count
+        );
     }
 
 
@@ -315,6 +364,14 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    public void deleteRequests(User lecturer) {
+        requestRepository.deleteAll(requestRepository.findAllByLecturer(lecturer));
+    }
+
+    public void deleteClasses(User lecturer) {
+        classRepository.deleteAll(classRepository.findAllByLecturer(lecturer));
+    }
+
     private void validCreatingUser(UserRole role, Long univId, Long facultyId, Long groupId) {
         if (role == UserRole.ADMIN) {
             if (univId != null) {
@@ -326,7 +383,7 @@ public class UserServiceImpl implements UserService {
             if (groupId != null) {
                 throw UserException.CODE.ADMIN_CANT_HAVE_GROUP.get();
             }
-        } else if (role == UserRole.LECTURER) {
+        } else if (role == UserRole.LECTURER || role == UserRole.LECTURER_SCHEDULER) {
             if (univId == null) {
                 throw UserException.CODE.LECTURER_SHOULD_HAVE_UNIVERSITY.get();
             }

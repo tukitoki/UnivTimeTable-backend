@@ -1,6 +1,7 @@
 package ru.vsu.cs.timetable.model.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.vsu.cs.timetable.model.dto.audience.AudienceDto;
 import ru.vsu.cs.timetable.model.dto.audience.AudienceResponse;
 import ru.vsu.cs.timetable.model.dto.audience.CreateAudienceRequest;
 import ru.vsu.cs.timetable.model.entity.Audience;
@@ -28,6 +29,28 @@ public class AudienceMapper {
                 .build();
     }
 
+    public Audience toEntity(AudienceDto audienceDto, Set<Equipment> equipments) {
+
+
+        return Audience.builder()
+                .audienceNumber(audienceDto.getAudienceNumber())
+                .capacity(audienceDto.getCapacity())
+                .equipments(equipments)
+                .build();
+    }
+
+    public AudienceDto toDto(Audience audience) {
+        return AudienceDto.builder()
+                .id(audience.getId())
+                .audienceNumber(audience.getAudienceNumber())
+                .capacity(audience.getCapacity())
+                .equipments(audience.getEquipments()
+                        .stream()
+                        .map(Equipment::getDisplayName)
+                        .collect(Collectors.toSet()))
+                .build();
+    }
+
     public PlanningAudience toPlanningAudience(Audience audience) {
         return PlanningAudience.builder()
                 .id(audience.getId())
@@ -39,6 +62,7 @@ public class AudienceMapper {
 
     public AudienceResponse toResponse(Audience audience) {
         return AudienceResponse.builder()
+                .id(audience.getId())
                 .audienceNumber(audience.getAudienceNumber())
                 .capacity(audience.getCapacity())
                 .equipments(audience.getEquipments().stream()

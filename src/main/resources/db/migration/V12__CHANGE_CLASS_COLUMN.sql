@@ -1,0 +1,3 @@
+ALTER TABLE class
+ALTER COLUMN audience_id
+DROP NOT NULL;
