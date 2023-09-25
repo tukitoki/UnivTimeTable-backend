@@ -14,14 +14,14 @@ import ru.vsu.cs.timetable.logic.service.GroupService;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_GROUP_AUTHORITY')")
-@RequestMapping("/faculty")
+@RequestMapping
 @RestController
 public class GroupController implements GroupApi {
 
     private final GroupService groupService;
 
     @Override
-    @GetMapping("/v2/{facultyId}/groups")
+    @GetMapping("/v2/faculty/{facultyId}/groups")
     public ResponseEntity<GroupViewDto> getFacultyGroups(
             @RequestParam(required = false) Integer course,
             @RequestParam(required = false) Integer groupNumber,
@@ -34,7 +34,7 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @GetMapping("/{facultyId}/groups")
+    @GetMapping("/faculty/{facultyId}/groups")
     public ResponseEntity<GroupPageDto> getFacultyGroups(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -49,7 +49,7 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @GetMapping("/group/{id}")
+    @GetMapping("/faculty/group/{id}")
     public ResponseEntity<GroupDto> getGroupById(@PathVariable Long id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -57,7 +57,7 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @PostMapping("/{facultyId}/group")
+    @PostMapping("/faculty/{facultyId}/group")
     public ResponseEntity<Void> createGroup(@RequestBody GroupDto groupDto,
                                             @PathVariable Long facultyId) {
         groupService.createGroup(groupDto, facultyId);
@@ -68,7 +68,7 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @DeleteMapping("/group/{id}")
+    @DeleteMapping("/faculty/group/{id}")
     public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
         groupService.deleteGroup(id);
 
@@ -78,7 +78,7 @@ public class GroupController implements GroupApi {
     }
 
     @Override
-    @PutMapping("/group/{id}")
+    @PutMapping("/faculty/group/{id}")
     public ResponseEntity<Void> updateGroup(@RequestBody GroupDto groupDto,
                                             @PathVariable Long id) {
         groupService.updateGroup(groupDto, id);

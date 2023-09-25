@@ -16,14 +16,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_FACULTY_AUTHORITY')")
-@RequestMapping("/university")
+@RequestMapping
 @RestController
 public class FacultyController implements FacultyApi {
 
     private final FacultyService facultyService;
 
     @Override
-    @GetMapping("/v2/{univId}/faculties")
+    @GetMapping("/v2/university/{univId}/faculties")
     public ResponseEntity<List<FacultyDto>> getFacultiesByUniversity(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "ASC") SortDirection order,
@@ -35,7 +35,7 @@ public class FacultyController implements FacultyApi {
     }
 
     @Override
-    @GetMapping("/{univId}/faculties")
+    @GetMapping("/university/{univId}/faculties")
     public ResponseEntity<FacultyPageDto> getFacultiesByUniversity(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -49,7 +49,7 @@ public class FacultyController implements FacultyApi {
     }
 
     @Override
-    @GetMapping("/{univId}/faculties/all")
+    @GetMapping("/university/{univId}/faculties/all")
     public ResponseEntity<List<FacultyDto>> getFacultiesByUniversity(@PathVariable Long univId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -57,7 +57,7 @@ public class FacultyController implements FacultyApi {
     }
 
     @Override
-    @GetMapping("/faculty/{id}")
+    @GetMapping("/university/faculty/{id}")
     public ResponseEntity<FacultyDto> getFacultyById(@PathVariable Long id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -65,7 +65,7 @@ public class FacultyController implements FacultyApi {
     }
 
     @Override
-    @PostMapping("/{univId}/faculty/create")
+    @PostMapping("/university/{univId}/faculty/create")
     public ResponseEntity<Void> createFaculty(@RequestBody CreateFacultyRequest createFacultyRequest,
                                               @PathVariable Long univId) {
         facultyService.createFaculty(createFacultyRequest, univId);
@@ -76,7 +76,7 @@ public class FacultyController implements FacultyApi {
     }
 
     @Override
-    @DeleteMapping("/faculty/{id}")
+    @DeleteMapping("/university/faculty/{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
 
@@ -86,7 +86,7 @@ public class FacultyController implements FacultyApi {
     }
 
     @Override
-    @PutMapping("/faculty/{id}")
+    @PutMapping("/university/faculty/{id}")
     public ResponseEntity<Void> updateFaculty(@RequestBody FacultyDto facultyDto,
                                               @PathVariable Long id) {
         facultyService.updateFaculty(facultyDto, id);
