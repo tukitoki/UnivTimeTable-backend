@@ -15,14 +15,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('CREATE_UNIVERSITY_AUTHORITY')")
-@RequestMapping("/universities")
+@RequestMapping
 @RestController
 public class UniversityController implements UniversityApi {
 
     private final UniversityService universityService;
 
     @Override
-    @GetMapping("/v2")
+    @GetMapping("/v2/universities")
     public ResponseEntity<List<UniversityDto>> getAllUniversities(
             @RequestParam(required = false) String universityName,
             @RequestParam(defaultValue = "ASC") SortDirection order
@@ -33,7 +33,7 @@ public class UniversityController implements UniversityApi {
     }
 
     @Override
-    @GetMapping
+    @GetMapping("/universities")
     public ResponseEntity<UniversityPageDto> getAllUniversities(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -46,7 +46,7 @@ public class UniversityController implements UniversityApi {
     }
 
     @Override
-    @GetMapping("/{id}")
+    @GetMapping("/universities/{id}")
     public ResponseEntity<UniversityDto> getUniversityById(@PathVariable Long id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -54,7 +54,7 @@ public class UniversityController implements UniversityApi {
     }
 
     @Override
-    @PostMapping("/create")
+    @PostMapping("/universities/create")
     public ResponseEntity<Void> createUniversity(@RequestBody UniversityDto createUnivRequest) {
         universityService.createUniversity(createUnivRequest);
 
@@ -64,7 +64,7 @@ public class UniversityController implements UniversityApi {
     }
 
     @Override
-    @PutMapping("/{id}")
+    @PutMapping("/universities/{id}")
     public ResponseEntity<Void> updateUniversity(@RequestBody UniversityDto universityDto,
                                                  @PathVariable Long id) {
         universityService.updateUniversity(universityDto, id);
@@ -75,7 +75,7 @@ public class UniversityController implements UniversityApi {
     }
 
     @Override
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/universities/{id}")
     public ResponseEntity<Void> deleteUniversity(@PathVariable Long id) {
         universityService.deleteUniversity(id);
 
